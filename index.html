@@ -2,866 +2,1312 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#26372A">
-
-  <title>Baladhika Fun Run 2026 | Experience Fun Run 5K</title>
-  <meta name="description" content="Baladhika Fun Run 2026, 6 Desember 2026 di Lapangan Rampal, Kota Malang.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --army: #26372A;
-      --army-dark: #18251D;
-      --army-light: #344B38;
-      --orange: #FF681F;
-      --cream: #F3EBD9;
-      --white: #FFFFFF;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: var(--army-dark);
-      color: var(--white);
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
-      position: absolute;
-      z-index: 100;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 24px 6%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo-img {
-      display: block;
-      width: 190px;
-      height: auto;
-      max-height: 85px;
-      object-fit: contain;
-    }
-
-    .nav-button {
-      background: var(--orange);
-      color: #111;
-      padding: 15px 26px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 900;
-      transition: .3s;
-    }
-
-    .nav-button:hover {
-      background: var(--cream);
-      transform: translateY(-3px);
-    }
-
-    /* HERO */
-
-    .hero {
-      position: relative;
-      height: 100svh;
-      min-height: 700px;
-      background: var(--army);
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    /* GRUNGE TEXTURE */
-
-    .hero::after,
-    .event-section::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 30;
-      opacity: .13;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          transparent 0px,
-          transparent 3px,
-          rgba(0,0,0,.16) 4px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          transparent 0px,
-          transparent 5px,
-          rgba(255,255,255,.05) 6px
-        );
-    }
-
-    /* ORANGE GEOMETRIC BACKGROUND */
-
-    .hero-shape {
-      position: absolute;
-      z-index: 1;
-      width: 45vw;
-      height: 65vh;
-      right: -15%;
-      top: 24%;
-      background: var(--orange);
-      transform: rotate(-17deg);
-      clip-path: polygon(
-        15% 0%,
-        100% 0%,
-        90% 100%,
-        0% 80%
-      );
-      opacity: .9;
-      pointer-events: none;
-    }
-
-    /* LEFT TEXT */
-
-    .hero-content {
-      position: absolute;
-      z-index: 12;
-      left: 6%;
-      top: 29%;
-      width: 52%;
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      font-size: clamp(12px, 1.2vw, 18px);
-      font-weight: 900;
-      letter-spacing: .6em;
-      margin-bottom: 22px;
-    }
-
-    .hero-title {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(75px, 10.5vw, 185px);
-      line-height: .98;
-      letter-spacing: -2px;
-      white-space: nowrap;
-      color: var(--cream);
-    }
-
-    .subtitle {
-      margin-top: 30px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      line-height: 1.8;
-    }
-
-    .hero-btn {
-      display: inline-block;
-      margin-top: 35px;
-      padding: 18px 35px;
-      background: var(--orange);
-      color: #111;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 900;
-      pointer-events: auto;
-      transition: .3s;
-    }
-
-    .hero-btn:hover {
-      background: var(--cream);
-      transform: translateY(-4px);
-    }
-
-    /* 5K AND RUNNERS MOVE AS ONE VISUAL GROUP */
-
-    .hero-visual {
-      position: absolute;
-      z-index: 18;
-      width: 47%;
-      height: 90%;
-      right: 0;
-      bottom: 0;
-      pointer-events: none;
-    }
-
-    .hero-5k {
-      position: absolute;
-      z-index: 1;
-      top: 19%;
-      right: 10%;
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(150px, 21vw, 380px);
-      line-height: 1;
-      letter-spacing: -8px;
-      color: var(--orange);
-      white-space: nowrap;
-      text-shadow: 8px 8px 0 rgba(0,0,0,.13);
-    }
-
-    .runner {
-      position: absolute;
-      z-index: 2;
-      height: 100%;
-      width: auto;
-      max-width: none;
-      right: -4%;
-      bottom: -4%;
-      object-fit: contain;
-      filter: drop-shadow(
-        0 22px 35px rgba(0,0,0,.3)
-      );
-    }
-
-    .scroll-hint {
-      position: absolute;
-      z-index: 35;
-      left: 6%;
-      bottom: 32px;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 4px;
-    }
-
-    /* EVENT SECTION */
-
-    .event-section {
-      position: relative;
-      min-height: 100vh;
-      background: var(--army-dark);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      padding: 120px 6%;
-      isolation: isolate;
-    }
-
-    .event-number {
-      position: absolute;
-      z-index: 1;
-      left: 3%;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(300px, 45vw, 750px);
-      line-height: 1;
-      color: rgba(255,255,255,.055);
-      pointer-events: none;
-    }
-
-    .event-content {
-      position: relative;
-      z-index: 5;
-      text-align: center;
-    }
-
-    .event-label {
-      color: var(--orange);
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 5px;
-      margin-bottom: 25px;
-    }
-
-    .event-title {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(65px, 12vw, 180px);
-      line-height: 1;
-      color: var(--cream);
-    }
-
-    .event-title span {
-      color: var(--orange);
-    }
-
-    .event-location {
-      margin-top: 35px;
-      font-size: clamp(13px, 1.5vw, 20px);
-      font-weight: 800;
-      letter-spacing: 4px;
-      line-height: 1.8;
-    }
-
-    .event-description {
-      max-width: 620px;
-      margin: 28px auto 0;
-      font-size: 14px;
-      line-height: 2;
-      color: #D0D8CF;
-    }
-
-    /* EXPERIENCE SECTION */
-
-    .experience-section {
-      min-height: 90vh;
-      background: var(--army-light);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 100px 6%;
-      overflow: hidden;
-    }
-
-    .experience-section h2 {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(55px, 10vw, 150px);
-      line-height: 1.05;
-      color: var(--cream);
-    }
-
-    .experience-section h2 span {
-      color: var(--orange);
-    }
-
-    .experience-section p {
-      max-width: 650px;
-      margin: 30px auto 0;
-      font-size: 14px;
-      line-height: 2;
-      color: #E0E5DC;
-    }
-
-    /* REGISTRATION DEMO */
-
-    .registration {
-      min-height: 65vh;
-      background: var(--orange);
-      color: var(--army-dark);
-      padding: 100px 6%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .registration h2 {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(65px, 11vw, 160px);
-      line-height: 1;
-    }
-
-    .registration p {
-      max-width: 600px;
-      margin: 25px auto;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.8;
-    }
-
-    .demo-label {
-      display: inline-block;
-      border: 2px solid var(--army-dark);
-      border-radius: 50px;
-      padding: 9px 15px;
-      margin-bottom: 25px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-
-    .registration-btn {
-      display: inline-block;
-      background: var(--army-dark);
-      color: white;
-      border-radius: 50px;
-      padding: 19px 38px;
-      font-size: 12px;
-      font-weight: 900;
-      transition: transform .3s;
-    }
-
-    .registration-btn:hover {
-      transform: translateY(-4px);
-    }
-
-    /* FOOTER */
-
-    footer {
-      background: #101A13;
-      padding: 55px 6%;
-      text-align: center;
-    }
-
-    footer h3 {
-      font-family: 'Anton', sans-serif;
-      font-size: 32px;
-      color: var(--cream);
-    }
-
-    footer p {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #C5D0C4;
-      line-height: 1.8;
-    }
-
-    footer a {
-      color: var(--orange);
-      font-weight: 700;
-    }
-
-    /* TABLET */
-
-    @media (max-width: 1100px) {
-      .hero-content {
-        top: 28%;
-        width: 58%;
-      }
-
-      .hero-title {
-        font-size: 10vw;
-      }
-
-      .hero-visual {
-        width: 49%;
-      }
-
-      .hero-5k {
-        font-size: 23vw;
-      }
-
-      .runner {
-        height: 88%;
-      }
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 768px) {
-      .navbar {
-        padding: 20px 5%;
-      }
-
-      .logo-img {
-        width: 125px;
-        max-height: 65px;
-      }
-
-      .nav-button {
-        padding: 12px 15px;
-        font-size: 9px;
-      }
-
-      .hero {
-        min-height: 740px;
-      }
-
-      .hero-content {
-        top: 19%;
-        left: 5%;
-        width: 90%;
-      }
-
-      .eyebrow {
-        font-size: 11px;
-        letter-spacing: 5px;
-        margin-bottom: 16px;
-      }
-
-      .hero-title {
-        font-size: 16vw;
-        white-space: nowrap;
-        letter-spacing: -1px;
-      }
-
-      .subtitle {
-        margin-top: 20px;
-        font-size: 9px;
-        letter-spacing: 1px;
-        max-width: 300px;
-      }
-
-      .hero-btn {
-        margin-top: 25px;
-        padding: 15px 23px;
-        font-size: 10px;
-      }
-
-      .hero-shape {
-        width: 95vw;
-        height: 42vh;
-        top: 52%;
-        right: -38%;
-      }
-
-      .hero-visual {
-        width: 100%;
-        height: 55%;
-        bottom: 0;
-        right: 0;
-      }
-
-      .hero-5k {
-        top: 5%;
-        right: 12%;
-        font-size: 48vw;
-        letter-spacing: -4px;
-      }
-
-      .runner {
-        height: 100%;
-        right: -25%;
-        bottom: -5%;
-      }
-
-      .scroll-hint {
-        left: 5%;
-        bottom: 25px;
-        font-size: 8px;
-      }
-
-      .event-number {
-        font-size: 90vw;
-      }
-
-      .event-title {
-        font-size: 17vw;
-      }
-
-      .event-label {
-        font-size: 10px;
-        letter-spacing: 3px;
-      }
-
-      .event-location {
-        font-size: 12px;
-        letter-spacing: 2px;
-      }
-
-      .event-description,
-      .experience-section p {
-        font-size: 12px;
-      }
-
-      .experience-section h2 {
-        font-size: 15vw;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#24362b">
+<meta name="description" content="Baladhika Fun Run 2026 - Experience Fun Run 5K, 6 Desember 2026, Lapangan Rampal Kota Malang.">
+<title>BALADHIKA FUN RUN 2026 | EXPERIENCE 5K</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --army:#24362b;
+  --army2:#344938;
+  --dark:#15231b;
+  --orange:#ff691f;
+  --cream:#f5efdf;
+  --white:#ffffff;
+  --muted:#c5d0c4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--dark);
+  color:var(--cream);
+  font-family:Montserrat,Arial,sans-serif;
+  overflow-x:hidden;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-weight:400}
+.anton{font-family:Anton,Impact,sans-serif}
+.orange{color:var(--orange)}
+.section{
+  position:relative;
+  min-height:760px;
+  min-height:100svh;
+  overflow:hidden;
+  isolation:isolate;
+}
+.grunge::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:25;
+  pointer-events:none;
+  opacity:.13;
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.22) 4px),
+    repeating-linear-gradient(90deg,transparent 0 6px,rgba(255,255,255,.06) 7px);
+}
+.inner{
+  position:relative;
+  z-index:5;
+  width:min(1400px,90%);
+  margin:auto;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  border:0;
+  border-radius:40px;
+  padding:17px 29px;
+  background:var(--orange);
+  color:#17251b;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.4px;
+  transition:transform .25s,background .25s;
+}
+.btn:hover{
+  transform:translateY(-4px);
+  background:var(--cream);
+}
+.btn-dark{
+  background:var(--dark);
+  color:white;
+}
+.btn-dark:hover{background:var(--army2);color:white}
+.kicker{
+  font-size:clamp(11px,1.1vw,15px);
+  font-weight:900;
+  letter-spacing:.4em;
+}
+.section-heading{
+  font-family:Anton,Impact,sans-serif;
+  font-size:clamp(75px,12vw,180px);
+  line-height:.98;
+}
+.small-copy{
+  font-size:clamp(12px,1.05vw,15px);
+  line-height:1.9;
+  font-weight:500;
+}
+img.runner-img{
+  position:absolute;
+  width:auto;
+  max-width:none;
+  object-fit:contain;
+  pointer-events:none;
+}
+
+/* NAVIGATION */
+.navbar{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:100;
+  padding:22px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+.nav-logo{
+  width:clamp(120px,14vw,190px);
+  max-height:85px;
+  object-fit:contain;
+}
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:26px;
+}
+.nav-link{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.nav-link:hover{color:var(--orange)}
+
+/* SECTION 01: EXPERIENCE */
+.hero{
+  background:var(--army);
+  display:flex;
+  align-items:center;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  width:55vw;
+  height:95vh;
+  right:-18%;
+  top:12%;
+  z-index:0;
+  background:var(--orange);
+  transform:rotate(-18deg);
+  clip-path:polygon(15% 0,100% 0,85% 100%,0 85%);
+}
+.hero .inner{
+  display:flex;
+  align-items:center;
+  min-height:100svh;
+  padding:125px 0 80px;
+}
+.hero-text{
+  position:relative;
+  z-index:10;
+  width:60%;
+}
+.hero-text h1{
+  margin:15px 0 20px;
+  font-family:Anton,Impact,sans-serif;
+  font-size:clamp(85px,13vw,205px);
+  line-height:.94;
+  letter-spacing:-2px;
+}
+.hero-text h1 span{display:block}
+.hero-text .tagline{
+  font-size:clamp(10px,1.15vw,15px);
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:30px;
+}
+.hero-visual{
+  position:absolute;
+  z-index:12;
+  width:53%;
+  height:88%;
+  right:-3%;
+  bottom:0;
+  pointer-events:none;
+}
+.hero-5k{
+  position:absolute;
+  top:18%;
+  right:10%;
+  font-family:Anton,Impact,sans-serif;
+  font-size:clamp(150px,23vw,380px);
+  line-height:1;
+  color:var(--orange);
+  text-shadow:7px 7px 0 rgba(0,0,0,.13);
+  z-index:1;
+}
+.hero-visual img{
+  position:absolute;
+  z-index:2;
+  height:100%;
+  width:100%;
+  object-fit:contain;
+  object-position:bottom right;
+  bottom:0;
+  right:0;
+  filter:drop-shadow(0 20px 25px rgba(0,0,0,.25));
+}
+.hero-bottom{
+  position:absolute;
+  z-index:30;
+  bottom:25px;
+  left:5%;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+/* SECTION 02: DATE */
+.date-section{
+  background:var(--dark);
+  display:flex;
+  align-items:center;
+}
+.date-ghost{
+  position:absolute;
+  z-index:0;
+  left:-3%;
+  top:50%;
+  transform:translateY(-50%);
+  font:clamp(320px,50vw,800px)/1 Anton,Impact,sans-serif;
+  color:rgba(255,255,255,.055);
+}
+.date-section .inner{
+  display:flex;
+  align-items:center;
+  min-height:100svh;
+  padding:100px 0;
+}
+.date-text{
+  position:relative;
+  z-index:6;
+  width:58%;
+}
+.date-text h2{
+  font:clamp(90px,13vw,190px)/.95 Anton,Impact,sans-serif;
+  margin:25px 0;
+}
+.date-text h2 span{display:block}
+.date-place{
+  font-size:clamp(13px,1.4vw,20px);
+  letter-spacing:3px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+.date-text .small-copy{max-width:490px;color:var(--muted)}
+.date-runner{
+  z-index:5;
+  height:83%;
+  right:-2%;
+  bottom:0;
+  filter:drop-shadow(0 25px 25px rgba(0,0,0,.25));
+}
+
+/* SECTION 03: PRICES */
+.price-section{
+  background:var(--army2);
+  display:flex;
+  align-items:center;
+}
+.price-section::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  height:100%;
+  width:42%;
+  left:30%;
+  background:rgba(0,0,0,.09);
+  transform:skewX(-16deg);
+}
+.price-section .inner{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:125px 0 95px;
+}
+.price-col{
+  width:33%;
+  position:relative;
+  z-index:8;
+}
+.price-col.right{text-align:right}
+.price-col h2{
+  font:clamp(65px,8vw,125px)/1 Anton,Impact,sans-serif;
+  margin:12px 0;
+}
+.price-value{
+  font:clamp(45px,5.3vw,85px)/1 Anton,Impact,sans-serif;
+  color:var(--orange);
+}
+.price-note{
+  font-size:12px;
+  line-height:1.8;
+  color:#e0e6dd;
+  margin-top:24px;
+  max-width:300px;
+}
+.price-col.right .price-note{margin-left:auto}
+.price-runner{
+  height:82%;
+  left:50%;
+  bottom:-2%;
+  transform:translateX(-50%);
+  z-index:4;
+}
+.price-disclaimer{
+  position:absolute;
+  z-index:12;
+  bottom:26px;
+  left:5%;
+  right:5%;
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  color:#f2e6d6;
+}
+
+/* SECTION 04: BENEFITS */
+.benefit-section{
+  background:var(--orange);
+  color:var(--dark);
+  display:flex;
+  align-items:center;
+}
+.benefit-section .inner{
+  text-align:center;
+  padding:100px 0;
+}
+.benefit-section h2{
+  font:clamp(80px,12vw,170px)/1 Anton,Impact,sans-serif;
+  margin-bottom:15px;
+}
+.benefit-description{
+  max-width:720px;
+  margin:0 auto 35px;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.9;
+}
+.benefit-art{
+  display:block;
+  width:min(1050px,100%);
+  max-height:570px;
+  object-fit:contain;
+  margin:0 auto;
+}
+.benefit-fallback{
+  display:none;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin:40px auto 0;
+}
+.benefit-tile{
+  padding:28px 15px;
+  border:2px solid rgba(22,35,27,.3);
+  border-radius:16px;
+  font-size:13px;
+  font-weight:900;
+}
+.benefit-tile span{
+  display:block;
+  font-size:32px;
+  margin-bottom:14px;
+}
+
+/* SECTION 05: ROUTE */
+.route-section{
+  background:var(--army);
+  display:flex;
+  align-items:center;
+}
+.route-section .inner{
+  text-align:center;
+  padding:100px 0;
+}
+.route-section h2{
+  font:clamp(90px,13vw,180px)/1 Anton,Impact,sans-serif;
+  margin:10px 0 15px;
+}
+.route-subtitle{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:30px;
+}
+.route-frame{
+  width:min(1100px,100%);
+  margin:0 auto;
+  padding:18px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+}
+.route-frame img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+}
+.route-note{
+  margin:24px auto 0;
+  max-width:690px;
+  font-size:12px;
+  line-height:1.9;
+  color:var(--muted);
+}
+
+/* SECTION 06: MORE THAN */
+.more-section{
+  background:var(--army2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.more-section::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  width:52vw;
+  height:110%;
+  right:-20%;
+  background:rgba(255,105,31,.16);
+  transform:skewX(-20deg);
+}
+.more-section .inner{padding:120px 0}
+.more-section h2{
+  font:clamp(80px,13vw,190px)/.98 Anton,Impact,sans-serif;
+  margin-bottom:28px;
+}
+.more-section h2 span{display:block}
+.more-section p{
+  max-width:680px;
+  margin:auto;
+  font-size:clamp(13px,1.15vw,16px);
+  line-height:2;
+  color:#e0e8df;
+}
+
+/* SECTION 07: READY */
+.ready-section{
+  background:var(--orange);
+  color:var(--dark);
+  display:flex;
+  align-items:center;
+}
+.ready-section .inner{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  min-height:100svh;
+  padding:120px 0;
+}
+.ready-runner{
+  height:93%;
+  left:-2%;
+  bottom:0;
+  z-index:3;
+  filter:drop-shadow(0 20px 25px rgba(0,0,0,.18));
+}
+.ready-text{
+  position:relative;
+  z-index:8;
+  width:55%;
+  text-align:right;
+}
+.ready-text h2{
+  font:clamp(85px,13vw,195px)/.96 Anton,Impact,sans-serif;
+  margin:10px 0 25px;
+}
+.ready-text h2 span{display:block}
+.ready-text p{
+  max-width:500px;
+  margin:0 0 25px auto;
+  font-size:13px;
+  line-height:1.9;
+  font-weight:700;
+}
+.demo-pill{
+  display:inline-block;
+  border:2px solid var(--dark);
+  padding:9px 16px;
+  border-radius:30px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+/* FOOTER */
+.footer{
+  background:#0e1912;
+  text-align:center;
+  padding:55px 5%;
+}
+.footer h3{
+  font:34px Anton,Impact,sans-serif;
+  margin-bottom:12px;
+}
+.footer p{
+  font-size:12px;
+  line-height:1.9;
+  color:var(--muted);
+}
+.footer a{color:var(--orange);font-weight:800}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+/* DEMO MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.8);
+  padding:20px;
+}
+.modal.open{display:flex}
+.modal-box{
+  position:relative;
+  width:min(500px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:32px;
+  border-radius:18px;
+  background:var(--cream);
+  color:var(--dark);
+}
+.modal-box h2{
+  font:42px Anton,Impact,sans-serif;
+  margin-bottom:12px;
+}
+.modal-box p{
+  font-size:12px;
+  line-height:1.8;
+}
+.close-modal{
+  position:absolute;
+  right:17px;
+  top:12px;
+  border:0;
+  background:transparent;
+  font-size:30px;
+}
+.form-group{margin:17px 0}
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+.form-group input,
+.form-group select{
+  display:block;
+  width:100%;
+  padding:13px;
+  border:1px solid #aab3a8;
+  border-radius:9px;
+  background:white;
+  color:#15231b;
+  font-size:13px;
+}
+.form-message{
+  display:none;
+  margin-top:18px;
+  padding:15px;
+  background:#e1ebdf;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.8;
+}
+.form-message.show{display:block}
+
+/* TABLET */
+@media(max-width:1050px){
+  .nav-link{display:none}
+  .hero-text h1{font-size:12vw}
+  .hero-visual{width:56%;right:-7%}
+  .date-runner{height:68%;right:-8%}
+  .price-runner{height:67%}
+  .ready-runner{height:77%;left:-8%}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .section{min-height:760px;min-height:100svh}
+  .navbar{padding:17px 5%}
+  .nav-logo{width:115px}
+  .navbar .btn{font-size:9px;padding:12px 15px}
+  .hero .inner{
+    align-items:flex-start;
+    padding-top:150px;
+  }
+  .hero-text{width:100%}
+  .hero-text h1{
+    font-size:19vw;
+    line-height:.97;
+    letter-spacing:-1px;
+  }
+  .hero-text .tagline{
+    font-size:9px;
+    max-width:270px;
+    line-height:1.8;
+  }
+  .hero-text .btn{padding:14px 20px;font-size:10px}
+  .hero::before{
+    width:115vw;
+    height:55%;
+    right:-50%;
+    top:45%;
+  }
+  .hero-visual{
+    width:105%;
+    height:53%;
+    right:-20%;
+    bottom:0;
+  }
+  .hero-5k{
+    font-size:52vw;
+    top:5%;
+    right:20%;
+  }
+  .hero-bottom{font-size:8px;bottom:18px}
+
+  .date-section .inner{
+    align-items:flex-start;
+    padding-top:100px;
+  }
+  .date-text{width:100%}
+  .date-text h2{font-size:18vw}
+  .date-place{font-size:12px;letter-spacing:1px}
+  .date-text .small-copy{font-size:11px;max-width:330px}
+  .date-runner{
+    height:48%;
+    right:-17%;
+    bottom:0;
+  }
+  .date-ghost{font-size:90vw}
+
+  .price-section .inner{
+    align-items:flex-start;
+    padding:110px 0 65px;
+    gap:12px;
+  }
+  .price-col{width:50%}
+  .price-col h2{font-size:12vw}
+  .price-value{font-size:8vw}
+  .price-note{font-size:10px;line-height:1.7}
+  .price-runner{
+    height:52%;
+    bottom:0;
+    left:50%;
+  }
+  .price-disclaimer{font-size:9px;bottom:12px}
+
+  .benefit-section .inner{padding:85px 0}
+  .benefit-section h2{font-size:15vw}
+  .benefit-description{font-size:11px}
+  .benefit-fallback{grid-template-columns:repeat(2,1fr)}
+  .benefit-tile{font-size:10px;padding:20px 8px}
+
+  .route-section .inner{padding:90px 0}
+  .route-section h2{font-size:20vw}
+  .route-frame{padding:8px;border-radius:12px}
+  .route-subtitle{font-size:10px}
+  .route-note{font-size:11px}
+
+  .more-section h2{font-size:17vw}
+  .more-section p{font-size:12px}
+
+  .ready-section .inner{
+    align-items:flex-start;
+    padding-top:110px;
+  }
+  .ready-text{width:100%;text-align:right}
+  .ready-text h2{font-size:19vw}
+  .ready-text p{
+    font-size:11px;
+    max-width:300px;
+    margin-left:auto;
+  }
+  .ready-runner{
+    height:48%;
+    left:-18%;
+    bottom:0;
+  }
+  .demo-pill{font-size:9px}
+}
+
+@media(max-width:390px){
+  .hero-text h1{font-size:18vw}
+  .price-note{font-size:9px}
+  .date-runner{height:43%}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION -->
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <a href="#home" aria-label="Kembali ke awal">
+    <img class="nav-logo" src="logo-baladhika.png" alt="Logo Baladhika Fun Run">
+  </a>
 
-  <nav class="navbar">
-    <a href="#home" aria-label="Baladhika Fun Run 2026">
-      <img
-        src="logo-baladhika.png"
-        alt="Logo Baladhika Fun Run 2026"
-        class="logo-img"
-      >
-    </a>
+  <div class="nav-right">
+    <a class="nav-link" href="#tanggal">EVENT</a>
+    <a class="nav-link" href="#harga">KATEGORI</a>
+    <a class="nav-link" href="#benefit">BENEFIT</a>
+    <a class="nav-link" href="#rute">RUTE</a>
+    <a class="btn" href="#daftar">DAFTAR SEKARANG ↗</a>
+  </div>
+</nav>
 
-    <a href="#daftar" class="nav-button">
-      DAFTAR SEKARANG ↗
-    </a>
-  </nav>
+<main>
 
-  <!-- HERO -->
+<!-- 01 EXPERIENCE -->
+<section class="section hero grunge" id="home">
+  <div class="inner">
+    <div class="hero-text">
+      <p class="kicker">EXPERIENCE</p>
 
-  <section class="hero" id="home">
+      <h1>
+        <span>FUN RUN</span>
+        <span class="orange">2026</span>
+      </h1>
 
-    <div class="hero-shape"></div>
-
-    <div class="hero-content">
-      <div class="eyebrow">EXPERIENCE</div>
-
-      <h1 class="hero-title">FUN RUN</h1>
-
-      <p class="subtitle">
+      <p class="tagline">
         ONE RUN • ONE SPIRIT • ONE EXPERIENCE
       </p>
 
-      <a href="#daftar" class="hero-btn">
-        DAFTAR SEKARANG →
+      <a class="btn" href="#tanggal">
+        EXPLORE THE EVENT ↓
       </a>
     </div>
 
-    <!-- 5K AND RUNNERS APPEAR TOGETHER -->
-
     <div class="hero-visual">
       <div class="hero-5k">5K</div>
-
-      <img
-        src="pelari-hero.png"
-        alt="Pelari Baladhika Fun Run 2026"
-        class="runner"
-      >
+      <img src="pelari-hero.png"
+           alt="Pelari Baladhika Fun Run 2026">
     </div>
+  </div>
 
-    <div class="scroll-hint">
-      ↓ SCROLL TO EXPLORE
-    </div>
+  <div class="hero-bottom">↓ SCROLL TO EXPLORE</div>
+</section>
 
-  </section>
+<!-- 02 DATE -->
+<section class="section date-section grunge" id="tanggal">
+  <div class="date-ghost">6</div>
 
-  <!-- EVENT DATE -->
+  <div class="inner">
+    <div class="date-text">
+      <p class="kicker orange">SAVE THE DATE</p>
 
-  <section class="event-section" id="event">
-    <div class="event-number">6</div>
-
-    <div class="event-content">
-      <p class="event-label">
-        BALADHIKA FUN RUN 2026
-      </p>
-
-      <h2 class="event-title">
-        6 DESEMBER<br>
-        <span>2026</span>
+      <h2>
+        <span>6 DESEMBER</span>
+        <span class="orange">2026</span>
       </h2>
 
-      <p class="event-location">
+      <p class="date-place">
         LAPANGAN RAMPAL • KOTA MALANG
       </p>
 
-      <p class="event-description">
+      <p class="small-copy">
         Bersiaplah menjadi bagian dari pengalaman
         Fun Run 5K yang penuh energi, semangat,
         dan kebersamaan.
       </p>
     </div>
-  </section>
+  </div>
 
-  <!-- EXPERIENCE -->
+  <img class="runner-img date-runner"
+       src="pelari-tanggal.png"
+       alt="Pelari pada section tanggal event">
+</section>
 
-  <section class="experience-section" id="experience">
-    <div>
+<!-- 03 REGISTRATION CATEGORIES -->
+<section class="section price-section grunge" id="harga">
+  <div class="inner">
+
+    <div class="price-col">
+      <p class="kicker">REGISTRATION</p>
+      <h2>EARLY<br>BIRD</h2>
+      <div class="price-value">125K</div>
+      <p class="price-note">
+        Daftar lebih awal dan amankan kesempatan
+        menjadi bagian dari pengalaman seru
+        Baladhika Fun Run 2026.
+      </p>
+    </div>
+
+    <img class="runner-img price-runner"
+         src="pelari-harga.png"
+         alt="Pelari bersiap mengikuti Fun Run">
+
+    <div class="price-col right">
+      <p class="kicker">REGISTRATION</p>
+      <h2>NORMAL</h2>
+      <div class="price-value">150K</div>
+      <p class="price-note">
+        Pilih kategori pendaftaranmu,
+        siapkan energi terbaik,
+        dan nikmati setiap langkah menuju garis finis.
+      </p>
+    </div>
+
+  </div>
+
+  <p class="price-disclaimer">
+    * HARGA MASIH DALAM TAHAP RANCANGAN DAN MENUNGGU KONFIRMASI RESMI.
+  </p>
+</section>
+
+<!-- 04 YOUR BENEFIT -->
+<section class="section benefit-section" id="benefit">
+  <div class="inner">
+
+    <p class="kicker">RUN WITH MORE</p>
+    <h2>YOUR BENEFIT</h2>
+
+    <p class="benefit-description">
+      Satu langkah, banyak pengalaman!
+      Nikmati berbagai fasilitas yang disiapkan
+      untuk melengkapi momen larimu.
+    </p>
+
+    <img class="benefit-art"
+         src="banner-benefit.png"
+         alt="Fasilitas peserta Baladhika Fun Run 2026"
+         onerror="this.style.display='none';document.getElementById('benefitFallback').style.display='grid'">
+
+    <div class="benefit-fallback" id="benefitFallback">
+      <div class="benefit-tile"><span>👕</span>JERSEY EVENT</div>
+      <div class="benefit-tile"><span>🏅</span>MEDALI FINISHER</div>
+      <div class="benefit-tile"><span>🏷️</span>BIB NON CHIP</div>
+      <div class="benefit-tile"><span>🎁</span>GOODIE BAG</div>
+      <div class="benefit-tile"><span>🥤</span>REFRESHMENT</div>
+      <div class="benefit-tile"><span>➕</span>MEDICAL SUPPORT</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 05 ROUTE -->
+<section class="section route-section grunge" id="rute">
+  <div class="inner">
+
+    <p class="kicker orange">EXPLORE THE COURSE</p>
+
+    <h2>RUTE <span class="orange">5K</span></h2>
+
+    <p class="route-subtitle">
+      BALADHIKA FUN RUN 2026 • KOTA MALANG
+    </p>
+
+    <div class="route-frame">
+      <img src="banner-rute-5k.png"
+           alt="Peta dan urutan rute Baladhika Fun Run 5K">
+    </div>
+
+    <p class="route-note">
+      Kenali jalur larimu dan persiapkan langkah
+      terbaik untuk menikmati pengalaman Fun Run 5K.
+      Ikuti informasi rute resmi dari panitia.
+    </p>
+
+  </div>
+</section>
+
+<!-- 06 MORE THAN JUST A RUN -->
+<section class="section more-section grunge" id="experience">
+  <div class="inner">
+
+    <p class="kicker orange">THE EXPERIENCE</p>
+
+    <h2>
+      <span>MORE THAN</span>
+      <span class="orange">JUST A RUN.</span>
+    </h2>
+
+    <p>
+      Bukan sekadar berlari sejauh lima kilometer.
+      Ini adalah tentang semangat, kebersamaan,
+      dan pengalaman yang akan selalu dikenang.
+      Setiap langkah membawa cerita,
+      setiap garis finis menjadi kebanggaan.
+    </p>
+
+  </div>
+</section>
+
+<!-- 07 READY TO RUN -->
+<section class="section ready-section" id="daftar">
+
+  <img class="runner-img ready-runner"
+       src="pelari-finish.png"
+       alt="Pelari menuju garis finis">
+
+  <div class="inner">
+    <div class="ready-text">
+
+      <span class="demo-pill">
+        WEBSITE DEMONSTRASI
+      </span>
+
       <h2>
-        MORE THAN<br>
-        <span>JUST A RUN.</span>
+        <span>READY</span>
+        <span>TO RUN?</span>
       </h2>
 
       <p>
-        Baladhika Fun Run 2026 menghadirkan
-        pengalaman berlari bersama dalam suasana
-        penuh semangat, kebersamaan, dan gaya hidup sehat.
+        Saatnya menjadi bagian dari
+        BALADHIKA FUN RUN 2026.
+        Siapkan semangatmu dan rasakan
+        pengalaman lari yang berbeda!
       </p>
+
+      <button class="btn btn-dark" id="openRegistration">
+        DAFTAR SEKARANG ↗
+      </button>
+
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- REGISTRATION DEMO -->
+</main>
 
-  <section class="registration" id="daftar">
-    <div>
-      <div class="demo-label">
-        WEBSITE DEMONSTRASI
+<!-- FOOTER -->
+<footer class="footer">
+  <h3>BALADHIKA FUN RUN 2026</h3>
+
+  <p>
+    6 Desember 2026 • Lapangan Rampal, Kota Malang
+  </p>
+
+  <div class="footer-links">
+    <a href="https://wa.me/6282320758805"
+       target="_blank" rel="noopener noreferrer">
+      WhatsApp: 0823-2075-8805
+    </a>
+
+    <a href="https://www.instagram.com/Bhaladhika_funrun2026/"
+       target="_blank" rel="noopener noreferrer">
+      Instagram: @Bhaladhika_funrun2026
+    </a>
+  </div>
+
+  <p>
+    © 2026 Baladhika Fun Run.
+    Website Demonstrasi — Belum menerima pembayaran.
+  </p>
+</footer>
+
+<!-- DEMO REGISTRATION MODAL -->
+<div class="modal" id="registrationModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="modalTitle"
+     aria-hidden="true">
+
+  <div class="modal-box">
+
+    <button class="close-modal"
+            id="closeRegistration"
+            aria-label="Tutup formulir">
+      ×
+    </button>
+
+    <h2 id="modalTitle">REGISTRATION DEMO</h2>
+
+    <p>
+      Formulir ini hanya untuk demonstrasi.
+      Jangan masukkan data pribadi sungguhan.
+      Tidak ada data yang dikirim, disimpan,
+      atau diproses sebagai pendaftaran resmi.
+    </p>
+
+    <form id="demoForm">
+
+      <div class="form-group">
+        <label for="demoName">Nama Peserta Contoh</label>
+        <input id="demoName"
+               type="text"
+               placeholder="Contoh: Peserta Demo"
+               required>
       </div>
 
-      <h2>READY TO RUN?</h2>
+      <div class="form-group">
+        <label for="demoCategory">Kategori</label>
+        <select id="demoCategory" required>
+          <option value="">Pilih kategori</option>
+          <option value="Early Bird - Rp125.000">
+            Early Bird - Rp125.000 (Simulasi)
+          </option>
+          <option value="Normal - Rp150.000">
+            Normal - Rp150.000 (Simulasi)
+          </option>
+        </select>
+      </div>
 
-      <p>
-        Pendaftaran dan pembayaran online
-        akan diaktifkan setelah sistem resmi
-        mendapatkan persetujuan.
-      </p>
+      <button class="btn" type="submit">
+        SIMULASIKAN PENDAFTARAN →
+      </button>
 
-      <a href="#home" class="registration-btn">
-        KEMBALI KE ATAS ↑
-      </a>
-    </div>
-  </section>
+    </form>
 
-  <!-- FOOTER -->
+    <div class="form-message" id="demoMessage"
+         role="status" aria-live="polite"></div>
 
-  <footer>
-    <h3>BALADHIKA FUN RUN 2026</h3>
+  </div>
+</div>
 
-    <p>
-      6 Desember 2026 • Lapangan Rampal, Kota Malang
-    </p>
+<!-- GSAP ANIMATION -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    <p>
-      WhatsApp:
-      <a href="https://wa.me/6282320758805">
-        0823-2075-8805
-      </a>
-    </p>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
 
-    <p>
-      Instagram:
-      <a href="https://www.instagram.com/Bhaladhika_funrun2026/">
-        @Bhaladhika_funrun2026
-      </a>
-    </p>
+  const modal=document.getElementById("registrationModal");
+  const openBtn=document.getElementById("openRegistration");
+  const closeBtn=document.getElementById("closeRegistration");
+  const form=document.getElementById("demoForm");
+  const message=document.getElementById("demoMessage");
+  let previousFocus=null;
 
-    <p>
-      © 2026 Baladhika Fun Run.
-      Website demonstrasi.
-    </p>
-  </footer>
+  function openModal(){
+    previousFocus=document.activeElement;
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";
+    closeBtn.focus();
+  }
 
-  <!-- GSAP ANIMATIONS -->
+  function closeModal(){
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+    document.body.style.overflow="";
+    if(previousFocus)previousFocus.focus();
+  }
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+  openBtn.addEventListener("click",openModal);
+  closeBtn.addEventListener("click",closeModal);
 
-  <script>
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+  modal.addEventListener("click",function(e){
+    if(e.target===modal)closeModal();
+  });
 
-    if (
-      typeof gsap !== "undefined" &&
-      typeof ScrollTrigger !== "undefined" &&
-      !reducedMotion
-    ) {
-      gsap.registerPlugin(ScrollTrigger);
+  document.addEventListener("keydown",function(e){
+    if(!modal.classList.contains("open"))return;
 
-      // Opening sequence
-      const intro = gsap.timeline({
-        defaults: { ease: "power3.out" }
-      });
-
-      intro.from(".eyebrow", {
-        y: 35,
-        opacity: 0,
-        duration: .7
-      });
-
-      intro.from(".hero-title", {
-        y: 100,
-        opacity: 0,
-        duration: 1
-      }, "-=.3");
-
-      intro.from(".subtitle", {
-        y: 30,
-        opacity: 0,
-        duration: .7
-      }, "-=.5");
-
-      // 5K AND RUNNERS REVEAL TOGETHER
-      intro.from(".hero-visual", {
-        y: 130,
-        opacity: 0,
-        duration: 1.3
-      }, "-=.7");
-
-      intro.from(".hero-btn", {
-        y: 25,
-        opacity: 0,
-        duration: .7
-      }, "-=.8");
-
-      // Group parallax keeps 5K and runners aligned
-      gsap.to(".hero-visual", {
-        y: -110,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-
-      gsap.to(".hero-content", {
-        y: -75,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-
-      gsap.to(".hero-shape", {
-        x: -65,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-
-      // Event date reveal
-      gsap.from(".event-title", {
-        y: 100,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: ".event-section",
-          start: "top 80%",
-          end: "top 30%",
-          scrub: 1
-        }
-      });
-
-      // Background number movement
-      gsap.to(".event-number", {
-        x: 90,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".event-section",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-
-      // Experience reveal
-      gsap.from(".experience-section h2", {
-        y: 100,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: ".experience-section",
-          start: "top 85%",
-          end: "top 35%",
-          scrub: 1
-        }
-      });
-
-      // Registration reveal
-      gsap.from(".registration h2", {
-        scale: .8,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: ".registration",
-          start: "top 80%",
-          end: "top 35%",
-          scrub: 1
-        }
-      });
+    if(e.key==="Escape"){
+      closeModal();
+      return;
     }
-  </script>
+
+    if(e.key==="Tab"){
+      const focusable=Array.from(
+        modal.querySelectorAll(
+          'button:not([disabled]),input:not([disabled]),select:not([disabled])'
+        )
+      );
+
+      const first=focusable[0];
+      const last=focusable[focusable.length-1];
+
+      if(e.shiftKey && document.activeElement===first){
+        e.preventDefault();
+        last.focus();
+      }else if(!e.shiftKey && document.activeElement===last){
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+
+    const name=document.getElementById("demoName").value.trim();
+    const category=document.getElementById("demoCategory").value;
+
+    if(!name || !category)return;
+
+    message.replaceChildren();
+
+    const title=document.createElement("strong");
+    title.textContent="SIMULASI BERHASIL";
+
+    const detail=document.createElement("p");
+    detail.textContent=
+      "Peserta contoh: "+name+
+      " | Kategori: "+category+
+      ". Ini hanya tampilan simulasi. Tidak ada pendaftaran atau pembayaran sungguhan.";
+
+    message.append(title,detail);
+    message.classList.add("show");
+  });
+
+  const reducedMotion=window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  if(
+    reducedMotion ||
+    typeof gsap==="undefined" ||
+    typeof ScrollTrigger==="undefined"
+  )return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // HERO OPENING
+  const intro=gsap.timeline({
+    defaults:{ease:"power3.out"}
+  });
+
+  intro.from(".hero-text .kicker",{
+    y:35,
+    opacity:0,
+    duration:.7
+  });
+
+  intro.from(".hero-text h1",{
+    y:100,
+    opacity:0,
+    duration:1
+  },"-=.3");
+
+  // 5K and runners appear together
+  intro.from(".hero-visual",{
+    y:110,
+    opacity:0,
+    duration:1.3
+  },"-=.65");
+
+  intro.from(".hero-text .tagline",{
+    y:25,
+    opacity:0,
+    duration:.6
+  },"-=.7");
+
+  intro.from(".hero-text .btn",{
+    y:25,
+    opacity:0,
+    duration:.6
+  },"-=.4");
+
+  // HERO PARALLAX
+  gsap.to(".hero-visual",{
+    y:-100,
+    ease:"none",
+    scrollTrigger:{
+      trigger:".hero",
+      start:"top top",
+      end:"bottom top",
+      scrub:1
+    }
+  });
+
+  gsap.to(".hero-text",{
+    y:-65,
+    ease:"none",
+    scrollTrigger:{
+      trigger:".hero",
+      start:"top top",
+      end:"bottom top",
+      scrub:1
+    }
+  });
+
+  // DATE REVEAL
+  gsap.from(".date-text",{
+    y:75,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".date-section",
+      start:"top 78%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  gsap.from(".date-runner",{
+    x:100,
+    opacity:0,
+    duration:1.2,
+    scrollTrigger:{
+      trigger:".date-section",
+      start:"top 78%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  // PRICE REVEAL
+  gsap.from(".price-col",{
+    y:65,
+    opacity:0,
+    duration:1,
+    stagger:.2,
+    scrollTrigger:{
+      trigger:".price-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  gsap.from(".price-runner",{
+    y:100,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".price-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  // BENEFITS
+  gsap.from(".benefit-section h2",{
+    y:65,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".benefit-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  // ROUTE
+  gsap.from(".route-frame",{
+    y:75,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".route-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  // MORE THAN
+  gsap.from(".more-section h2",{
+    y:95,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".more-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  // READY
+  gsap.from(".ready-text",{
+    x:65,
+    opacity:0,
+    duration:1,
+    scrollTrigger:{
+      trigger:".ready-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+  gsap.from(".ready-runner",{
+    x:-80,
+    opacity:0,
+    duration:1.2,
+    scrollTrigger:{
+      trigger:".ready-section",
+      start:"top 75%",
+      toggleActions:"play none none reverse"
+    }
+  });
+
+});
+</script>
 
 </body>
 </html>
