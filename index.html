@@ -3,10 +3,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Baladhika Fun Run 2026</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -15,61 +17,299 @@
       box-sizing: border-box;
     }
 
-    body {
-      background: #ff4d0a;
-      color: white;
-      font-family: 'Inter', sans-serif;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .hero {
-      min-height: 100vh;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #111;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* NAVIGATION */
+    .navbar {
+      position: absolute;
+      z-index: 100;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 25px 6%;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
+    }
+
+    .logo {
+      font-family: 'Anton', sans-serif;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .logo span {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    .nav-button {
+      background: #111;
+      color: white;
+      padding: 13px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      min-height: 650px;
+      position: relative;
+      background: #ff4d0a;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 60vw;
+      height: 65vh;
+      background: #0647e8;
+      right: -12%;
+      top: 20%;
+      transform: rotate(-18deg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      padding: 0 6%;
+      margin-top: -80px;
+    }
+
+    .eyebrow {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 12px;
+      margin-bottom: 15px;
+    }
+
+    .hero-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(75px, 12vw, 210px);
+      line-height: 0.95;
+      white-space: nowrap;
+      letter-spacing: -2px;
+    }
+
+    .hero-title span {
+      color: #ffb05b;
+    }
+
+    .subtitle {
+      margin-top: 25px;
+      font-size: 12px;
+      letter-spacing: 4px;
+      font-weight: 600;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      margin-top: 30px;
+      background: #111;
+      padding: 18px 35px;
+      border-radius: 40px;
+      color: white;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /* RUNNER IMAGE */
+    .runner {
+      position: absolute;
+      z-index: 10;
+      height: 90%;
+      width: auto;
+      max-width: none;
+      bottom: -10%;
+      right: 2%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 35px;
+      left: 6%;
+      z-index: 20;
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+
+    /* SECOND SECTION */
+    .section-two {
+      height: 100vh;
+      background: #111;
+      display: flex;
       justify-content: center;
+      align-items: center;
       text-align: center;
       padding: 30px;
     }
 
-    .hero h2 {
-      font-size: 20px;
-      letter-spacing: 8px;
-      margin-bottom: 10px;
-    }
-
-    .hero h1 {
+    .section-two h2 {
       font-family: 'Anton', sans-serif;
-      font-size: clamp(70px, 13vw, 200px);
+      font-size: clamp(55px, 10vw, 150px);
       line-height: 1;
     }
 
-    .hero p {
-      margin-top: 20px;
-      font-size: 14px;
-      letter-spacing: 3px;
+    .section-two span {
+      color: #ff4d0a;
     }
 
-    .btn {
-      margin-top: 35px;
-      padding: 16px 35px;
-      background: #111;
-      color: white;
-      text-decoration: none;
-      border-radius: 40px;
-      font-weight: bold;
+    @media (max-width: 768px) {
+      .hero {
+        min-height: 700px;
+      }
+
+      .hero-content {
+        margin-top: -230px;
+      }
+
+      .hero-title {
+        font-size: 18vw;
+        white-space: normal;
+      }
+
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 6px;
+      }
+
+      .runner {
+        height: 65%;
+        right: -20%;
+        bottom: -5%;
+      }
+
+      .subtitle {
+        font-size: 9px;
+        letter-spacing: 2px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <section class="hero">
-    <h2>EXPERIENCE</h2>
-    <h1>FUN RUN 5K</h1>
-    <p>BALADHIKA FUN RUN 2026</p>
-    <p>6 DESEMBER 2026 | LAPANGAN RAMPAL MALANG</p>
-    <a href="#daftar" class="btn">DAFTAR SEKARANG →</a>
+  <nav class="navbar">
+    <div class="logo">
+      BALADHIKA
+      <span>FUN RUN 2026</span>
+    </div>
+
+    <a href="#daftar" class="nav-button">
+      DAFTAR SEKARANG ↗
+    </a>
+  </nav>
+
+  <section class="hero" id="home">
+
+    <div class="hero-content">
+      <div class="eyebrow">EXPERIENCE</div>
+
+      <h1 class="hero-title">
+        FUN RUN <span>5K</span>
+      </h1>
+
+      <p class="subtitle">
+        ONE RUN • ONE SPIRIT • ONE EXPERIENCE
+      </p>
+
+      <a href="#daftar" class="hero-btn">
+        DAFTAR SEKARANG →
+      </a>
+    </div>
+
+    <img
+      src="pelari-hero.png"
+      class="runner"
+      alt="Pelari Baladhika Fun Run 2026"
+    >
+
+    <div class="scroll-hint">
+      ↓ SCROLL TO EXPLORE
+    </div>
+
   </section>
+
+  <section class="section-two" id="daftar">
+    <h2>
+      MORE THAN<br>
+      <span>JUST A RUN.</span>
+    </h2>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from(".hero-title", {
+      y: 120,
+      opacity: 0,
+      duration: 1.3,
+      ease: "power4.out"
+    });
+
+    gsap.from(".runner", {
+      y: 200,
+      opacity: 0,
+      duration: 1.5,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.to(".runner", {
+      y: -180,
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1
+      }
+    });
+
+    gsap.to(".hero-content", {
+      y: -100,
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1
+      }
+    });
+
+    gsap.from(".section-two h2", {
+      y: 120,
+      opacity: 0,
+      scrollTrigger: {
+        trigger: ".section-two",
+        start: "top 80%",
+        end: "top 30%",
+        scrub: 1
+      }
+    });
+  </script>
 
 </body>
 </html>
