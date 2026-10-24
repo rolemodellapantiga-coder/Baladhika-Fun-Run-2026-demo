@@ -1038,6 +1038,342 @@
         }
       });
 
+    
+    // ==============================================
+    // BALADHIKA FUN RUN 2026
+    // REKAP PESANAN DAN PEMBAYARAN KHUSUS OWNER
+    // ==============================================
+
+    const ordersSection = document.createElement("section");
+
+    ordersSection.innerHTML = `
+      <h2 class="section-title">Rekap Pesanan dan Pembayaran</h2>
+
+      <div class="card">
+        <p class="info">
+          Data pesanan diambil langsung dari Supabase.
+          Status PENDING_DEMO bukan bukti pembayaran lunas.
+        </p>
+
+        <div class="toolbar" style="margin-top:18px">
+          <input
+            type="search"
+            id="orderSearchInput"
+            placeholder="Cari nomor pesanan atau nama pemesan"
+          >
+          <button class="btn" id="orderSearchButton" type="button">
+            Cari Pesanan
+          </button>
+          <button class="btn" id="orderRefreshButton" type="button">
+            Refresh Pesanan
+          </button>
+          <button class="btn btn-orange" id="orderExportButton" type="button">
+            Export Pesanan (CSV)
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Nomor Pesanan</th>
+                <th>Nama Pemesan</th>
+                <th>Early Bird</th>
+                <th>Normal</th>
+                <th>Jumlah Peserta</th>
+                <th>Total Tagihan</th>
+                <th>Metode Pembayaran</th>
+                <th>Status Pembayaran</th>
+                <th>Tanggal Pesanan</th>
+              </tr>
+            </thead>
+            <tbody id="orderRows">
+              <tr>
+                <td colspan="10">Memuat data pesanan...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span id="orderPageInfo" class="info">—</span>
+          <div>
+            <button class="btn" id="orderPrevButton" type="button">
+              Sebelumnya
+            </button>
+            <button class="btn" id="orderNextButton" type="button">
+              Berikutnya
+            </button>
+          </div>
+        </div>
+
+        <p id="orderError" class="error" role="alert"></p>
+      </div>
+    `;
+
+    // Tempatkan rekap pesanan setelah daftar peserta.
+    document.querySelector(".container").appendChild(ordersSection);
+
+    const ORDER_PAGE_SIZE = 50;
+    let orderPage = 0;
+    let orderSearch = "";
+    let orderTotal = 0;
+
+    function renderOrders(items) {
+      const tbody = document.getElementById("orderRows");
+      tbody.replaceChildren();
+
+      if (!items.length) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 10;
+        cell.textContent = "Tidak ada pesanan yang ditemukan.";
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+      }
+
+      items.forEach((order, index) => {
+        const row = document.createElement("tr");
+
+        addCell(row, orderPage * ORDER_PAGE_SIZE + index + 1);
+        addCell(row, order.order_number);
+        addCell(row, order.buyer_name);
+        addCell(row, order.early_bird_qty);
+        addCell(row, order.normal_qty);
+        addCell(row, order.total_participants);
+        addCell(row, rupiah(order.total_amount));
+        addCell(row, order.payment_method);
+
+        const statusCell = addCell(row, "");
+        const statusBadge = document.createElement("span");
+
+        statusBadge.className = "status" +
+          (order.payment_status === "PAID" ? " paid" : "");
+
+        statusBadge.textContent = order.payment_status || "-";
+        statusCell.appendChild(statusBadge);
+
+        addCell(row, displayDate(order.created_at));
+        tbody.appendChild(row);
+      });
+    }
+
+    async function loadOrders() {
+      const result = await rpc("get_owner_orders", {
+        p_search: orderSearch,
+        p_limit: ORDER_PAGE_SIZE,
+        p_offset: orderPage * ORDER_PAGE_SIZE
+      });
+
+      const items = Array.isArray(result.orders)
+        ? result.orders
+        : [];
+
+      orderTotal = Number(result.total || 0);
+      renderOrders(items);
+
+      const start = orderTotal
+        ? orderPage * ORDER_PAGE_SIZE + 1
+        : 0;
+
+      const end = Math.min(
+        (orderPage + 1) * ORDER_PAGE_SIZE,
+        orderTotal
+      );
+
+      document.getElementById("orderPageInfo").textContent =
+        "Menampilkan " + numberFormat(start) +
+        "–" + numberFormat(end) +
+        " dari " + numberFormat(orderTotal) + " pesanan";
+
+      document.getElementById("orderPrevButton").disabled =
+        orderPage === 0;
+
+      document.getElementById("orderNextButton").disabled =
+        (orderPage + 1) * ORDER_PAGE_SIZE >= orderTotal;
+
+      document.getElementById("orderError").textContent = "";
+    }
+
+    async function refreshOrders() {
+      if (!accessToken) return;
+
+      try {
+        await loadOrders();
+      } catch (error) {
+        document.getElementById("orderError").textContent =
+          "Gagal memuat pesanan: " + error.message;
+      }
+    }
+
+    // Muat pesanan setiap kali dashboard diperbarui.
+    const refreshDashboardBeforeOrders = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await refreshDashboardBeforeOrders();
+
+      if (!accessToken) return;
+
+      await refreshOrders();
+    };
+
+    document.getElementById("orderSearchButton")
+      .addEventListener("click", () => {
+        orderSearch =
+          document.getElementById("orderSearchInput").value.trim();
+        orderPage = 0;
+        refreshOrders();
+      });
+
+    document.getElementById("orderSearchInput")
+      .addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          orderSearch = event.target.value.trim();
+          orderPage = 0;
+          refreshOrders();
+        }
+      });
+
+    document.getElementById("orderRefreshButton")
+      .addEventListener("click", refreshOrders);
+
+    document.getElementById("orderPrevButton")
+      .addEventListener("click", () => {
+        if (orderPage > 0) {
+          orderPage--;
+          refreshOrders();
+        }
+      });
+
+    document.getElementById("orderNextButton")
+      .addEventListener("click", () => {
+        if ((orderPage + 1) * ORDER_PAGE_SIZE < orderTotal) {
+          orderPage++;
+          refreshOrders();
+        }
+      });
+
+    // EXPORT SELURUH PESANAN KE CSV
+    document.getElementById("orderExportButton")
+      .addEventListener("click", async () => {
+        const button = document.getElementById("orderExportButton");
+
+        button.disabled = true;
+        button.textContent = "Menyiapkan CSV...";
+
+        try {
+          const allOrders = [];
+          const batchSize = 100;
+          let offset = 0;
+          let expectedTotal = null;
+
+          while (true) {
+            const result = await rpc("get_owner_orders", {
+              p_search: "",
+              p_limit: batchSize,
+              p_offset: offset
+            });
+
+            const batch = Array.isArray(result.orders)
+              ? result.orders
+              : [];
+
+            const total = Number(result.total);
+
+            if (!Number.isSafeInteger(total) || total < 0) {
+              throw new Error("Jumlah pesanan tidak valid.");
+            }
+
+            if (expectedTotal === null) {
+              expectedTotal = total;
+            } else if (expectedTotal !== total) {
+              throw new Error(
+                "Jumlah pesanan berubah saat ekspor. Ulangi ekspor."
+              );
+            }
+
+            allOrders.push(...batch);
+            offset += batch.length;
+
+            if (allOrders.length >= expectedTotal) break;
+
+            if (batch.length === 0) {
+              throw new Error("Pengambilan pesanan terhenti.");
+            }
+          }
+
+          const headers = [
+            "No",
+            "Nomor Pesanan",
+            "Nama Pemesan",
+            "Early Bird",
+            "Normal",
+            "Jumlah Peserta",
+            "Total Tagihan",
+            "Mata Uang",
+            "Metode Pembayaran",
+            "Status Pembayaran",
+            "Tanggal Pesanan",
+            "Tanggal Lunas"
+          ];
+
+          const rows = allOrders.map((o, index) => [
+            index + 1,
+            o.order_number,
+            o.buyer_name,
+            o.early_bird_qty,
+            o.normal_qty,
+            o.total_participants,
+            o.total_amount,
+            o.currency,
+            o.payment_method,
+            o.payment_status,
+            displayDate(o.created_at),
+            displayDate(o.paid_at)
+          ]);
+
+          const csv = "\uFEFF" +
+            [headers, ...rows]
+              .map(row => row.map(csvCell).join(","))
+              .join("\r\n");
+
+          const blob = new Blob([csv], {
+            type: "text/csv;charset=utf-8"
+          });
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+
+          link.href = url;
+          link.download =
+            "Baladhika_Fun_Run_2026_Rekap_Pesanan_" +
+            new Date().toISOString().slice(0, 10) +
+            ".csv";
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+          alert(
+            "Export berhasil. " +
+            allOrders.length +
+            " pesanan dimasukkan ke file CSV."
+          );
+
+        } catch (error) {
+          alert("Export pesanan gagal: " + error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Export Pesanan (CSV)";
+        }
+      });
+
+
   </script>
 </body>
 </html>
