@@ -921,9 +921,10 @@ section{position:relative;overflow:hidden;isolation:isolate}
         </button>
       </div>
 
+      <div id="registrationResult" class="notice" role="status" aria-live="polite" hidden></div>
       <p class="notice">
-        MODE DEMO: Tidak menyimpan data peserta,
-        tidak mengirim email, dan tidak memproses pembayaran.
+        MODE DEMO: Data contoh yang dikirim akan disimpan ke Supabase.
+        Tidak ada email otomatis atau transaksi pembayaran nyata.
       </p>
     </div>
   </div>
@@ -1667,22 +1668,107 @@ function selectPayment(method){
 }
 function updatePaymentButton(){
   $("paymentButton").disabled=
+    registrationSubmitting||registrationCompleted||
     !selectedPayment||!$("agreeRules").checked;
 }
 $("agreeRules").addEventListener("change",updatePaymentButton);
 
-function previewPayment(){
+let registrationSubmitting=false;
+let registrationCompleted=false;
+
+function showRegistrationResult(message, success=false){
+  const target=$("registrationResult");
+  target.replaceChildren();
+  target.hidden=false;
+  target.style.borderLeftColor=success?"#77d99b":"#ff691f";
+  const lines=String(message).split("\n");
+  lines.forEach((line,index)=>{
+    if(index)target.append(document.createElement("br"));
+    target.append(document.createTextNode(line));
+  });
+  target.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+async function previewPayment(){
+  if(registrationSubmitting||registrationCompleted)return;
   if(!$("agreeRules").checked||!selectedPayment){
     alert("Setujui peraturan dan pilih metode pembayaran.");
     return;
   }
-  alert(
-    "SIMULASI PENDAFTARAN SELESAI.\n\n"+
-    "MODE DEMO / TEST.\n\n"+
-    "Tidak ada data yang dikirim atau disimpan.\n"+
-    "Tidak ada email yang dikirim.\n"+
-    "Tidak ada pembayaran nyata."
-  );
+  if(!participantData.length||participantData.length!==totalPeople()){
+    alert("Jumlah peserta tidak sesuai. Silakan periksa formulir.");
+    return;
+  }
+
+  const button=$("paymentButton");
+  registrationSubmitting=true;
+  button.disabled=true;
+  button.textContent="MENYIMPAN PENDAFTARAN...";
+  $("registrationResult").hidden=true;
+
+  try{
+    // Periksa kembali kategori yang masih tersedia.
+    const statusResponse=await fetch("/api/ticket-status",{cache:"no-store"});
+    if(!statusResponse.ok)throw new Error("Status tiket belum dapat diperiksa.");
+    const currentStatus=await statusResponse.json();
+    const selectedCategory=qty.early>0?"early_bird":"normal";
+    if(currentStatus.success!==true ||
+       currentStatus[selectedCategory]?.can_register!==true){
+      throw new Error("Kategori tiket sudah tidak tersedia. Silakan kembali ke pilihan tiket.");
+    }
+
+    const payload={
+      buyer:{
+        name:$("buyerName").value.trim(),
+        email:$("buyerEmail").value.trim(),
+        phone:$("buyerPhone").value.trim()
+      },
+      participants:participantData.map(person=>({
+        ...person,
+        ticket_category:person.category==="early"?"EARLY_BIRD":"NORMAL"
+      })),
+      payment_method:selectedPayment
+    };
+
+    const response=await fetch("/api/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload),
+      cache:"no-store"
+    });
+    const data=await response.json().catch(()=>null);
+    if(!response.ok||data?.success!==true){
+      throw new Error(data?.error||"Pendaftaran gagal disimpan. Silakan coba lagi.");
+    }
+
+    registrationCompleted=true;
+    const numbers=Array.isArray(data.registration_numbers)?data.registration_numbers:[];
+    const lines=[
+      "PENDAFTARAN DEMO BERHASIL DISIMPAN",
+      "Nomor pesanan: "+(data.order_number||"-"),
+      "Jumlah peserta: "+data.total_participants,
+      "Total simulasi: "+rupiah(data.total_amount),
+      "Status: PENDING_DEMO",
+      "",
+      "NOMOR REGISTRASI PESERTA:"
+    ];
+    numbers.forEach((number,index)=>{
+      const person=participantData[index];
+      lines.push((index+1)+". "+person.first_name+" "+person.last_name+" — "+number);
+    });
+    lines.push("", "DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.",
+      "Simpan nomor pesanan dan registrasi untuk pengujian. Tidak ada email yang dikirim.");
+    showRegistrationResult(lines.join("\n"),true);
+    button.textContent="PENDAFTARAN DEMO TERSIMPAN";
+    // Token pembayaran DEMO sengaja tidak ditampilkan atau disimpan di browser.
+    await refreshTicketStatus();
+  }catch(error){
+    showRegistrationResult(error?.message||"Terjadi kesalahan sistem.");
+    button.textContent="COBA SIMPAN PENDAFTARAN →";
+  }finally{
+    registrationSubmitting=false;
+    button.disabled=registrationCompleted||!selectedPayment||!$("agreeRules").checked;
+  }
 }
 
 /* GSAP PARALLAX */
