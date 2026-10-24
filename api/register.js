@@ -4,13 +4,15 @@ const crypto = require("node:crypto");
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+const MAX_PARTICIPANTS_PER_ORDER = 20;
+
 const PRICES = {
   EARLY_BIRD: 125000,
   NORMAL: 150000,
 };
 
 function send(res, status, data) {
-  res.status(status).json(data);
+  return res.status(status).json(data);
 }
 
 function clean(value, max = 200) {
@@ -20,38 +22,77 @@ function clean(value, max = 200) {
 }
 
 function makeCode(prefix) {
-  return `${prefix}-${crypto.randomBytes(8).toString("hex").toUpperCase()}`;
+  return (
+    prefix +
+    "-" +
+    crypto.randomBytes(10).toString("hex").toUpperCase()
+  );
 }
 
-async function supabase(path, options = {}) {
+function validEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validPhone(phone) {
+  return /^[+0-9()\s-]{8,25}$/.test(phone);
+}
+
+async function createRegistration(order, participants) {
   const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${path}`,
+    `${SUPABASE_URL}/rest/v1/rpc/create_demo_registration`,
     {
-      ...options,
+      method: "POST",
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=representation",
-        ...options.headers,
       },
+      body: JSON.stringify({
+        p_order: order,
+        p_participants: participants,
+      }),
     }
   );
 
-  const data = await response.json().catch(() => null);
+  const result = await response.json().catch(() => null);
 
   if (!response.ok) {
-    console.error("Database request failed", response.status);
-    throw new Error("DATABASE_ERROR");
+    console.error(
+      "Supabase registration error:",
+      response.status,
+      result?.code || "UNKNOWN"
+    );
+
+    const message = String(result?.message || "");
+
+    if (
+      message.includes("Kuota total 2.000") ||
+      message.includes("Kuota total")
+    ) {
+      return {
+        error: "Kuota gabungan 2.000 peserta sudah penuh.",
+        status: 409,
+      };
+    }
+
+    return {
+      error: "Pendaftaran gagal disimpan. Silakan coba lagi.",
+      status: 500,
+    };
   }
 
-  return data;
+  return { data: result };
 }
 
 module.exports = async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return send(res, 405, { error: "Metode tidak diizinkan." });
+
+    return send(res, 405, {
+      error: "Metode tidak diizinkan.",
+    });
   }
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -61,18 +102,27 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const body = typeof req.body === "string"
-      ? JSON.parse(req.body)
-      : req.body;
+    const body =
+      typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : req.body;
 
-    const buyer = body?.buyer || {};
-    const participants = body?.participants;
-
-    if (!Array.isArray(participants) ||
-        participants.length < 1 ||
-        participants.length > 20) {
+    if (!body || typeof body !== "object") {
       return send(res, 400, {
-        error: "Jumlah peserta harus 1 sampai 20 orang.",
+        error: "Data pendaftaran tidak valid.",
+      });
+    }
+
+    const buyer = body.buyer || {};
+    const inputParticipants = body.participants;
+
+    if (
+      !Array.isArray(inputParticipants) ||
+      inputParticipants.length < 1 ||
+      inputParticipants.length > MAX_PARTICIPANTS_PER_ORDER
+    ) {
+      return send(res, 400, {
+        error: "Jumlah peserta per pesanan harus 1 sampai 20 orang.",
       });
     }
 
@@ -82,24 +132,49 @@ module.exports = async function handler(req, res) {
 
     if (
       !buyerName ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail) ||
-      !buyerPhone
+      !validEmail(buyerEmail) ||
+      !validPhone(buyerPhone)
     ) {
       return send(res, 400, {
-        error: "Nama, email, dan nomor HP pemesan wajib valid.",
+        error: "Nama, email, atau nomor HP pemesan tidak valid.",
       });
     }
 
-    const rows = [];
+    const paymentMethod = clean(
+      body.payment_method,
+      30
+    ).toUpperCase();
+
+    if (
+      !["QRIS_DEMO", "VA_MANDIRI_DEMO"].includes(paymentMethod)
+    ) {
+      return send(res, 400, {
+        error: "Pilih metode pembayaran simulasi.",
+      });
+    }
+
+    const participants = [];
     let earlyQty = 0;
     let normalQty = 0;
 
-    for (const person of participants) {
-      const category = clean(person.category).toUpperCase();
-
-      if (!["EARLY_BIRD", "NORMAL"].includes(category)) {
+    for (const person of inputParticipants) {
+      if (!person || typeof person !== "object") {
         return send(res, 400, {
-          error: "Kategori tiket tidak valid.",
+          error: "Data peserta tidak valid.",
+        });
+      }
+
+      const category = clean(
+        person.category || person.ticket_category,
+        30
+      ).toUpperCase();
+
+      if (
+        category !== "EARLY_BIRD" &&
+        category !== "NORMAL"
+      ) {
+        return send(res, 400, {
+          error: "Kategori tiket peserta tidak valid.",
         });
       }
 
@@ -107,38 +182,49 @@ module.exports = async function handler(req, res) {
       const lastName = clean(person.last_name);
       const bibName = clean(person.bib_name, 40);
       const emergencyName = clean(person.emergency_name);
-      const emergencyPhone = clean(person.emergency_phone, 30);
+      const emergencyPhone = clean(
+        person.emergency_phone,
+        30
+      );
 
       if (
         !firstName ||
         !lastName ||
         !bibName ||
         !emergencyName ||
-        !emergencyPhone
+        !validPhone(emergencyPhone)
       ) {
         return send(res, 400, {
-          error: "Identitas dan kontak darurat peserta wajib diisi.",
+          error:
+            "Nama, nama BIB, dan kontak darurat peserta wajib diisi.",
         });
       }
 
-      if (category === "EARLY_BIRD") earlyQty++;
-      else normalQty++;
+      if (category === "EARLY_BIRD") {
+        earlyQty++;
+      } else {
+        normalQty++;
+      }
 
-      rows.push({
+      participants.push({
         registration_number: makeCode("BFR"),
         ticket_category: category,
+
         first_name: firstName,
         last_name: lastName,
         bib_name: bibName,
+
         birth_date: clean(person.birth_date, 10) || null,
         gender: clean(person.gender, 30) || null,
         jersey_size: clean(person.jersey_size, 10) || null,
         blood_type: clean(person.blood_type, 5) || null,
         phone: clean(person.phone, 30) || null,
+
         emergency_name: emergencyName,
         emergency_phone: emergencyPhone,
         emergency_relation:
           clean(person.emergency_relation, 50) || null,
+
         city: clean(person.city, 100) || null,
         medical_notes:
           clean(person.medical_notes, 1000) || null,
@@ -149,86 +235,81 @@ module.exports = async function handler(req, res) {
       earlyQty * PRICES.EARLY_BIRD +
       normalQty * PRICES.NORMAL;
 
-    const method = clean(body.payment_method).toUpperCase();
-
-    if (!["QRIS_DEMO", "VA_MANDIRI_DEMO"].includes(method)) {
-      return send(res, 400, {
-        error: "Pilih metode pembayaran demo.",
-      });
-    }
-
-    const token = crypto.randomBytes(32).toString("hex");
-    const tokenHash = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
-
     const orderNumber = makeCode("BFR-ORDER");
 
-    const createdOrders = await supabase("orders", {
-      method: "POST",
-      body: JSON.stringify({
-        order_number: orderNumber,
-        buyer_name: buyerName,
-        buyer_email: buyerEmail,
-        buyer_phone: buyerPhone,
-        early_bird_qty: earlyQty,
-        normal_qty: normalQty,
-        total_amount: totalAmount,
-        payment_method: method,
-        payment_status: "PENDING_DEMO",
-        demo_payment_token_hash: tokenHash,
-      }),
-    });
+    // Token acak untuk konfirmasi pembayaran demo.
+    // Database hanya menyimpan hash token.
+    const paymentToken = crypto.randomBytes(32).toString("hex");
 
-    const order = createdOrders?.[0];
+    const paymentTokenHash = crypto
+      .createHash("sha256")
+      .update(paymentToken)
+      .digest("hex");
 
-    if (!order?.id) {
-      throw new Error("ORDER_CREATE_FAILED");
-    }
+    const order = {
+      order_number: orderNumber,
 
-    const participantRows = rows.map((row) => ({
-      ...row,
-      order_id: order.id,
-    }));
+      buyer_name: buyerName,
+      buyer_email: buyerEmail,
+      buyer_phone: buyerPhone,
 
-    try {
-      await supabase("participants", {
-        method: "POST",
-        body: JSON.stringify(participantRows),
+      early_bird_qty: earlyQty,
+      normal_qty: normalQty,
+
+      total_amount: totalAmount,
+
+      payment_method: paymentMethod,
+      demo_payment_token_hash: paymentTokenHash,
+    };
+
+    const result = await createRegistration(
+      order,
+      participants
+    );
+
+    if (result.error) {
+      return send(res, result.status, {
+        success: false,
+        error: result.error,
       });
-    } catch (error) {
-      // Batalkan pesanan yang gagal menyimpan peserta.
-      try {
-        await supabase(
-          `orders?id=eq.${encodeURIComponent(order.id)}`,
-          { method: "DELETE" }
-        );
-      } catch {
-        console.error("Order cleanup failed");
-      }
-      throw error;
     }
 
     return send(res, 201, {
       success: true,
       demo: true,
-      message: "Pendaftaran demo berhasil dibuat.",
-      order_number: orderNumber,
-      total_participants: participants.length,
-      total_amount: totalAmount,
-      currency: "IDR",
-      payment_method: method,
-      payment_status: "PENDING_DEMO",
-      payment_token: token,
-      notice: "DEMO - BUKAN BUKTI PEMBAYARAN SAH",
-    });
 
+      message: "Pendaftaran simulasi berhasil dibuat.",
+
+      order_number: result.data.order_number,
+
+      early_bird_qty: earlyQty,
+      normal_qty: normalQty,
+
+      total_participants:
+        result.data.total_participants,
+
+      total_amount: result.data.total_amount,
+
+      currency: "IDR",
+
+      payment_method: paymentMethod,
+      payment_status: "PENDING_DEMO",
+
+      payment_token: paymentToken,
+
+      notice:
+        "DEMO - BUKAN BUKTI PEMBAYARAN SAH",
+    });
   } catch (error) {
-    console.error("Registration error:", error.message);
+    console.error(
+      "Registration handler error:",
+      error.message
+    );
 
     return send(res, 500, {
-      error: "Pendaftaran belum dapat diproses. Silakan coba lagi.",
+      success: false,
+      error:
+        "Terjadi kesalahan sistem. Silakan coba kembali.",
     });
   }
 };
