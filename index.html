@@ -1725,6 +1725,7 @@ async function previewPayment(){
       },
       participants:participantData.map(person=>({
         ...person,
+        category:person.category==="early"?"EARLY_BIRD":"NORMAL",
         ticket_category:person.category==="early"?"EARLY_BIRD":"NORMAL"
       })),
       payment_method:selectedPayment
