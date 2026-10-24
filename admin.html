@@ -1,0 +1,727 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard Admin | Baladhika Fun Run 2026</title>
+  <style>
+    :root {
+      --army: #263d2b;
+      --army-dark: #17271c;
+      --orange: #f08b35;
+      --bg: #f3f5f1;
+      --white: #ffffff;
+      --muted: #66736a;
+      --border: #e0e6df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: #202b22;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
+    .login-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #17271c, #3a553b);
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 35px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 20px 60px #0003;
+    }
+    .brand {
+      font-weight: 900;
+      font-size: 23px;
+      color: var(--army);
+      letter-spacing: .4px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 10px 0 25px;
+      line-height: 1.6;
+    }
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cdd6cd;
+      border-radius: 9px;
+      outline-color: var(--army);
+    }
+    .btn {
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--army);
+      color: white;
+      font-weight: bold;
+    }
+    .btn:hover { background: #3b5940; }
+    .btn-orange { background: var(--orange); color: #202b22; }
+    .btn-orange:hover { background: #e7a15f; }
+    .btn-full { width: 100%; margin-top: 22px; }
+    .error {
+      color: #ae3030;
+      font-size: 13px;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .header {
+      background: var(--army-dark);
+      color: white;
+      padding: 22px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .header h1 { margin: 0; font-size: 21px; }
+    .header p { margin: 6px 0 0; color: #cbd8cc; font-size: 13px; }
+    .container {
+      max-width: 1350px;
+      margin: auto;
+      padding: 30px 20px 70px;
+    }
+    .section-title {
+      margin: 25px 0 15px;
+      font-size: 19px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: white;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .card .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .card .value {
+      font-size: 29px;
+      font-weight: 900;
+      margin-top: 12px;
+      color: var(--army);
+      overflow-wrap: anywhere;
+    }
+    .card .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+    .quota-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .quota-track {
+      background: #e8eee7;
+      height: 12px;
+      border-radius: 30px;
+      overflow: hidden;
+      margin: 15px 0 9px;
+    }
+    .quota-fill {
+      background: var(--orange);
+      height: 100%;
+      width: 0;
+      transition: width .3s;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .toolbar input { flex: 1; min-width: 200px; }
+    .table-wrap {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    th, td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e9ede8;
+    }
+    th { background: #edf1eb; color: var(--army); }
+    tr:last-child td { border-bottom: 0; }
+    .status {
+      display: inline-block;
+      border-radius: 30px;
+      padding: 5px 9px;
+      background: #fff0d9;
+      color: #865113;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .paid { background: #e0f3e4; color: #1e7234; }
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .pagination button:disabled { opacity: .4; cursor: default; }
+    .info {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .notice {
+      padding: 13px 15px;
+      background: #fff5e6;
+      border: 1px solid #f1d6ab;
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+    @media (max-width: 850px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quota-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .cards { grid-template-columns: 1fr; }
+      .login-card { padding: 25px; }
+      .header h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">BALADHIKA FUN RUN 2026</div>
+      <p class="subtitle">
+        Dashboard Admin Panitia<br>
+        Akses khusus akun OWNER
+      </p>
+      <form id="loginForm">
+        <label for="email">Email OWNER</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          required
+          placeholder="Email OWNER"
+        >
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          placeholder="Password akun Supabase"
+        >
+        <button class="btn btn-full" id="loginButton" type="submit">
+          MASUK DASHBOARD
+        </button>
+        <p id="loginError" class="error" role="alert"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboardScreen" class="hidden">
+    <header class="header">
+      <div>
+        <h1>BALADHIKA FUN RUN 2026</h1>
+        <p>Dashboard Admin Panitia — OWNER</p>
+      </div>
+      <button class="btn btn-orange" id="logoutButton">
+        Logout
+      </button>
+    </header>
+
+    <main class="container">
+      <p class="info" id="ownerInfo"></p>
+
+      <div class="notice">
+        Mode DEMO: status PENDING_DEMO bukan bukti pembayaran.
+        Dashboard ini hanya membaca data dan tidak mengubah status
+        pembayaran atau kuota tiket.
+      </div>
+
+      <h2 class="section-title">Ringkasan Pendaftaran</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="label">Total Peserta</div>
+          <div class="value" id="totalParticipants">—</div>
+          <div class="note">Peserta terdaftar</div>
+        </div>
+        <div class="card">
+          <div class="label">Total Pesanan</div>
+          <div class="value" id="totalOrders">—</div>
+          <div class="note">Pesanan individu dan rombongan</div>
+        </div>
+        <div class="card">
+          <div class="label">Pesanan Pending DEMO</div>
+          <div class="value" id="pendingOrders">—</div>
+          <div class="note">Belum merupakan pembayaran lunas</div>
+        </div>
+        <div class="card">
+          <div class="label">Nilai Pesanan</div>
+          <div class="value" id="totalValue">—</div>
+          <div class="note">Bukan pendapatan yang sudah diterima</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Monitoring Kuota</h2>
+      <div class="quota-grid">
+        <div class="card">
+          <strong>EARLY BIRD</strong>
+          <div class="value" id="earlyValue">—</div>
+          <div class="quota-track">
+            <div class="quota-fill" id="earlyBar"></div>
+          </div>
+          <div class="info" id="earlyNote">—</div>
+        </div>
+        <div class="card">
+          <strong>NORMAL</strong>
+          <div class="value" id="normalValue">—</div>
+          <div class="quota-track">
+            <div class="quota-fill" id="normalBar"></div>
+          </div>
+          <div class="info" id="normalNote">—</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Daftar Peserta</h2>
+      <div class="toolbar">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Cari nama, nomor registrasi, atau nomor pesanan"
+        >
+        <button class="btn" id="searchButton">Cari</button>
+        <button class="btn" id="refreshButton">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Nomor Registrasi</th>
+              <th>Nama Peserta</th>
+              <th>Nomor Pesanan</th>
+              <th>Kategori</th>
+              <th>Jersey</th>
+              <th>Gender</th>
+              <th>Kota</th>
+              <th>Pembayaran</th>
+              <th>Tanggal Daftar</th>
+            </tr>
+          </thead>
+          <tbody id="participantRows">
+            <tr><td colspan="10">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <span class="info" id="pageInfo">—</span>
+        <div>
+          <button class="btn" id="prevButton">Sebelumnya</button>
+          <button class="btn" id="nextButton">Berikutnya</button>
+        </div>
+      </div>
+      <p id="dashboardError" class="error" role="alert"></p>
+    </main>
+  </section>
+
+  <script>
+    "use strict";
+
+    // KONFIGURASI SUPABASE
+    // Ganti hanya teks GANTI_DENGAN_PUBLISHABLE_KEY_ANDA
+    // dengan Publishable Key dari Supabase.
+    const SUPABASE_URL =
+      "https://vsxrtafxtbzeknjcywhw.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_E-2ltwCC-X3TwS8Bpi7hvw__WDknaUG";
+
+    const PAGE_SIZE = 50;
+
+    let accessToken = "";
+    let refreshToken = "";
+    let currentPage = 0;
+    let currentSearch = "";
+    let totalResults = 0;
+
+    const el = id => document.getElementById(id);
+
+    const numberFormat = value =>
+      Number(value || 0).toLocaleString("id-ID");
+
+    const rupiah = value =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(Number(value || 0));
+
+    function showLogin(message = "") {
+      accessToken = "";
+      refreshToken = "";
+      el("dashboardScreen").classList.add("hidden");
+      el("loginScreen").classList.remove("hidden");
+      el("loginError").textContent = message;
+      el("password").value = "";
+    }
+
+    function showDashboard(email) {
+      el("loginScreen").classList.add("hidden");
+      el("dashboardScreen").classList.remove("hidden");
+      el("ownerInfo").textContent = "Login sebagai: " + email;
+      el("dashboardError").textContent = "";
+    }
+
+    async function supabaseRequest(path, options = {}, token = "") {
+      const headers = {
+        "apikey": SUPABASE_KEY,
+        "Content-Type": "application/json",
+        ...(token ? { "Authorization": "Bearer " + token } : {})
+      };
+
+      const response = await fetch(SUPABASE_URL + path, {
+        ...options,
+        headers: { ...headers, ...(options.headers || {}) },
+        cache: "no-store"
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      if (!response.ok) {
+        const error = new Error(
+          data.msg ||
+          data.message ||
+          data.error_description ||
+          data.error ||
+          "Permintaan gagal (" + response.status + ")"
+        );
+        error.status = response.status;
+        throw error;
+      }
+
+      return data;
+    }
+
+    async function checkOwner(token) {
+      const data = await supabaseRequest(
+        "/rest/v1/admin_users?select=role&role=eq.OWNER&limit=1",
+        { method: "GET" },
+        token
+      );
+
+      return Array.isArray(data) &&
+        data.length === 1 &&
+        data[0].role === "OWNER";
+    }
+
+    async function signIn(email, password) {
+      return await supabaseRequest(
+        "/auth/v1/token?grant_type=password",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        }
+      );
+    }
+
+    async function rpc(name, payload) {
+      if (!accessToken) {
+        throw new Error("Sesi login tidak tersedia. Silakan login kembali.");
+      }
+
+      return await supabaseRequest(
+        "/rest/v1/rpc/" + name,
+        {
+          method: "POST",
+          body: JSON.stringify(payload)
+        },
+        accessToken
+      );
+    }
+
+    async function loadSummary() {
+      const data = await rpc(
+        "get_owner_dashboard_summary",
+        {}
+      );
+
+      el("totalParticipants").textContent =
+        numberFormat(data.total_participants);
+
+      el("totalOrders").textContent =
+        numberFormat(data.total_orders);
+
+      el("pendingOrders").textContent =
+        numberFormat(data.pending_demo_orders);
+
+      el("totalValue").textContent =
+        rupiah(data.total_order_value);
+
+      const early = Number(data.early_bird_registered || 0);
+      const normal = Number(data.normal_registered || 0);
+      const earlyQuota = Number(data.early_bird_quota || 1800);
+      const normalQuota = Number(data.normal_quota || 200);
+
+      el("earlyValue").textContent =
+        numberFormat(early) + " / " + numberFormat(earlyQuota);
+
+      el("normalValue").textContent =
+        numberFormat(normal) + " / " + numberFormat(normalQuota);
+
+      el("earlyBar").style.width =
+        Math.min(100, earlyQuota ? early / earlyQuota * 100 : 0) + "%";
+
+      el("normalBar").style.width =
+        Math.min(100, normalQuota ? normal / normalQuota * 100 : 0) + "%";
+
+      el("earlyNote").textContent =
+        "Sisa berdasarkan jumlah pesanan: " +
+        numberFormat(Math.max(0, earlyQuota - early));
+
+      el("normalNote").textContent =
+        "Sisa berdasarkan jumlah pesanan: " +
+        numberFormat(Math.max(0, normalQuota - normal));
+    }
+
+    function addCell(row, value) {
+      const td = document.createElement("td");
+      td.textContent = value == null ? "-" : String(value);
+      row.appendChild(td);
+      return td;
+    }
+
+    function displayDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    }
+
+    function renderParticipants(items) {
+      const tbody = el("participantRows");
+      tbody.replaceChildren();
+
+      if (!items.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 10;
+        td.textContent = "Tidak ada peserta yang ditemukan.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      items.forEach((p, index) => {
+        const tr = document.createElement("tr");
+
+        addCell(tr, currentPage * PAGE_SIZE + index + 1);
+        addCell(tr, p.registration_number);
+        addCell(tr, p.full_name);
+        addCell(tr, p.order_number);
+        addCell(tr, p.ticket_category);
+        addCell(tr, p.jersey_size);
+        addCell(tr, p.gender);
+        addCell(tr, p.city);
+
+        const statusCell = addCell(tr, "");
+        const badge = document.createElement("span");
+        badge.className = "status" +
+          (p.payment_status === "PAID" ? " paid" : "");
+        badge.textContent = p.payment_status || "-";
+        statusCell.appendChild(badge);
+
+        addCell(tr, displayDate(p.registered_at));
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function loadParticipants() {
+      const data = await rpc("get_owner_participants", {
+        p_search: currentSearch,
+        p_limit: PAGE_SIZE,
+        p_offset: currentPage * PAGE_SIZE
+      });
+
+      const items = Array.isArray(data.participants)
+        ? data.participants : [];
+
+      totalResults = Number(data.total || 0);
+      renderParticipants(items);
+
+      const start = totalResults
+        ? currentPage * PAGE_SIZE + 1 : 0;
+
+      const end = Math.min(
+        (currentPage + 1) * PAGE_SIZE,
+        totalResults
+      );
+
+      el("pageInfo").textContent =
+        "Menampilkan " + numberFormat(start) +
+        "–" + numberFormat(end) +
+        " dari " + numberFormat(totalResults) + " peserta";
+
+      el("prevButton").disabled = currentPage === 0;
+      el("nextButton").disabled =
+        (currentPage + 1) * PAGE_SIZE >= totalResults;
+    }
+
+    async function refreshDashboard() {
+      el("dashboardError").textContent = "";
+      try {
+        await Promise.all([
+          loadSummary(),
+          loadParticipants()
+        ]);
+      } catch (error) {
+        if (error.status === 401 || error.status === 403) {
+          showLogin("Sesi berakhir atau akses ditolak. Silakan login kembali.");
+          return;
+        }
+        el("dashboardError").textContent =
+          "Gagal memuat dashboard: " + error.message;
+      }
+    }
+
+    el("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const button = el("loginButton");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+
+      if (SUPABASE_KEY === "GANTI_DENGAN_PUBLISHABLE_KEY_ANDA") {
+        el("loginError").textContent =
+          "Publishable Key belum dimasukkan ke admin.html.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "MEMERIKSA LOGIN...";
+      el("loginError").textContent = "";
+
+      try {
+        const session = await signIn(email, password);
+
+        if (!session.access_token) {
+          throw new Error("Token login tidak diterima.");
+        }
+
+        const allowed = await checkOwner(session.access_token);
+
+        if (!allowed) {
+          throw new Error("Akun ini tidak memiliki akses OWNER.");
+        }
+
+        accessToken = session.access_token;
+        refreshToken = session.refresh_token || "";
+
+        showDashboard(email);
+        await refreshDashboard();
+
+      } catch (error) {
+        showLogin("Login gagal: " + error.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = "MASUK DASHBOARD";
+      }
+    });
+
+    el("logoutButton").addEventListener("click", async () => {
+      const token = accessToken;
+      showLogin();
+
+      if (token) {
+        try {
+          await supabaseRequest(
+            "/auth/v1/logout",
+            { method: "POST" },
+            token
+          );
+        } catch {
+          // Sesi lokal tetap ditutup.
+        }
+      }
+    });
+
+    el("searchButton").addEventListener("click", () => {
+      currentSearch = el("searchInput").value.trim();
+      currentPage = 0;
+      refreshDashboard();
+    });
+
+    el("searchInput").addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        currentSearch = el("searchInput").value.trim();
+        currentPage = 0;
+        refreshDashboard();
+      }
+    });
+
+    el("refreshButton").addEventListener("click", refreshDashboard);
+
+    el("prevButton").addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        refreshDashboard();
+      }
+    });
+
+    el("nextButton").addEventListener("click", () => {
+      if ((currentPage + 1) * PAGE_SIZE < totalResults) {
+        currentPage++;
+        refreshDashboard();
+      }
+    });
+
+    showLogin();
+  </script>
+</body>
+</html>
