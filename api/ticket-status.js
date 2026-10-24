@@ -3,135 +3,100 @@
  * BALADHIKA FUN RUN 2026
  * API: /api/ticket-status
  *
- * Early Bird: 1.800 peserta
- * Normal: 200 peserta
+ * Kuota:
+ * Early Bird 1.800
+ * Normal 200
  *
- * Tidak mengirimkan jumlah kuota kepada publik.
+ * Perhitungan dilakukan oleh Supabase.
+ * Jumlah kuota tidak dikirimkan ke publik.
  */
 
-const EARLY_BIRD_LIMIT = 1800;
-const NORMAL_LIMIT = 200;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
+  res.setHeader(
+    "X-Content-Type-Options",
+    "nosniff"
+  );
 
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
+
     return res.status(405).json({
-      error: "Method not allowed"
+      success: false,
+      error: "Metode tidak diizinkan.",
     });
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
     return res.status(503).json({
-      error: "Konfigurasi server belum tersedia"
+      success: false,
+      error: "Konfigurasi server belum tersedia.",
     });
   }
 
   try {
-    const url = new URL(
-      "/rest/v1/orders",
-      supabaseUrl
-    );
+    const url =
+      SUPABASE_URL.replace(/\/+$/, "") +
+      "/rest/v1/rpc/get_demo_ticket_status";
 
-    url.searchParams.set(
-      "select",
-      "early_bird_qty,normal_qty"
-    );
-
-    url.searchParams.set(
-      "payment_status",
-      "in.(PENDING_DEMO,PAID_DEMO)"
-    );
-
-    const response = await fetch(url.toString(), {
+    const response = await fetch(url, {
+      method: "POST",
       headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-        Accept: "application/json"
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      cache: "no-store"
+      body: "{}",
+      cache: "no-store",
     });
 
     if (!response.ok) {
+      console.error(
+        "Ticket status database error:",
+        response.status
+      );
+
       throw new Error(
-        `Supabase request failed: ${response.status}`
+        "Gagal membaca status tiket."
       );
     }
 
-    const orders = await response.json();
+    const data = await response.json();
 
-    if (!Array.isArray(orders)) {
-      throw new Error("Invalid database response");
-    }
-
-    let earlyBirdSold = 0;
-    let normalSold = 0;
-
-    for (const order of orders) {
-      earlyBirdSold += Number(
-        order.early_bird_qty || 0
+    if (!data || data.success !== true) {
+      throw new Error(
+        "Respons status tiket tidak valid."
       );
-
-      normalSold += Number(
-        order.normal_qty || 0
-      );
-    }
-
-    const earlyBirdSoldOut =
-      earlyBirdSold >= EARLY_BIRD_LIMIT;
-
-    const normalSoldOut =
-      normalSold >= NORMAL_LIMIT;
-
-    let activeCategory = "EARLY_BIRD";
-
-    if (earlyBirdSoldOut) {
-      activeCategory = normalSoldOut
-        ? null
-        : "NORMAL";
     }
 
     return res.status(200).json({
       success: true,
-      active_category: activeCategory,
 
-      early_bird: {
-        price: 125000,
-        status: earlyBirdSoldOut
-          ? "SOLD_OUT"
-          : "AVAILABLE",
-        can_register:
-          activeCategory === "EARLY_BIRD"
-      },
+      active_category:
+        data.active_category,
 
-      normal: {
-        price: 150000,
-        status: normalSoldOut
-          ? "SOLD_OUT"
-          : earlyBirdSoldOut
-            ? "AVAILABLE"
-            : "COMING_SOON",
-        can_register:
-          activeCategory === "NORMAL"
-      },
+      early_bird: data.early_bird,
+      normal: data.normal,
 
       registration_open:
-        activeCategory !== null
+        data.registration_open,
     });
 
   } catch (error) {
     console.error(
       "Ticket status error:",
-      error.message
+      error?.message || "UNKNOWN"
     );
 
     return res.status(503).json({
       success: false,
-      error: "Status tiket belum dapat diperiksa"
+      error:
+        "Status tiket belum dapat diperiksa.",
     });
   }
-}
+};
