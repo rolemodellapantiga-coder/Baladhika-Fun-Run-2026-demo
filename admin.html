@@ -859,6 +859,185 @@
         exportButton.textContent = "Export CSV (Excel)";
       }
     });
+
+    
+    // ==========================================
+    // BALADHIKA FUN RUN 2026
+    // REKAP JERSEY OTOMATIS KHUSUS OWNER
+    // ==========================================
+
+    const jerseySection = document.createElement("section");
+
+    jerseySection.innerHTML = `
+      <h2 class="section-title">Rekap Kebutuhan Jersey</h2>
+      <div class="card">
+        <p class="info">
+          Rekap otomatis berdasarkan seluruh peserta terdaftar.
+          Termasuk peserta dengan status PENDING_DEMO.
+        </p>
+
+        <div id="jerseySummaryGrid" class="cards"
+             style="margin-top:18px"></div>
+
+        <div style="margin-top:20px">
+          <strong>Total Kebutuhan Jersey:</strong>
+          <span id="jerseyGrandTotal">—</span>
+        </div>
+
+        <p id="jerseyOtherInfo" class="info"></p>
+
+        <button
+          type="button"
+          id="exportJerseyButton"
+          class="btn btn-orange"
+          style="margin-top:15px">
+          Export Rekap Jersey (CSV)
+        </button>
+
+        <p id="jerseyError" class="error" role="alert"></p>
+      </div>
+    `;
+
+    const participantSectionTitle =
+      Array.from(document.querySelectorAll(".section-title"))
+        .find(element =>
+          element.textContent.trim() === "Daftar Peserta"
+        );
+
+    if (participantSectionTitle) {
+      participantSectionTitle.before(jerseySection);
+    } else {
+      document.querySelector(".container").appendChild(jerseySection);
+    }
+
+    let jerseyExportData = null;
+
+    async function loadJerseySummary() {
+      const data = await rpc("get_owner_jersey_summary", {});
+
+      const sizes = Array.isArray(data.jersey_sizes)
+        ? data.jersey_sizes
+        : [];
+
+      const grid = document.getElementById("jerseySummaryGrid");
+      grid.replaceChildren();
+
+      sizes.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.background = "#f3f5f1";
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "Ukuran " + item.size;
+
+        const value = document.createElement("div");
+        value.className = "value";
+        value.textContent = numberFormat(item.quantity);
+
+        card.appendChild(label);
+        card.appendChild(value);
+        grid.appendChild(card);
+      });
+
+      const total = Number(data.total_participants || 0);
+      const other = Number(data.other_or_missing || 0);
+
+      document.getElementById("jerseyGrandTotal").textContent =
+        numberFormat(total) + " pcs";
+
+      document.getElementById("jerseyOtherInfo").textContent =
+        other > 0
+          ? "Perhatian: " + numberFormat(other) +
+            " peserta memiliki ukuran jersey lain atau belum terisi."
+          : "Seluruh peserta memiliki ukuran jersey yang dikenali.";
+
+      jerseyExportData = {
+        sizes: sizes,
+        total: total,
+        other: other
+      };
+
+      document.getElementById("jerseyError").textContent = "";
+    }
+
+    const originalRefreshDashboard = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await originalRefreshDashboard();
+
+      if (!accessToken) return;
+
+      try {
+        await loadJerseySummary();
+      } catch (error) {
+        document.getElementById("jerseyError").textContent =
+          "Gagal memuat rekap jersey: " + error.message;
+      }
+    };
+
+    document.getElementById("exportJerseyButton")
+      .addEventListener("click", async () => {
+
+        const button = document.getElementById("exportJerseyButton");
+        button.disabled = true;
+
+        try {
+          await loadJerseySummary();
+
+          if (!jerseyExportData) {
+            throw new Error("Data jersey belum tersedia.");
+          }
+
+          const rows = [
+            ["Ukuran Jersey", "Jumlah"]
+          ];
+
+          jerseyExportData.sizes.forEach(item => {
+            rows.push([item.size, Number(item.quantity || 0)]);
+          });
+
+          rows.push([
+            "Lainnya / Belum Terisi",
+            jerseyExportData.other
+          ]);
+
+          rows.push([
+            "TOTAL",
+            jerseyExportData.total
+          ]);
+
+          const csv = "\uFEFF" +
+            rows.map(row =>
+              row.map(value =>
+                '"' + String(value).replace(/"/g, '""') + '"'
+              ).join(",")
+            ).join("\r\n");
+
+          const blob = new Blob([csv], {
+            type: "text/csv;charset=utf-8"
+          });
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+
+          link.href = url;
+          link.download =
+            "Baladhika_Fun_Run_2026_Rekap_Jersey.csv";
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        } catch (error) {
+          alert("Export rekap jersey gagal: " + error.message);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
   </script>
 </body>
 </html>
