@@ -721,7 +721,145 @@
       }
     });
 
+    
     showLogin();
+
+    // FITUR EXPORT CSV KHUSUS OWNER
+    // Mengambil seluruh peserta secara bertahap.
+    // Tidak mengubah database.
+
+    const exportButton = document.createElement("button");
+    exportButton.type = "button";
+    exportButton.className = "btn";
+    exportButton.textContent = "Export CSV (Excel)";
+    exportButton.style.background = "#e88932";
+    exportButton.style.color = "#17271c";
+
+    document.querySelector(".toolbar").appendChild(exportButton);
+
+    function csvCell(value) {
+      let text = String(value ?? "");
+
+      // Mencegah spreadsheet menjalankan formula
+      // dari data yang berasal dari input peserta.
+      if (/^[\s]*[=+\-@\t\r]/.test(text)) {
+        text = "'" + text;
+      }
+
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+
+    exportButton.addEventListener("click", async () => {
+      exportButton.disabled = true;
+      exportButton.textContent = "Menyiapkan CSV...";
+
+      try {
+        const allParticipants = [];
+        const batchSize = 100;
+        let offset = 0;
+        let expectedTotal = null;
+
+        while (true) {
+          const result = await rpc("get_owner_participants", {
+            p_search: "",
+            p_limit: batchSize,
+            p_offset: offset
+          });
+
+          const batch = Array.isArray(result.participants)
+            ? result.participants
+            : [];
+
+          const total = Number(result.total);
+
+          if (!Number.isSafeInteger(total) || total < 0) {
+            throw new Error("Jumlah peserta tidak valid.");
+          }
+
+          if (expectedTotal === null) {
+            expectedTotal = total;
+          } else if (expectedTotal !== total) {
+            throw new Error(
+              "Jumlah peserta berubah saat ekspor. Silakan ulangi."
+            );
+          }
+
+          allParticipants.push(...batch);
+          offset += batch.length;
+
+          if (allParticipants.length >= expectedTotal) break;
+
+          if (batch.length === 0) {
+            throw new Error("Pengambilan data peserta terhenti.");
+          }
+        }
+
+        const headers = [
+          "No",
+          "Nomor Registrasi",
+          "Nama Peserta",
+          "Nomor Pesanan",
+          "Kategori Tiket",
+          "Ukuran Jersey",
+          "Jenis Kelamin",
+          "Kota",
+          "Status Pembayaran",
+          "Metode Pembayaran",
+          "Tanggal Pendaftaran"
+        ];
+
+        const rows = allParticipants.map((p, index) => [
+          index + 1,
+          p.registration_number,
+          p.full_name,
+          p.order_number,
+          p.ticket_category,
+          p.jersey_size,
+          p.gender,
+          p.city,
+          p.payment_status,
+          p.payment_method,
+          displayDate(p.registered_at)
+        ]);
+
+        const csv = "\uFEFF" +
+          [headers, ...rows]
+            .map(row => row.map(csvCell).join(","))
+            .join("\r\n");
+
+        const blob = new Blob([csv], {
+          type: "text/csv;charset=utf-8"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download =
+          "Baladhika_Fun_Run_2026_Data_Peserta_" +
+          new Date().toISOString().slice(0, 10) +
+          ".csv";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        alert(
+          "Export berhasil. " +
+          allParticipants.length +
+          " peserta dimasukkan ke file CSV."
+        );
+
+      } catch (error) {
+        alert("Export gagal: " + error.message);
+      } finally {
+        exportButton.disabled = false;
+        exportButton.textContent = "Export CSV (Excel)";
+      }
+    });
   </script>
 </body>
 </html>
+
