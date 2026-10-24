@@ -5,8 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#24362b">
-<meta name="description" content="BALADHIKA FUN RUN 2026 - Experience Fun Run 5K, 6 Desember 2026, Lapangan Rampal Kota Malang.">
-<title>BALADHIKA FUN RUN 2026</title>
+<title>BALADHIKA FUN RUN 2026 | DEMO</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,459 +32,803 @@ body{
 [hidden]{display:none!important}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-h1,h2,h3,p{margin-top:0}
 section{position:relative;overflow:hidden;isolation:isolate}
-.inner{width:min(1320px,90%);margin:auto;position:relative;z-index:3}
+.inner{
+  width:min(1320px,90%);
+  margin:auto;
+  position:relative;
+  z-index:3;
+}
 .kicker{
-  font-size:12px;font-weight:900;letter-spacing:3px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:3px;
 }
 .orange{color:var(--orange)}
+.muted{color:var(--muted)}
+.copy{font-size:13px;line-height:1.9}
 .heading{
   font:400 clamp(60px,10vw,145px)/.98 Anton,Impact,sans-serif;
   margin:18px 0 25px;
 }
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:16px 27px;border:0;border-radius:40px;
-  background:var(--orange);color:var(--dark);
-  font-size:12px;font-weight:900;text-align:center;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px 27px;
+  border:0;
+  border-radius:40px;
+  background:var(--orange);
+  color:var(--dark);
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
   transition:background .25s,transform .25s;
 }
-.btn:hover{background:var(--cream);transform:translateY(-3px)}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn:hover{
+  background:var(--cream);
+  transform:translateY(-3px);
+}
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
+}
 .btn-outline{
-  background:transparent;color:var(--cream);
+  background:transparent;
+  color:var(--cream);
   border:1px solid #ffffff77;
 }
-.btn-outline:hover{background:var(--army2);color:white}
-.muted{color:var(--muted)}
-.copy{
-  font-size:13px;line-height:1.9;
-}
-.parallax-image{will-change:transform}
-.parallax-text{will-change:transform}
-.reveal{opacity:1}
+.parallax-text,.parallax-image{will-change:transform}
 
-/* NAVIGATION */
+/* NAVBAR */
 .navbar{
-  position:absolute;z-index:100;top:0;left:0;width:100%;
-  padding:16px 5%;display:flex;align-items:center;
-  justify-content:space-between;gap:15px;
+  position:absolute;
+  z-index:100;
+  top:0;left:0;width:100%;
+  padding:16px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 }
-.nav-logo{width:175px;max-height:75px;object-fit:contain}
-.nav-links{display:flex;align-items:center;gap:23px}
-.nav-links>a:not(.btn){font-size:11px;font-weight:900}
+.nav-logo{
+  width:175px;
+  max-height:75px;
+  object-fit:contain;
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:23px;
+}
+.nav-links>a:not(.btn){
+  font-size:11px;
+  font-weight:900;
+}
+.demo-ribbon{
+  position:fixed;
+  z-index:200;
+  right:12px;
+  bottom:12px;
+  padding:10px 14px;
+  background:white;
+  color:var(--dark);
+  border-radius:12px;
+  font-size:10px;
+  font-weight:900;
+  box-shadow:0 5px 30px #0005;
+}
 
 /* HERO */
 .hero{
-  min-height:100vh;min-height:100svh;
+  min-height:100svh;
   background:var(--army);
-  display:flex;align-items:center;
+  display:flex;
+  align-items:center;
 }
 .hero .inner{
-  min-height:100vh;min-height:100svh;
-  display:flex;align-items:center;
+  min-height:100svh;
+  display:flex;
+  align-items:center;
   padding:125px 0 90px;
 }
-.hero-content{position:relative;z-index:10;width:62%}
+.hero-content{
+  position:relative;
+  z-index:10;
+  width:62%;
+}
 .hero-logo{
   width:min(100%,800px);
-  max-height:360px;object-fit:contain;
+  max-height:360px;
+  object-fit:contain;
   object-position:left center;
 }
 .hero-category{
   font:400 clamp(50px,6vw,85px)/1 Anton,Impact,sans-serif;
-  color:var(--orange);margin:24px 0 15px;
+  color:var(--orange);
+  margin:24px 0 15px;
 }
 .hero-info{
-  font-size:12px;font-weight:800;line-height:2;
+  font-size:12px;
+  font-weight:800;
+  line-height:2;
 }
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:24px;
+}
 .hero-runner{
-  position:absolute;z-index:5;right:0;bottom:0;
-  width:58%;height:82%;max-width:none;
-  object-fit:contain;object-position:right bottom;
+  position:absolute;
+  z-index:5;
+  right:0;
+  bottom:0;
+  width:58%;
+  height:82%;
+  max-width:none;
+  object-fit:contain;
+  object-position:right bottom;
 }
 .hero-deco{
-  position:absolute;width:570px;height:570px;
-  right:3%;top:20%;border:65px solid #ff691f17;
-  border-radius:50%;pointer-events:none;
+  position:absolute;
+  width:570px;height:570px;
+  right:3%;top:20%;
+  border:65px solid #ff691f17;
+  border-radius:50%;
+  pointer-events:none;
 }
 .scroll-hint{
-  position:absolute;left:5%;bottom:22px;z-index:12;
-  font-size:10px;font-weight:900;letter-spacing:3px;
+  position:absolute;
+  left:5%;bottom:22px;
+  z-index:12;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:3px;
 }
 
 /* COUNTDOWN */
 .countdown{
-  padding:85px 0;background:var(--dark);
+  padding:85px 0;
+  background:var(--dark);
 }
 .countdown-grid{
-  display:grid;grid-template-columns:1fr 1.2fr;
-  gap:35px;align-items:center;
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:35px;
+  align-items:center;
 }
 .countdown-title{
   font:400 clamp(55px,7vw,100px)/1 Anton,Impact,sans-serif;
 }
 .time-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
 }
 .time-box{
-  padding:25px 10px;background:var(--army2);
-  border-radius:12px;text-align:center;
+  padding:25px 10px;
+  background:var(--army2);
+  border-radius:12px;
+  text-align:center;
 }
 .time-value{
   display:block;
   font:400 clamp(35px,4.2vw,65px)/1 Anton,Impact,sans-serif;
 }
 .time-label{
-  display:block;margin-top:12px;
-  font-size:9px;font-weight:900;letter-spacing:1px;
+  display:block;
+  margin-top:12px;
+  font-size:9px;
+  font-weight:900;
 }
 
 /* DATE */
 .date-section{
-  min-height:100vh;min-height:100svh;
-  background:var(--dark);display:flex;align-items:center;
+  min-height:100svh;
+  background:var(--dark);
+  display:flex;
+  align-items:center;
 }
 .date-section .inner{padding:110px 0}
-.date-content{position:relative;z-index:7;width:57%}
+.date-content{
+  position:relative;
+  z-index:7;
+  width:57%;
+}
 .date-title{
   font:400 clamp(70px,11vw,155px)/1 Anton,Impact,sans-serif;
   margin:20px 0;
 }
 .date-title span{display:block}
-.date-place{font-size:clamp(12px,1.5vw,20px);font-weight:900}
+.date-place{
+  font-size:clamp(12px,1.5vw,20px);
+  font-weight:900;
+}
 .date-description{max-width:440px}
 .date-runner{
-  position:absolute;right:0;bottom:0;z-index:4;
-  width:50%;height:83%;object-fit:contain;
+  position:absolute;
+  right:0;bottom:0;
+  z-index:4;
+  width:50%;
+  height:83%;
+  object-fit:contain;
   object-position:right bottom;
 }
 
 /* PRICE */
 .price-section{
-  min-height:100vh;min-height:100svh;
-  background:var(--army2);display:flex;align-items:center;
+  min-height:100svh;
+  background:var(--army2);
+  display:flex;
+  align-items:center;
 }
 .price-section .inner{
-  display:grid;grid-template-columns:1fr 1.15fr 1fr;
-  gap:18px;align-items:center;padding:110px 0 95px;
+  display:grid;
+  grid-template-columns:1fr 1.15fr 1fr;
+  gap:18px;
+  align-items:center;
+  padding:110px 0 95px;
 }
-.price-col{position:relative;z-index:8}
+.price-col{
+  position:relative;
+  z-index:8;
+}
 .price-col.right{text-align:right}
 .price-title{
-  display:inline-block;position:relative;
+  display:inline-block;
+  position:relative;
   font:400 clamp(55px,7vw,105px)/1 Anton,Impact,sans-serif;
   margin:15px 0;
 }
 .price-number{
   font:400 clamp(42px,5vw,75px)/1 Anton,Impact,sans-serif;
-  color:var(--orange);margin:12px 0;
+  color:var(--orange);
+  margin:12px 0;
 }
-.price-note{font-size:12px;line-height:1.9;max-width:260px}
+.price-note{
+  font-size:12px;
+  line-height:1.9;
+  max-width:260px;
+}
 .price-col.right .price-note{margin-left:auto}
 .price-visual{
-  position:relative;z-index:4;min-height:520px;
-  align-self:stretch;display:flex;align-items:flex-end;
+  position:relative;
+  z-index:4;
+  min-height:520px;
+  align-self:stretch;
+  display:flex;
+  align-items:flex-end;
   justify-content:center;
 }
 .price-ring{
-  position:absolute;top:48%;left:50%;
+  position:absolute;
+  top:48%;left:50%;
   transform:translate(-50%,-50%);
-  width:min(100%,430px);aspect-ratio:1;
-  border:45px solid var(--orange);border-radius:50%;
+  width:min(100%,430px);
+  aspect-ratio:1;
+  border:45px solid var(--orange);
+  border-radius:50%;
 }
 .price-runner{
-  position:relative;z-index:2;width:100%;
-  max-height:75vh;object-fit:contain;
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-height:75vh;
+  object-fit:contain;
   object-position:bottom center;
 }
 .ticket-status{
-  display:block;margin:12px 0;
-  font-size:11px;font-weight:900;letter-spacing:1px;
+  display:block;
+  margin:12px 0;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
 }
 .sold-stamp{
-  position:absolute;z-index:10;
-  top:50%;left:50%;width:115%;max-width:none;
+  position:absolute;
+  z-index:10;
+  top:50%;left:50%;
+  width:115%;
+  max-width:none;
   transform:translate(-50%,-50%) rotate(-12deg);
-  filter:drop-shadow(0 5px 8px #0005);
   pointer-events:none;
 }
-.disabled-link{pointer-events:none;opacity:.5}
-
-/* BENEFITS */
-.benefit-section{
-  min-height:90vh;background:var(--orange);
-  color:var(--dark);display:flex;align-items:center;
+.disabled-link{
+  pointer-events:none;
+  opacity:.5;
 }
-.benefit-section .inner{text-align:center;padding:105px 0}
+
+/* BENEFIT */
+.benefit-section{
+  min-height:90vh;
+  background:var(--orange);
+  color:var(--dark);
+  display:flex;
+  align-items:center;
+}
+.benefit-section .inner{
+  text-align:center;
+  padding:105px 0;
+}
 .benefit-art{
-  width:min(1050px,100%);max-height:570px;
-  margin:35px auto;object-fit:contain;
+  width:min(1050px,100%);
+  max-height:570px;
+  margin:35px auto;
+  object-fit:contain;
 }
 
 /* JERSEY */
-.jersey-section{background:var(--army);padding:110px 0}
+.jersey-section{
+  background:var(--army);
+  padding:110px 0;
+}
 .jersey-section .inner{text-align:center}
 .jersey-title{
   font:400 clamp(55px,9vw,125px)/1 Anton,Impact,sans-serif;
   margin:18px 0 25px;
 }
 .jersey-description{
-  max-width:660px;margin:0 auto 38px;
-  color:var(--muted);font-size:13px;line-height:1.9;
+  max-width:660px;
+  margin:0 auto 38px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
 }
 .jersey-frame{
-  position:relative;z-index:3;width:min(900px,100%);
-  margin:auto;padding:16px;background:#f7f7f5;
-  border-radius:18px;box-shadow:0 25px 65px #0005;
+  position:relative;
+  z-index:3;
+  width:min(900px,100%);
+  margin:auto;
+  padding:16px;
+  background:#f7f7f5;
+  border-radius:18px;
+  box-shadow:0 25px 65px #0005;
 }
-.jersey-frame img{width:100%;height:auto;object-fit:contain}
+.jersey-frame img{width:100%}
 .jersey-note{
-  margin:28px 0;font-size:12px;font-weight:900;line-height:1.9;
-}
-.jersey-deco{
-  position:absolute;right:-150px;top:10%;
-  width:420px;height:420px;border:55px solid #ff691f18;
-  border-radius:50%;pointer-events:none;
+  margin:28px 0;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.9;
 }
 
 /* ROUTE */
 .route-section{
-  min-height:90vh;background:var(--army);
-  display:flex;align-items:center;
+  min-height:90vh;
+  background:var(--army);
+  display:flex;
+  align-items:center;
 }
-.route-section .inner{text-align:center;padding:110px 0}
+.route-section .inner{
+  text-align:center;
+  padding:110px 0;
+}
 .route-frame{
-  width:min(1100px,100%);margin:35px auto;
-  padding:12px;background:#ffffff0a;
-  border:1px solid #ffffff25;border-radius:18px;
+  width:min(1100px,100%);
+  margin:35px auto;
+  padding:12px;
+  background:#ffffff0a;
+  border:1px solid #ffffff25;
+  border-radius:18px;
 }
-.route-frame img{width:100%;height:auto}
+.route-frame img{width:100%}
 
-/* EXPERIENCE */
+/* MORE */
 .more-section{
-  min-height:90vh;background:var(--army2);
-  display:flex;align-items:center;text-align:center;
+  min-height:90vh;
+  background:var(--army2);
+  display:flex;
+  align-items:center;
+  text-align:center;
 }
 .more-section .inner{padding:110px 0}
 .more-section h2 span{display:block}
-.more-section p{max-width:650px;margin:25px auto}
+.more-section p{
+  max-width:650px;
+  margin:25px auto;
+}
 
 /* READY */
 .ready-section{
-  min-height:100vh;min-height:100svh;
-  background:var(--orange);color:var(--dark);
-  display:flex;align-items:center;
+  min-height:100svh;
+  background:var(--orange);
+  color:var(--dark);
+  display:flex;
+  align-items:center;
 }
 .ready-section .inner{
-  min-height:100vh;min-height:100svh;
-  display:flex;align-items:center;justify-content:flex-end;
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
   padding:110px 0;
 }
 .ready-runner{
-  position:absolute;z-index:3;left:0;bottom:3%;
-  width:45%;height:83%;object-fit:contain;
+  position:absolute;
+  z-index:3;
+  left:0;bottom:3%;
+  width:45%;
+  height:83%;
+  object-fit:contain;
   object-position:center bottom;
 }
 .ready-content{
-  position:relative;z-index:8;width:54%;text-align:right;
+  position:relative;
+  z-index:8;
+  width:54%;
+  text-align:right;
 }
-.ready-content p{max-width:450px;margin:20px 0 25px auto}
-.ready-content .btn{background:var(--dark);color:white}
+.ready-content p{
+  max-width:450px;
+  margin:20px 0 25px auto;
+}
+.ready-content .btn{
+  background:var(--dark);
+  color:white;
+}
 
 /* REGISTRATION */
-.registration-section{background:var(--army);padding:115px 0}
+.registration-section{
+  background:var(--army);
+  padding:115px 0;
+}
 .registration-title{
   font:400 clamp(60px,10vw,135px)/1 Anton,Impact,sans-serif;
   margin:18px 0 25px;
 }
-.registration-intro{max-width:740px;color:var(--muted)}
+.registration-intro{
+  max-width:740px;
+  color:var(--muted);
+}
 .registration-steps{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;margin:35px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:35px 0;
 }
 .registration-step{
-  padding:13px 0;border-top:4px solid #ffffff35;
-  color:#aab9ac;font-size:11px;font-weight:900;
+  padding:13px 0;
+  border-top:4px solid #ffffff35;
+  color:#aab9ac;
+  font-size:11px;
+  font-weight:900;
 }
-.registration-step.active{border-color:var(--orange);color:white}
+.registration-step.active{
+  border-color:var(--orange);
+  color:white;
+}
 .registration-panel{
-  background:#15251b;border:1px solid #ffffff20;
-  border-radius:20px;padding:30px;
+  background:#15251b;
+  border:1px solid #ffffff20;
+  border-radius:20px;
+  padding:30px;
 }
 .registration-panel h3{
   font:400 clamp(35px,5vw,55px)/1 Anton,Impact,sans-serif;
 }
 .ticket-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:20px;margin:30px 0;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin:30px 0;
 }
 .ticket-card{
-  position:relative;padding:27px;background:var(--army2);
-  border:1px solid #ffffff2c;border-radius:17px;
+  position:relative;
+  padding:27px;
+  background:var(--army2);
+  border:1px solid #ffffff2c;
+  border-radius:17px;
 }
 .ticket-card.available{border-color:var(--orange)}
 .ticket-card.unavailable{opacity:.65}
 .ticket-name{
-  position:relative;display:inline-block;
+  position:relative;
+  display:inline-block;
   font:400 clamp(32px,4vw,56px)/1 Anton,Impact,sans-serif;
 }
 .ticket-price{
-  margin:12px 0;color:var(--orange);
+  margin:12px 0;
+  color:var(--orange);
   font:400 clamp(33px,4vw,58px)/1 Anton,Impact,sans-serif;
 }
-.ticket-card p{font-size:11px;color:var(--muted)}
+.ticket-card p{
+  font-size:11px;
+  color:var(--muted);
+}
 .ticket-counter{
-  display:flex;align-items:center;gap:18px;margin-top:25px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:25px;
 }
 .ticket-counter button{
-  width:43px;height:43px;border-radius:50%;
-  border:1px solid #ffffff70;background:transparent;
-  color:white;font-size:24px;
+  width:43px;height:43px;
+  border-radius:50%;
+  border:1px solid #ffffff70;
+  background:transparent;
+  color:white;
+  font-size:24px;
 }
-.ticket-counter button:disabled{opacity:.3;cursor:not-allowed}
+.ticket-counter button:disabled{
+  opacity:.3;
+  cursor:not-allowed;
+}
 .ticket-counter strong{
-  font-size:26px;min-width:25px;text-align:center;
+  font-size:26px;
+  min-width:25px;
+  text-align:center;
 }
 .order-summary{
-  padding:26px;border-radius:15px;
-  background:var(--orange);color:var(--dark);
+  padding:26px;
+  border-radius:15px;
+  background:var(--orange);
+  color:var(--dark);
 }
 .summary-line{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:15px;margin:13px 0;font-size:13px;font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin:13px 0;
+  font-size:13px;
+  font-weight:700;
 }
 .summary-line.total{
   border-top:1px solid #14211955;
-  margin-top:20px;padding-top:18px;
+  margin-top:20px;
+  padding-top:18px;
 }
 .summary-line.total strong{
   font:400 clamp(30px,5vw,53px)/1 Anton,Impact,sans-serif;
 }
 .registration-actions{
-  display:flex;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;margin-top:25px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:25px;
 }
 .notice{
-  padding:17px;margin:20px 0;
+  padding:17px;
+  margin:20px 0;
   border-left:4px solid var(--orange);
-  background:#ffffff0a;font-size:12px;line-height:1.9;
+  background:#ffffff0a;
+  font-size:12px;
+  line-height:1.9;
 }
 .field-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:0 20px;
 }
-.field{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-.field label{font-size:11px;font-weight:800}
-.field input,.field select{
-  width:100%;padding:14px;border:1px solid #ffffff45;
-  border-radius:9px;background:#0f1b14;color:white;
-  outline:none;font-size:13px;
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:18px;
 }
-.field input:focus,.field select:focus{border-color:var(--orange)}
+.field label{
+  font-size:11px;
+  font-weight:800;
+}
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:14px;
+  border:1px solid #ffffff45;
+  border-radius:9px;
+  background:#0f1b14;
+  color:white;
+  outline:none;
+  font-size:13px;
+}
+.field textarea{
+  min-height:95px;
+  resize:vertical;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--orange);
+}
+.field select:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+.field.full{grid-column:1/-1}
 .participant-card{
-  margin:25px 0;padding:24px;
-  border:1px solid #ffffff2b;border-radius:14px;
+  margin:25px 0;
+  padding:24px;
+  border:1px solid #ffffff2b;
+  border-radius:14px;
   background:#ffffff08;
 }
 .participant-header{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:12px;margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
 }
-.participant-header h3{font-size:30px;margin:0}
+.participant-header h3{
+  font-size:30px;
+  margin:0;
+}
 .category-pill{
-  padding:9px 13px;border-radius:30px;
-  background:var(--orange);color:var(--dark);
-  font-size:10px;font-weight:900;
+  padding:9px 13px;
+  border-radius:30px;
+  background:var(--orange);
+  color:var(--dark);
+  font-size:10px;
+  font-weight:900;
+}
+.address-heading{
+  margin:25px 0 18px;
+  padding-bottom:12px;
+  border-bottom:1px solid #ffffff30;
+  color:var(--orange);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.address-status{
+  font-size:11px;
+  color:#ffd1b9;
+  line-height:1.8;
 }
 .review-entry{
-  padding:18px 0;border-bottom:1px solid #ffffff30;
-  font-size:12px;line-height:1.9;
+  padding:18px 0;
+  border-bottom:1px solid #ffffff30;
+  font-size:12px;
+  line-height:1.9;
+  overflow-wrap:anywhere;
 }
 .review-entry strong{color:var(--orange)}
 .agreement{
-  display:flex;align-items:flex-start;gap:12px;
-  margin-top:25px;font-size:12px;line-height:1.9;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  margin-top:25px;
+  font-size:12px;
+  line-height:1.9;
 }
 .agreement input{
-  width:19px;height:19px;flex-shrink:0;
-  margin-top:4px;accent-color:var(--orange);
+  width:19px;height:19px;
+  flex-shrink:0;
+  margin-top:4px;
+  accent-color:var(--orange);
 }
-.text-link{color:#ffad82;text-decoration:underline}
+.text-link{
+  color:#ffad82;
+  text-decoration:underline;
+}
 .payment-options{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:15px;margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  margin-top:25px;
 }
 .payment-option{
-  padding:22px;border:1px solid #ffffff45;
-  border-radius:13px;background:var(--army2);
-  color:white;text-align:left;
+  padding:22px;
+  border:1px solid #ffffff45;
+  border-radius:13px;
+  background:var(--army2);
+  color:white;
+  text-align:left;
 }
-.payment-option.selected{border:2px solid var(--orange)}
+.payment-option.selected{
+  border:2px solid var(--orange);
+}
 .payment-option strong{
-  display:block;font-size:18px;margin-bottom:8px;
+  display:block;
+  font-size:18px;
+  margin-bottom:8px;
 }
-.payment-option span{font-size:11px;color:var(--muted)}
+.payment-option span{
+  font-size:11px;
+  color:var(--muted);
+}
 
 /* RACEPACK */
-.racepack-section{background:var(--army2);padding:100px 0}
+.racepack-section{
+  background:var(--army2);
+  padding:100px 0;
+}
 .racepack-title{
   font:400 clamp(55px,9vw,115px)/1 Anton,Impact,sans-serif;
 }
 .racepack-card{
-  margin-top:30px;padding:30px;border-radius:18px;
-  background:var(--dark);border:1px solid #ffffff25;
+  margin-top:30px;
+  padding:30px;
+  border-radius:18px;
+  background:var(--dark);
+  border:1px solid #ffffff25;
 }
-.racepack-card p{font-size:13px;line-height:2}
+.racepack-card p{
+  font-size:13px;
+  line-height:2;
+}
 
 /* RULES */
-.rules-section{background:var(--dark);padding:115px 0}
+.rules-section{
+  background:var(--dark);
+  padding:115px 0;
+}
 .rules-title{
   font:400 clamp(60px,10vw,135px)/1 Anton,Impact,sans-serif;
   margin:18px 0 30px;
 }
 .rules-info{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;margin:35px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:35px 0;
 }
 .rules-info-item{
-  padding:22px 15px;border-radius:12px;background:var(--army2);
+  padding:22px 15px;
+  border-radius:12px;
+  background:var(--army2);
 }
 .rules-info-item span{
-  display:block;margin-bottom:10px;
-  color:var(--muted);font-size:10px;
+  display:block;
+  margin-bottom:10px;
+  color:var(--muted);
+  font-size:10px;
 }
 .rules-info-item strong{font-size:17px}
 .rules-list{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:15px;margin-top:35px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+  margin-top:35px;
 }
 .rule{
-  display:flex;gap:17px;padding:22px;
-  background:var(--army);border:1px solid #ffffff18;
+  display:flex;
+  gap:17px;
+  padding:22px;
+  background:var(--army);
+  border:1px solid #ffffff18;
   border-radius:12px;
 }
 .rule-number{
   color:var(--orange);
   font:400 28px/1 Anton,Impact,sans-serif;
 }
-.rule p{margin:0;font-size:12px;line-height:1.9}
-
-/* FOOTER */
-.footer{background:#0d1811;padding:55px 5%;text-align:center}
+.rule p{
+  margin:0;
+  font-size:12px;
+  line-height:1.9;
+}
+.footer{
+  background:#0d1811;
+  padding:55px 5%;
+  text-align:center;
+}
 .footer h3{
   font:400 35px/1 Anton,Impact,sans-serif;
 }
-.footer p{font-size:12px;line-height:1.9;color:var(--muted)}
-.footer-links{
-  display:flex;justify-content:center;flex-wrap:wrap;
-  gap:22px;margin:20px 0;
+.footer p{
+  font-size:12px;
+  line-height:1.9;
+  color:var(--muted);
 }
-.footer-links a{color:var(--orange);font-size:12px;font-weight:800}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:22px;
+  margin:20px 0;
+}
+.footer-links a{
+  color:var(--orange);
+  font-size:12px;
+  font-weight:800;
+}
 
 @media(max-width:1000px){
   .nav-links>a:not(.btn){display:none}
@@ -496,14 +839,23 @@ section{position:relative;overflow:hidden;isolation:isolate}
 @media(max-width:768px){
   .nav-logo{width:115px}
   .navbar .btn{padding:12px;font-size:9px}
-  .hero .inner{align-items:flex-start;padding-top:145px}
+  .hero .inner{
+    align-items:flex-start;
+    padding-top:145px;
+  }
   .hero-content{width:100%}
   .hero-logo{width:88%;max-height:210px}
   .hero-category{font-size:12vw}
   .hero-info{font-size:10px;max-width:310px}
   .hero-runner{width:100%;height:45%;bottom:0}
-  .hero-actions .btn{font-size:10px;padding:13px 16px}
-  .hero-deco{width:320px;height:320px;border-width:35px}
+  .hero-actions .btn{
+    font-size:10px;
+    padding:13px 16px;
+  }
+  .hero-deco{
+    width:320px;height:320px;
+    border-width:35px;
+  }
   .countdown-grid{grid-template-columns:1fr}
   .countdown{padding:60px 0}
   .time-box{padding:20px 5px}
@@ -515,27 +867,37 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .price-section .inner{
     grid-template-columns:1fr 1fr;
     grid-template-rows:auto 1fr;
-    gap:12px;padding:100px 0 55px;
+    gap:12px;
+    padding:100px 0 55px;
   }
   .price-title{font-size:11vw}
   .price-number{font-size:8vw}
   .price-note{font-size:10px}
   .price-visual{
-    grid-column:1/-1;grid-row:2;
-    min-height:340px;max-height:48vh;
+    grid-column:1/-1;
+    grid-row:2;
+    min-height:340px;
+    max-height:48vh;
   }
   .price-ring{width:300px;max-width:80vw}
   .price-runner{height:100%;max-height:48vh}
-  .benefit-section .inner,.route-section .inner{padding:90px 0}
+  .benefit-section .inner,
+  .route-section .inner{padding:90px 0}
   .jersey-section{padding:80px 0}
   .jersey-frame{padding:8px}
   .more-section h2{font-size:17vw}
-  .ready-section .inner{align-items:flex-start;padding-top:110px}
+  .ready-section .inner{
+    align-items:flex-start;
+    padding-top:110px;
+  }
   .ready-content{width:100%}
   .ready-content h2{font-size:19vw}
   .ready-runner{width:85%;height:47%;bottom:3%}
-  .ticket-grid,.field-grid,.rules-list{grid-template-columns:1fr}
-  .registration-section,.rules-section{padding:85px 0}
+  .ticket-grid,.field-grid,.rules-list{
+    grid-template-columns:1fr;
+  }
+  .registration-section,
+  .rules-section{padding:85px 0}
   .registration-panel{padding:20px}
   .rules-info{grid-template-columns:1fr}
   .payment-options{grid-template-columns:1fr}
@@ -560,6 +922,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
 
 <body>
 
+<div class="demo-ribbon">DEMO / TEST ONLY</div>
+
 <nav class="navbar">
   <a href="#home">
     <img class="nav-logo" src="logo-baladhika.png"
@@ -582,11 +946,11 @@ section{position:relative;overflow:hidden;isolation:isolate}
   <div class="hero-deco"></div>
   <div class="inner">
     <div class="hero-content">
-      <p class="kicker parallax-text">EXPERIENCE FUN RUN 5K</p>
+      <p class="kicker">EXPERIENCE FUN RUN 5K</p>
       <img class="hero-logo" src="logo-baladhika.png"
            alt="BALADHIKA FUN RUN 2026">
       <h1 class="hero-category">KATEGORI 5K</h1>
-      <p class="hero-info parallax-text">
+      <p class="hero-info">
         ONE RUN • ONE SPIRIT • ONE EXPERIENCE<br>
         6 DESEMBER 2026 • 05.30 WIB<br>
         LAPANGAN RAMPAL, KOTA MALANG
@@ -603,7 +967,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </section>
 
 <!-- COUNTDOWN -->
-<section class="countdown" id="countdown">
+<section class="countdown">
   <div class="inner countdown-grid">
     <div>
       <p class="kicker orange">THE COUNTDOWN IS ON</p>
@@ -611,7 +975,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
         READY FOR<br><span class="orange">RACE DAY?</span>
       </h2>
       <p class="copy muted">
-        Hitung mundur menuju start BALADHIKA FUN RUN 2026.
+        Hitung mundur menuju BALADHIKA FUN RUN 2026.
       </p>
     </div>
     <div class="time-grid">
@@ -635,7 +999,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
   </div>
 </section>
 
-<!-- DATE -->
+<!-- TANGGAL -->
 <section class="date-section" id="tanggal">
   <div class="inner">
     <div class="date-content">
@@ -658,10 +1022,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
        src="pelari-tanggal.png" alt="Pelari Fun Run">
 </section>
 
-<!-- PRICE -->
+<!-- HARGA -->
 <section class="price-section" id="harga">
   <div class="inner">
-
     <div class="price-col" id="priceEarly">
       <p class="kicker">REGISTRATION</p>
       <h2 class="price-title">
@@ -674,7 +1037,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
         MEMERIKSA STATUS...
       </span>
       <p class="price-note">
-        Pilih kategori Early Bird dan amankan pengalaman larimu.
+        Pilih kategori Early Bird untuk pengalaman lari 5K.
       </p>
       <a class="btn disabled-link" href="#registration"
          id="priceEarlyButton" aria-disabled="true">
@@ -701,47 +1064,42 @@ section{position:relative;overflow:hidden;isolation:isolate}
         MEMERIKSA STATUS...
       </span>
       <p class="price-note">
-        Pilih kategori Normal dan bersiap menuju garis finis.
+        Kategori Normal tersedia sesuai tahapan pendaftaran.
       </p>
       <a class="btn disabled-link" href="#registration"
          id="priceNormalButton" aria-disabled="true">
         MEMERIKSA STATUS
       </a>
     </div>
-
   </div>
 </section>
 
 <!-- BENEFIT -->
 <section class="benefit-section" id="benefit">
   <div class="inner">
-    <p class="kicker parallax-text">RUN WITH MORE</p>
+    <p class="kicker">RUN WITH MORE</p>
     <h2 class="heading parallax-text">YOUR BENEFIT</h2>
-    <p class="copy parallax-text">
-      Berbagai fasilitas untuk pengalaman lari terbaik.
-    </p>
+    <p class="copy">Fasilitas peserta BALADHIKA FUN RUN 2026.</p>
     <img class="benefit-art parallax-image"
          src="banner-benefit.png"
-         alt="Fasilitas Baladhika Fun Run 2026">
+         alt="Fasilitas peserta Fun Run">
   </div>
 </section>
 
-<!-- JERSEY SIZE CHART -->
+<!-- SIZE CHART -->
 <section class="jersey-section" id="jersey">
-  <div class="jersey-deco"></div>
   <div class="inner">
     <p class="kicker orange">FIND YOUR PERFECT FIT</p>
     <h2 class="jersey-title parallax-text">
       JERSEY <span class="orange">SIZE CHART.</span>
     </h2>
-    <p class="jersey-description parallax-text">
-      Kenali panduan pengukuran jersey BALADHIKA FUN RUN 2026
-      sebelum menentukan ukuran pada formulir pendaftaran.
+    <p class="jersey-description">
+      Pilih ukuran jersey yang sesuai sebelum
+      melengkapi formulir pendaftaran.
     </p>
     <div class="jersey-frame">
       <img src="size-chart.png"
-           alt="Panduan pengukuran jersey Baladhika Fun Run"
-           loading="lazy">
+           alt="Jersey Size Chart" loading="lazy">
     </div>
     <p class="jersey-note">
       PILIHAN UKURAN: XS • S • M • L • XL • XXL • XXXL
@@ -752,40 +1110,38 @@ section{position:relative;overflow:hidden;isolation:isolate}
   </div>
 </section>
 
-<!-- ROUTE -->
+<!-- RUTE -->
 <section class="route-section" id="rute">
   <div class="inner">
     <p class="kicker orange">EXPLORE THE COURSE</p>
     <h2 class="heading parallax-text">
       RUTE <span class="orange">5K</span>
     </h2>
-    <p class="copy">Kenali rute sebelum memulai pengalaman larimu.</p>
+    <p class="copy">Kenali rute sebelum memulai lari.</p>
     <div class="route-frame">
       <img src="banner-rute-5k.png"
-           alt="Rute Baladhika Fun Run 5K"
-           loading="lazy">
+           alt="Rute Baladhika Fun Run 5K" loading="lazy">
     </div>
   </div>
 </section>
 
 <!-- MORE THAN -->
-<section class="more-section" id="experience">
+<section class="more-section">
   <div class="inner">
     <p class="kicker orange">THE EXPERIENCE</p>
     <h2 class="heading parallax-text">
       <span>MORE THAN</span>
       <span class="orange">JUST A RUN.</span>
     </h2>
-    <p class="copy parallax-text">
-      Baladhika Fun Run 2026 bukan hanya tentang mencapai
-      garis finis, tetapi tentang semangat, kebersamaan,
-      dan pengalaman berlari.
+    <p class="copy">
+      Baladhika Fun Run 2026 bukan hanya tentang
+      garis finis, tetapi juga semangat dan kebersamaan.
     </p>
   </div>
 </section>
 
 <!-- READY -->
-<section class="ready-section" id="ready">
+<section class="ready-section">
   <img class="ready-runner parallax-image"
        src="pelari-finish.png"
        alt="Pelari menuju garis finis">
@@ -794,8 +1150,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <p class="kicker">BALADHIKA FUN RUN 2026</p>
       <h2 class="heading parallax-text">READY<br>TO RUN?</h2>
       <p class="copy">
-        Daftarkan dirimu, keluarga, dan teman-teman.
-        Satu pemesan dapat mendaftarkan beberapa peserta sekaligus.
+        Satu pemesan dapat mendaftarkan beberapa peserta
+        dengan satu email utama.
       </p>
       <a class="btn" href="#registration">REGISTER NOW ↗</a>
     </div>
@@ -810,8 +1166,10 @@ section{position:relative;overflow:hidden;isolation:isolate}
       REGIS<span class="orange">TRATION.</span>
     </h2>
     <p class="registration-intro copy">
-      Pilih kategori tiket yang sedang dibuka,
-      tentukan jumlah peserta, dan lengkapi data setiap orang.
+      Satu email utama untuk setiap pesanan,
+      baik pendaftaran individu maupun rombongan.
+      Setiap peserta tetap mengisi identitas,
+      alamat lengkap, ukuran jersey, dan kontak darurat.
     </p>
 
     <div class="registration-steps">
@@ -831,11 +1189,11 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <p class="kicker orange">STEP 01</p>
       <h3>CHOOSE YOUR <span class="orange">TICKET.</span></h3>
       <p class="registration-intro copy">
-        Kategori Normal akan dibuka setelah Early Bird habis.
+        Pilih kategori yang tersedia.
+        Kategori Normal dibuka sesuai status dari sistem.
       </p>
 
       <div class="ticket-grid">
-
         <div class="ticket-card unavailable" id="cardEarly">
           <div class="ticket-name">
             EARLY BIRD
@@ -875,7 +1233,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
                     onclick="changeQty('normal',1)" disabled>+</button>
           </div>
         </div>
-
       </div>
 
       <div class="order-summary">
@@ -898,8 +1255,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </div>
 
       <p class="notice" id="ticketNotice">
-        Status tiket diperiksa otomatis.
-        Formulir ini masih mode pratinjau.
+        MODE DEMO. Status tiket mengikuti API pengujian.
+        Tidak ada pembayaran nyata.
       </p>
 
       <div class="registration-actions">
@@ -915,9 +1272,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <div class="registration-panel" id="detailsStep" hidden>
       <p class="kicker orange">STEP 02</p>
       <h3>BUYER <span class="orange">INFORMATION.</span></h3>
+
       <p class="registration-intro copy">
-        Data pemesan utama digunakan untuk komunikasi
-        seluruh peserta dalam pesanan.
+        Masukkan satu email pemesan utama.
+        Untuk pendaftaran 2, 3, atau lebih peserta,
+        email ini digunakan bersama sebagai email
+        konfirmasi seluruh peserta.
       </p>
 
       <form id="registrationForm">
@@ -929,7 +1289,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
                    placeholder="Nama lengkap pemesan">
           </div>
           <div class="field">
-            <label for="buyerEmail">Email Pemesan *</label>
+            <label for="buyerEmail">Email Utama *</label>
             <input id="buyerEmail" type="email" required
                    autocomplete="email"
                    placeholder="email@contoh.com">
@@ -943,8 +1303,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
         </div>
 
         <div class="notice">
-          Gunakan data contoh selama pengujian.
-          Data belum dikirim ke server.
+          Email peserta tidak perlu diisi berulang.
+          Cukup satu email utama pada data pemesan.
+          Gunakan data contoh selama MODE DEMO.
         </div>
 
         <h3>PARTICIPANT <span class="orange">DETAILS.</span></h3>
@@ -966,8 +1327,11 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <div class="registration-panel" id="reviewStep" hidden>
       <p class="kicker orange">STEP 03</p>
       <h3>ORDER <span class="orange">CONFIRMATION.</span></h3>
+
       <p class="registration-intro copy">
-        Periksa kembali seluruh data peserta dan nominal tiket.
+        Periksa data seluruh peserta,
+        alamat, identitas, ukuran jersey,
+        dan satu email konfirmasi utama.
       </p>
 
       <div id="reviewBuyer"></div>
@@ -987,7 +1351,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <label class="agreement">
         <input type="checkbox" id="agreeRules">
         <span>
-          Saya telah membaca dan menyetujui
+          Saya menyetujui
           <a href="#rules" class="text-link">
             peraturan BALADHIKA FUN RUN 2026
           </a>
@@ -998,8 +1362,10 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <h3 style="margin-top:35px">
         PAYMENT <span class="orange">METHOD.</span>
       </h3>
+
       <p class="registration-intro copy">
-        Metode pembayaran berikut masih pratinjau.
+        Simulasi metode pembayaran.
+        Tidak ada transaksi uang sungguhan.
       </p>
 
       <div class="payment-options">
@@ -1007,8 +1373,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
                 data-method="QRIS_DEMO"
                 onclick="selectPayment('QRIS_DEMO')">
           <strong>▦ QRIS</strong>
-          <span>Pratinjau pembayaran QRIS</span>
+          <span>Pratinjau QRIS</span>
         </button>
+
         <button class="payment-option" type="button"
                 data-method="VA_MANDIRI_DEMO"
                 onclick="selectPayment('VA_MANDIRI_DEMO')">
@@ -1030,11 +1397,10 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </div>
 
       <p class="notice">
-        MODE PRATINJAU: Belum ada penyimpanan data,
-        pembuatan pesanan, atau pembayaran.
+        MODE DEMO: Tidak menyimpan data peserta,
+        tidak mengirim email, dan tidak memproses pembayaran.
       </p>
     </div>
-
   </div>
 </section>
 
@@ -1049,13 +1415,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <p><strong>TANGGAL:</strong> 4–5 DESEMBER 2026</p>
       <p><strong>LOKASI:</strong> AULA MAKOREM 083/BDJ</p>
       <p>
-        Informasi jam pengambilan akan diumumkan
-        secara resmi oleh panitia.
+        Jam pengambilan mengikuti pengumuman resmi panitia.
       </p>
       <a class="btn"
          href="https://maps.app.goo.gl/tYboMgM2xcAogSSa7"
          target="_blank" rel="noopener noreferrer">
-        LIHAT LOKASI GOOGLE MAPS ↗
+        LIHAT GOOGLE MAPS ↗
       </a>
     </div>
   </div>
@@ -1069,8 +1434,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
       EVENT <span class="orange">RULES.</span>
     </h2>
     <p class="registration-intro copy">
-      Informasi umum pelaksanaan BALADHIKA FUN RUN 2026.
-      Ketentuan final mengikuti pengumuman resmi panitia.
+      Informasi umum kegiatan.
+      Ketentuan final mengikuti pengumuman panitia.
     </p>
 
     <div class="rules-info">
@@ -1092,26 +1457,17 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </div>
       <div class="rule">
         <span class="rule-number">02</span>
-        <p>Peserta wajib mengikuti arahan panitia selama kegiatan.</p>
+        <p>Peserta mengikuti arahan panitia selama kegiatan.</p>
       </div>
       <div class="rule">
         <span class="rule-number">03</span>
-        <p>Peserta wajib menjaga ketertiban dan kebersihan area kegiatan.</p>
+        <p>Peserta menjaga ketertiban dan kebersihan area kegiatan.</p>
       </div>
       <div class="rule">
         <span class="rule-number">04</span>
         <p>Ketentuan lengkap mengikuti peraturan resmi panitia.</p>
       </div>
     </div>
-
-    <p class="notice">
-      Ketentuan lengkap perlu dikonfirmasi berdasarkan
-      dokumen final panitia sebelum pendaftaran publik diaktifkan.
-    </p>
-
-    <a class="btn" href="#registration">
-      KEMBALI KE REGISTRATION ↑
-    </a>
   </div>
 </section>
 
@@ -1130,7 +1486,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       Instagram: @Bhaladhika_funrun2026
     </a>
   </div>
-  <p>© 2026 BALADHIKA FUN RUN • WEBSITE PREVIEW</p>
+  <p>© 2026 BALADHIKA FUN RUN • MODE DEMO</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -1139,58 +1495,93 @@ section{position:relative;overflow:hidden;isolation:isolate}
 <script>
 "use strict";
 
-/* HELPERS */
-const $=id=>document.getElementById(id);
-const rupiah=value=>"Rp"+Number(value).toLocaleString("id-ID");
+/* ======================================
+   PENGATURAN DASAR
+====================================== */
 
-/* COUNTDOWN */
-const raceDate=new Date("2026-12-06T05:30:00+07:00").getTime();
+const $ = id => document.getElementById(id);
+
+const rupiah = value =>
+  "Rp" + Number(value).toLocaleString("id-ID");
+
+const prices = {
+  early:125000,
+  normal:150000
+};
+
+const qty = {
+  early:0,
+  normal:0
+};
+
+const MAX_PER_ORDER = 10;
+
+let ticketStatus = null;
+let selectedPayment = "";
+let participantData = [];
+
+/* ======================================
+   COUNTDOWN
+====================================== */
+
+const raceDate =
+  new Date("2026-12-06T05:30:00+07:00").getTime();
 
 function updateCountdown(){
-  const distance=Math.max(0,raceDate-Date.now());
+  const distance = Math.max(0,raceDate-Date.now());
 
-  $("days").textContent=Math.floor(distance/86400000);
-  $("hours").textContent=String(
-    Math.floor(distance%86400000/3600000)
-  ).padStart(2,"0");
-  $("minutes").textContent=String(
-    Math.floor(distance%3600000/60000)
-  ).padStart(2,"0");
-  $("seconds").textContent=String(
-    Math.floor(distance%60000/1000)
-  ).padStart(2,"0");
+  $("days").textContent =
+    Math.floor(distance/86400000);
+
+  $("hours").textContent =
+    String(
+      Math.floor((distance%86400000)/3600000)
+    ).padStart(2,"0");
+
+  $("minutes").textContent =
+    String(
+      Math.floor((distance%3600000)/60000)
+    ).padStart(2,"0");
+
+  $("seconds").textContent =
+    String(
+      Math.floor((distance%60000)/1000)
+    ).padStart(2,"0");
 }
+
 updateCountdown();
 setInterval(updateCountdown,1000);
 
-/* TICKET API */
-const prices={early:125000,normal:150000};
-const qty={early:0,normal:0};
-const MAX_PER_ORDER=10;
-
-let ticketStatus=null;
-let selectedPayment="";
-let participantData=[];
+/* ======================================
+   STATUS TIKET
+====================================== */
 
 function totalPeople(){
   return qty.early+qty.normal;
 }
+
 function totalPrice(){
   return qty.early*prices.early+
          qty.normal*prices.normal;
 }
+
 function isAvailable(category){
   if(!ticketStatus) return false;
 
-  const key=category==="early"?"early_bird":"normal";
+  const key =
+    category==="early"?"early_bird":"normal";
 
-  return ticketStatus.registration_open===true &&
-         ticketStatus[key]?.status==="AVAILABLE" &&
-         ticketStatus[key]?.can_register===true;
+  return (
+    ticketStatus.registration_open===true &&
+    ticketStatus[key]?.status==="AVAILABLE" &&
+    ticketStatus[key]?.can_register===true
+  );
 }
 
 function setSoldStamp(id,sold){
-  const stamp=$(id)?.querySelector(".sold-stamp");
+  const stamp =
+    $(id)?.querySelector(".sold-stamp");
+
   if(stamp) stamp.hidden=!sold;
 }
 
@@ -1222,35 +1613,55 @@ function updateTicketDisplay(){
 
   configs.forEach(c=>{
     const available=isAvailable(c.key);
-    const sold=ticketStatus?.[c.apiKey]?.status==="SOLD_OUT";
+
+    const sold =
+      ticketStatus?.[c.apiKey]?.status==="SOLD_OUT";
 
     setSoldStamp(c.priceId,sold);
     setSoldStamp(c.cardId,sold);
 
-    const status=!ticketStatus
-      ?"STATUS BELUM TERSEDIA"
-      :sold
-        ?"SOLD OUT"
-        :available
-          ?"PENDAFTARAN DIBUKA"
-          :c.key==="normal"
-            ?"SEGERA DIBUKA"
-            :"BELUM TERSEDIA";
+    let status="STATUS BELUM TERSEDIA";
+
+    if(ticketStatus){
+      if(sold){
+        status="SOLD OUT";
+      }else if(available){
+        status="PENDAFTARAN DIBUKA";
+      }else if(c.key==="normal"){
+        status="SEGERA DIBUKA";
+      }else{
+        status="BELUM TERSEDIA";
+      }
+    }
 
     $(c.priceStatus).textContent=status;
     $(c.cardStatus).textContent=status;
 
-    $(c.cardId).classList.toggle("available",available);
-    $(c.cardId).classList.toggle("unavailable",!available);
+    $(c.cardId).classList.toggle(
+      "available",available
+    );
+
+    $(c.cardId).classList.toggle(
+      "unavailable",!available
+    );
 
     $(c.plus).disabled=!available;
     $(c.minus).disabled=!available;
 
     const link=$(c.button);
-    link.classList.toggle("disabled-link",!available);
-    link.setAttribute("aria-disabled",String(!available));
+
+    link.classList.toggle(
+      "disabled-link",!available
+    );
+
+    link.setAttribute(
+      "aria-disabled",String(!available)
+    );
+
     link.tabIndex=available?0:-1;
-    link.textContent=available?"PILIH TIKET ↗":status;
+
+    link.textContent=
+      available?"PILIH TIKET ↗":status;
 
     if(!available){
       qty[c.key]=0;
@@ -1262,9 +1673,10 @@ function updateTicketDisplay(){
 
 async function refreshTicketStatus(){
   try{
-    const response=await fetch("/api/ticket-status",{
-      cache:"no-store"
-    });
+    const response=await fetch(
+      "/api/ticket-status",
+      {cache:"no-store"}
+    );
 
     if(!response.ok){
       throw new Error("HTTP "+response.status);
@@ -1282,7 +1694,11 @@ async function refreshTicketStatus(){
 
     ticketStatus=data;
   }catch(error){
-    console.error("Gagal membaca status tiket:",error);
+    console.warn(
+      "Status tiket tidak tersedia:",
+      error
+    );
+
     ticketStatus=null;
   }
 
@@ -1290,17 +1706,22 @@ async function refreshTicketStatus(){
 }
 
 function changeQty(category,change){
-  if(!["early","normal"].includes(category)) return;
+  if(!["early","normal"].includes(category)){
+    return;
+  }
 
   if(!isAvailable(category)){
     alert("Kategori tiket belum tersedia.");
     return;
   }
 
-  const other=category==="early"?"normal":"early";
+  const other=
+    category==="early"?"normal":"early";
 
   if(change>0 && qty[other]>0){
-    alert("Hanya satu kategori tiket per pesanan.");
+    alert(
+      "Hanya satu kategori tiket per pesanan."
+    );
     return;
   }
 
@@ -1308,7 +1729,10 @@ function changeQty(category,change){
 
   if(next<0) return;
 
-  if(change>0 && totalPeople()>=MAX_PER_ORDER){
+  if(
+    change>0 &&
+    totalPeople()>=MAX_PER_ORDER
+  ){
     alert("Maksimal 10 peserta per pesanan.");
     return;
   }
@@ -1327,32 +1751,46 @@ function updateTicketSummary(){
   $("normalSubtotal").textContent=
     rupiah(qty.normal*prices.normal);
 
-  $("totalPeople").textContent=totalPeople()+" orang";
-  $("grandTotal").textContent=rupiah(totalPrice());
+  $("totalPeople").textContent=
+    totalPeople()+" orang";
+
+  $("grandTotal").textContent=
+    rupiah(totalPrice());
 
   $("continueTickets").disabled=
     totalPeople()===0 ||
     !ticketStatus ||
-    (qty.early>0 && !isAvailable("early")) ||
-    (qty.normal>0 && !isAvailable("normal"));
+    (qty.early>0&&!isAvailable("early")) ||
+    (qty.normal>0&&!isAvailable("normal"));
 }
 
 updateTicketDisplay();
 refreshTicketStatus();
+
 setInterval(refreshTicketStatus,30000);
 
-document.addEventListener("visibilitychange",()=>{
-  if(!document.hidden) refreshTicketStatus();
-});
+document.addEventListener(
+  "visibilitychange",
+  ()=>{
+    if(!document.hidden){
+      refreshTicketStatus();
+    }
+  }
+);
 
-/* REGISTRATION */
+/* ======================================
+   PERPINDAHAN TAHAP PENDAFTARAN
+====================================== */
+
 function showRegistrationStep(step){
   $("ticketStep").hidden=step!==1;
   $("detailsStep").hidden=step!==2;
   $("reviewStep").hidden=step!==3;
 
   for(let i=1;i<=3;i++){
-    $("step"+i).classList.toggle("active",i===step);
+    $("step"+i).classList.toggle(
+      "active",i===step
+    );
   }
 
   $("registration").scrollIntoView({
@@ -1360,12 +1798,22 @@ function showRegistrationStep(step){
   });
 }
 
-function makeInput(label,name,type="text",required=true){
+/* ======================================
+   PEMBUAT FIELD FORMULIR
+====================================== */
+
+function makeInput(
+  label,
+  name,
+  type="text",
+  required=true
+){
   const wrapper=document.createElement("div");
   wrapper.className="field";
 
   const title=document.createElement("label");
-  title.textContent=label+(required?" *":"");
+  title.textContent=
+    label+(required?" *":"");
 
   const input=document.createElement("input");
   input.name=name;
@@ -1376,16 +1824,28 @@ function makeInput(label,name,type="text",required=true){
     input.max=new Date().toISOString().slice(0,10);
   }
 
+  if(name==="identity_number"){
+    input.maxLength=30;
+    input.autocomplete="off";
+    input.placeholder="Masukkan nomor identitas";
+  }
+
   wrapper.append(title,input);
   return wrapper;
 }
 
-function makeSelect(label,name,options,required=true){
+function makeSelect(
+  label,
+  name,
+  options,
+  required=true
+){
   const wrapper=document.createElement("div");
   wrapper.className="field";
 
   const title=document.createElement("label");
-  title.textContent=label+(required?" *":"");
+  title.textContent=
+    label+(required?" *":"");
 
   const select=document.createElement("select");
   select.name=name;
@@ -1393,26 +1853,312 @@ function makeSelect(label,name,options,required=true){
 
   const empty=document.createElement("option");
   empty.value="";
-  empty.textContent="Pilih "+label.toLowerCase();
-  select.appendChild(empty);
+  empty.textContent=
+    "Pilih "+label.toLowerCase();
+
+  select.append(empty);
 
   options.forEach(value=>{
     const option=document.createElement("option");
     option.value=value;
     option.textContent=value;
-    select.appendChild(option);
+    select.append(option);
   });
 
   wrapper.append(title,select);
   return wrapper;
 }
 
+function makeTextarea(label,name){
+  const wrapper=document.createElement("div");
+  wrapper.className="field full";
+
+  const title=document.createElement("label");
+  title.textContent=label+" *";
+
+  const textarea=document.createElement("textarea");
+  textarea.name=name;
+  textarea.required=true;
+  textarea.placeholder=
+    "Nama jalan, nomor rumah, RT/RW, dusun, atau lingkungan";
+
+  wrapper.append(title,textarea);
+  return wrapper;
+}
+
 function makeGrid(...elements){
   const grid=document.createElement("div");
   grid.className="field-grid";
-  elements.forEach(element=>grid.appendChild(element));
+
+  elements.forEach(el=>grid.append(el));
   return grid;
 }
+
+/* ======================================
+   API WILAYAH INDONESIA
+   PROVINSI > KAB/KOTA >
+   KECAMATAN > DESA/KELURAHAN
+====================================== */
+
+const REGION_API =
+  "https://www.emsifa.com/api-wilayah-indonesia/api";
+
+const regionCache=new Map();
+
+async function fetchRegions(type,parentId=""){
+  let url="";
+
+  if(type==="provinces"){
+    url=REGION_API+"/provinces.json";
+  }else if(type==="regencies"){
+    url=REGION_API+
+      "/regencies/"+parentId+".json";
+  }else if(type==="districts"){
+    url=REGION_API+
+      "/districts/"+parentId+".json";
+  }else if(type==="villages"){
+    url=REGION_API+
+      "/villages/"+parentId+".json";
+  }
+
+  if(!url){
+    throw new Error("Tipe wilayah tidak dikenal");
+  }
+
+  if(regionCache.has(url)){
+    return regionCache.get(url);
+  }
+
+  const controller=new AbortController();
+
+  const timeout=setTimeout(
+    ()=>controller.abort(),
+    12000
+  );
+
+  try{
+    const response=await fetch(url,{
+      signal:controller.signal
+    });
+
+    if(!response.ok){
+      throw new Error("HTTP "+response.status);
+    }
+
+    const data=await response.json();
+
+    if(!Array.isArray(data)){
+      throw new Error("Format data wilayah tidak valid");
+    }
+
+    regionCache.set(url,data);
+    return data;
+  }finally{
+    clearTimeout(timeout);
+  }
+}
+
+function addRegionSelect(label,name){
+  const field=document.createElement("div");
+  field.className="field";
+
+  const title=document.createElement("label");
+  title.textContent=label+" *";
+
+  const select=document.createElement("select");
+  select.name=name;
+  select.required=true;
+  select.disabled=true;
+
+  field.append(title,select);
+
+  return{field,select};
+}
+
+function resetRegionSelect(select,message){
+  select.replaceChildren();
+
+  const option=document.createElement("option");
+  option.value="";
+  option.textContent=message;
+
+  select.append(option);
+  select.disabled=true;
+}
+
+function fillRegionSelect(select,data,label){
+  select.replaceChildren();
+
+  const first=document.createElement("option");
+  first.value="";
+  first.textContent="Pilih "+label;
+
+  select.append(first);
+
+  data.forEach(item=>{
+    const option=document.createElement("option");
+    option.value=String(item.id);
+    option.textContent=item.name;
+    select.append(option);
+  });
+
+  select.disabled=false;
+}
+
+function selectedRegionName(select){
+  if(!select||!select.value) return "";
+
+  return select.selectedOptions[0]?.textContent||"";
+}
+
+function setupRegions(card){
+  const province=addRegionSelect(
+    "Provinsi","province"
+  );
+
+  const regency=addRegionSelect(
+    "Kabupaten / Kota","regency"
+  );
+
+  const district=addRegionSelect(
+    "Kecamatan","district"
+  );
+
+  const village=addRegionSelect(
+    "Desa / Kelurahan","village"
+  );
+
+  const selects=[
+    province.select,
+    regency.select,
+    district.select,
+    village.select
+  ];
+
+  const labels=[
+    "provinsi",
+    "kabupaten / kota",
+    "kecamatan",
+    "desa / kelurahan"
+  ];
+
+  const types=[
+    "provinces",
+    "regencies",
+    "districts",
+    "villages"
+  ];
+
+  const status=document.createElement("p");
+  status.className="address-status";
+  status.setAttribute("role","status");
+
+  card.append(
+    makeGrid(
+      province.field,
+      regency.field,
+      district.field,
+      village.field
+    ),
+    status,
+    makeGrid(
+      makeTextarea(
+        "Alamat Detail","street_address"
+      )
+    )
+  );
+
+  const versions=[0,0,0,0];
+
+  async function loadLevel(level,parentId=""){
+    const select=selects[level];
+    const version=++versions[level];
+
+    resetRegionSelect(
+      select,
+      "Memuat pilihan..."
+    );
+
+    status.textContent=
+      "Memuat data "+labels[level]+"...";
+
+    try{
+      const data=await fetchRegions(
+        types[level],parentId
+      );
+
+      if(version!==versions[level]){
+        return;
+      }
+
+      fillRegionSelect(
+        select,data,labels[level]
+      );
+
+      status.textContent="";
+    }catch(error){
+      if(version!==versions[level]){
+        return;
+      }
+
+      resetRegionSelect(
+        select,
+        "Gagal memuat wilayah"
+      );
+
+      status.textContent=
+        "Data "+labels[level]+
+        " belum berhasil dimuat. "+
+        "Periksa koneksi internet, "+
+        "lalu pilih ulang wilayah sebelumnya.";
+
+      console.warn(
+        "Gagal memuat wilayah:",
+        error
+      );
+    }
+  }
+
+  for(let i=0;i<3;i++){
+    selects[i].addEventListener(
+      "change",
+      ()=>{
+        for(let j=i+1;j<4;j++){
+          versions[j]++;
+
+          resetRegionSelect(
+            selects[j],
+            "Pilih "+labels[j]
+          );
+        }
+
+        status.textContent="";
+
+        if(selects[i].value){
+          loadLevel(i+1,selects[i].value);
+        }
+      }
+    );
+  }
+
+  resetRegionSelect(
+    selects[0],
+    "Memuat provinsi..."
+  );
+
+  for(let i=1;i<4;i++){
+    resetRegionSelect(
+      selects[i],
+      "Pilih "+labels[i]
+    );
+  }
+
+  loadLevel(0);
+}
+
+/* ======================================
+   FORMULIR SETIAP PESERTA
+====================================== */
 
 function createParticipant(index,category){
   const card=document.createElement("div");
@@ -1427,74 +2173,192 @@ function createParticipant(index,category){
 
   const pill=document.createElement("span");
   pill.className="category-pill";
-  pill.textContent=category==="early"?"EARLY BIRD":"NORMAL";
+  pill.textContent=
+    category==="early"?"EARLY BIRD":"NORMAL";
 
   header.append(title,pill);
-  card.appendChild(header);
+  card.append(header);
 
-  card.appendChild(makeGrid(
-    makeInput("Nama Depan","first_name"),
-    makeInput("Nama Belakang","last_name")
-  ));
+  /* NAMA PESERTA */
+  card.append(
+    makeGrid(
+      makeInput(
+        "Nama Depan","first_name"
+      ),
+      makeInput(
+        "Nama Belakang","last_name"
+      )
+    )
+  );
 
-  card.appendChild(makeGrid(
-    makeInput("Nama pada BIB","bib_name"),
-    makeInput("Tanggal Lahir","birth_date","date")
-  ));
+  /* BIB DAN TANGGAL LAHIR */
+  card.append(
+    makeGrid(
+      makeInput(
+        "Nama pada BIB","bib_name"
+      ),
+      makeInput(
+        "Tanggal Lahir","birth_date","date"
+      )
+    )
+  );
 
-  card.appendChild(makeGrid(
-    makeSelect("Jenis Kelamin","gender",[
-      "Laki-laki","Perempuan"
-    ]),
-    makeSelect("Ukuran Jersey","jersey_size",[
-      "XS","S","M","L","XL","XXL","XXXL"
-    ])
-  ));
+  /* JENIS KELAMIN DAN JERSEY */
+  card.append(
+    makeGrid(
+      makeSelect(
+        "Jenis Kelamin",
+        "gender",
+        ["Laki-laki","Perempuan"]
+      ),
+      makeSelect(
+        "Ukuran Jersey",
+        "jersey_size",
+        ["XS","S","M","L","XL","XXL","XXXL"]
+      )
+    )
+  );
 
-  const help=document.createElement("p");
-  help.style.fontSize="12px";
+  const sizeHelp=document.createElement("p");
+  sizeHelp.style.fontSize="12px";
 
-  const helpLink=document.createElement("a");
-  helpLink.href="#jersey";
-  helpLink.className="text-link";
-  helpLink.textContent="Lihat Jersey Size Chart";
+  const sizeLink=document.createElement("a");
+  sizeLink.href="#jersey";
+  sizeLink.className="text-link";
+  sizeLink.textContent=
+    "Lihat panduan ukuran jersey";
 
-  help.appendChild(helpLink);
-  card.appendChild(help);
+  sizeHelp.append(sizeLink);
+  card.append(sizeHelp);
 
-  card.appendChild(makeGrid(
-    makeInput("WhatsApp Peserta","phone","tel",false),
-    makeInput("Kota / Kabupaten","city")
-  ));
+  /* JENIS IDENTITAS DAN NOMOR IDENTITAS */
+  card.append(
+    makeGrid(
+      makeSelect(
+        "Jenis Identitas",
+        "identity_type",
+        [
+          "KTP",
+          "KIA",
+          "Paspor",
+          "Identitas Lainnya"
+        ]
+      ),
+      makeInput(
+        "Nomor Identitas",
+        "identity_number"
+      )
+    )
+  );
 
-  card.appendChild(makeGrid(
-    makeInput("Nama Kontak Darurat","emergency_name"),
-    makeInput("Nomor Kontak Darurat","emergency_phone","tel")
-  ));
+  /* STATUS KESEHATAN */
+  card.append(
+    makeSelect(
+      "Status Kesehatan",
+      "health_status",
+      [
+        "Sehat / Siap Mengikuti Lari",
+        "Memiliki Kondisi Kesehatan yang Perlu Diperhatikan"
+      ]
+    )
+  );
 
-  card.appendChild(makeSelect(
-    "Hubungan Kontak Darurat","emergency_relation",[
-      "Orang Tua","Pasangan","Saudara",
-      "Keluarga Lain","Teman","Lainnya"
-    ]
-  ));
+  const healthNote=document.createElement("p");
+  healthNote.className="copy muted";
+  healthNote.textContent=
+    "Tidak perlu mencantumkan diagnosis medis. "+
+    "Peserta yang memiliki kondisi kesehatan "+
+    "tertentu disarankan berkonsultasi dengan "+
+    "tenaga kesehatan dan menghubungi panitia.";
+
+  card.append(healthNote);
+
+  /* ALAMAT LENGKAP */
+  const addressTitle=document.createElement("p");
+  addressTitle.className="address-heading";
+  addressTitle.textContent=
+    "ALAMAT LENGKAP PESERTA";
+
+  card.append(addressTitle);
+
+  setupRegions(card);
+
+  /* KONTAK PESERTA */
+  card.append(
+    makeGrid(
+      makeInput(
+        "WhatsApp Peserta (opsional)",
+        "phone",
+        "tel",
+        false
+      ),
+      makeInput(
+        "Kode Pos (opsional)",
+        "postal_code",
+        "text",
+        false
+      )
+    )
+  );
+
+  /* KONTAK DARURAT */
+  const emergencyTitle=document.createElement("p");
+  emergencyTitle.className="address-heading";
+  emergencyTitle.textContent="KONTAK DARURAT";
+
+  card.append(emergencyTitle);
+
+  card.append(
+    makeGrid(
+      makeInput(
+        "Nama Kontak Darurat",
+        "emergency_name"
+      ),
+      makeInput(
+        "Nomor Kontak Darurat",
+        "emergency_phone",
+        "tel"
+      )
+    )
+  );
+
+  card.append(
+    makeSelect(
+      "Hubungan Kontak Darurat",
+      "emergency_relation",
+      [
+        "Orang Tua",
+        "Pasangan",
+        "Saudara",
+        "Keluarga Lain",
+        "Teman",
+        "Lainnya"
+      ]
+    )
+  );
 
   return card;
 }
+
+/* ======================================
+   LANJUT KE DATA PESERTA
+====================================== */
 
 async function openParticipantStep(){
   await refreshTicketStatus();
 
   if(totalPeople()===0){
-    alert("Pilih tiket yang masih tersedia.");
+    alert("Pilih tiket yang tersedia.");
     return;
   }
 
   if(
-    (qty.early>0 && !isAvailable("early")) ||
-    (qty.normal>0 && !isAvailable("normal"))
+    (qty.early>0&&!isAvailable("early")) ||
+    (qty.normal>0&&!isAvailable("normal"))
   ){
-    alert("Status tiket berubah. Silakan pilih ulang.");
+    alert(
+      "Status tiket berubah. Silakan pilih ulang."
+    );
     return;
   }
 
@@ -1507,7 +2371,7 @@ async function openParticipantStep(){
   container.replaceChildren();
 
   categories.forEach((category,index)=>{
-    container.appendChild(
+    container.append(
       createParticipant(index,category)
     );
   });
@@ -1515,24 +2379,50 @@ async function openParticipantStep(){
   showRegistrationStep(2);
 }
 
+/* ======================================
+   AMBIL DATA FORMULIR
+====================================== */
+
 function collectParticipants(){
   return [
     ...document.querySelectorAll(".participant-card")
   ].map(card=>{
+
     const get=name=>
-      card.querySelector(`[name="${name}"]`)
-        ?.value.trim()||"";
+      card.querySelector(
+        `[name="${name}"]`
+      )?.value.trim()||"";
+
+    const region=name=>
+      selectedRegionName(
+        card.querySelector(
+          `[name="${name}"]`
+        )
+      );
 
     return{
       category:card.dataset.category,
+
       first_name:get("first_name"),
       last_name:get("last_name"),
       bib_name:get("bib_name"),
       birth_date:get("birth_date"),
       gender:get("gender"),
       jersey_size:get("jersey_size"),
+
+      identity_type:get("identity_type"),
+      identity_number:get("identity_number"),
+      health_status:get("health_status"),
+
+      province:region("province"),
+      regency:region("regency"),
+      district:region("district"),
+      village:region("village"),
+
+      street_address:get("street_address"),
+      postal_code:get("postal_code"),
       phone:get("phone"),
-      city:get("city"),
+
       emergency_name:get("emergency_name"),
       emergency_phone:get("emergency_phone"),
       emergency_relation:get("emergency_relation")
@@ -1540,117 +2430,241 @@ function collectParticipants(){
   });
 }
 
+/* ======================================
+   TAMPILKAN DATA KONFIRMASI
+====================================== */
+
 function addReviewLine(parent,text,bold=false){
   const p=document.createElement("p");
 
   if(bold){
     const strong=document.createElement("strong");
     strong.textContent=text;
-    p.appendChild(strong);
+    p.append(strong);
   }else{
     p.textContent=text;
   }
 
-  parent.appendChild(p);
+  parent.append(p);
 }
 
-$("registrationForm").addEventListener("submit",event=>{
-  event.preventDefault();
+$("registrationForm").addEventListener(
+  "submit",
+  event=>{
+    event.preventDefault();
 
-  if(!$("registrationForm").reportValidity()){
-    return;
+    if(!$("registrationForm").reportValidity()){
+      return;
+    }
+
+    participantData=collectParticipants();
+
+    const buyer=$("reviewBuyer");
+    buyer.replaceChildren();
+
+    const buyerCard=document.createElement("div");
+    buyerCard.className="review-entry";
+
+    addReviewLine(
+      buyerCard,
+      "DATA PEMESAN UTAMA",
+      true
+    );
+
+    addReviewLine(
+      buyerCard,
+      "Nama: "+$("buyerName").value
+    );
+
+    addReviewLine(
+      buyerCard,
+      "Email Konfirmasi Bersama: "+
+      $("buyerEmail").value
+    );
+
+    addReviewLine(
+      buyerCard,
+      "WhatsApp: "+$("buyerPhone").value
+    );
+
+    buyer.append(buyerCard);
+
+    const list=$("reviewParticipants");
+    list.replaceChildren();
+
+    participantData.forEach((person,index)=>{
+      const card=document.createElement("div");
+      card.className="review-entry";
+
+      addReviewLine(
+        card,
+        "PESERTA "+(index+1),
+        true
+      );
+
+      addReviewLine(
+        card,
+        "Nama: "+
+        person.first_name+" "+
+        person.last_name
+      );
+
+      addReviewLine(
+        card,
+        "Nama BIB: "+person.bib_name
+      );
+
+      addReviewLine(
+        card,
+        "Kategori: "+
+        (
+          person.category==="early"
+            ?"Early Bird"
+            :"Normal"
+        )
+      );
+
+      addReviewLine(
+        card,
+        "Tanggal Lahir: "+person.birth_date
+      );
+
+      addReviewLine(
+        card,
+        "Jenis Kelamin: "+person.gender
+      );
+
+      addReviewLine(
+        card,
+        "Ukuran Jersey: "+person.jersey_size
+      );
+
+      addReviewLine(
+        card,
+        "Jenis Identitas: "+person.identity_type
+      );
+
+      addReviewLine(
+        card,
+        "Nomor Identitas: "+person.identity_number
+      );
+
+      addReviewLine(
+        card,
+        "Status Kesehatan: "+person.health_status
+      );
+
+      const address=[
+        person.street_address,
+        person.village,
+        person.district,
+        person.regency,
+        person.province,
+        person.postal_code
+      ].filter(Boolean).join(", ");
+
+      addReviewLine(
+        card,
+        "Alamat Lengkap: "+address
+      );
+
+      if(person.phone){
+        addReviewLine(
+          card,
+          "WhatsApp Peserta: "+person.phone
+        );
+      }
+
+      addReviewLine(
+        card,
+        "Kontak Darurat: "+
+        person.emergency_name+
+        " ("+person.emergency_phone+")"
+      );
+
+      addReviewLine(
+        card,
+        "Hubungan: "+person.emergency_relation
+      );
+
+      list.append(card);
+    });
+
+    $("reviewCount").textContent=
+      totalPeople()+" orang";
+
+    $("reviewTotal").textContent=
+      rupiah(totalPrice());
+
+    $("agreeRules").checked=false;
+    selectedPayment="";
+
+    document.querySelectorAll(
+      ".payment-option"
+    ).forEach(button=>{
+      button.classList.remove("selected");
+    });
+
+    updatePaymentButton();
+    showRegistrationStep(3);
   }
+);
 
-  participantData=collectParticipants();
-
-  const buyer=$("reviewBuyer");
-  buyer.replaceChildren();
-
-  const buyerCard=document.createElement("div");
-  buyerCard.className="review-entry";
-
-  addReviewLine(buyerCard,"DATA PEMESAN",true);
-  addReviewLine(buyerCard,"Nama: "+$("buyerName").value);
-  addReviewLine(buyerCard,"Email: "+$("buyerEmail").value);
-  addReviewLine(buyerCard,"WhatsApp: "+$("buyerPhone").value);
-
-  buyer.appendChild(buyerCard);
-
-  const list=$("reviewParticipants");
-  list.replaceChildren();
-
-  participantData.forEach((person,index)=>{
-    const card=document.createElement("div");
-    card.className="review-entry";
-
-    addReviewLine(card,"PESERTA "+(index+1),true);
-    addReviewLine(
-      card,"Nama: "+person.first_name+" "+person.last_name
-    );
-    addReviewLine(card,"Nama BIB: "+person.bib_name);
-    addReviewLine(
-      card,"Kategori: "+
-      (person.category==="early"?"Early Bird":"Normal")
-    );
-    addReviewLine(card,"Jersey: "+person.jersey_size);
-    addReviewLine(
-      card,"Kontak Darurat: "+
-      person.emergency_name+" ("+
-      person.emergency_phone+")"
-    );
-
-    list.appendChild(card);
-  });
-
-  $("reviewCount").textContent=totalPeople()+" orang";
-  $("reviewTotal").textContent=rupiah(totalPrice());
-
-  $("agreeRules").checked=false;
-  selectedPayment="";
-
-  document.querySelectorAll(".payment-option")
-    .forEach(button=>button.classList.remove("selected"));
-
-  updatePaymentButton();
-  showRegistrationStep(3);
-});
+/* ======================================
+   PEMBAYARAN DEMO
+====================================== */
 
 function selectPayment(method){
   selectedPayment=method;
 
-  document.querySelectorAll(".payment-option")
-    .forEach(button=>{
-      button.classList.toggle(
-        "selected",button.dataset.method===method
-      );
-    });
+  document.querySelectorAll(
+    ".payment-option"
+  ).forEach(button=>{
+    button.classList.toggle(
+      "selected",
+      button.dataset.method===method
+    );
+  });
 
   updatePaymentButton();
 }
 
 function updatePaymentButton(){
   $("paymentButton").disabled=
-    !selectedPayment || !$("agreeRules").checked;
+    !selectedPayment ||
+    !$("agreeRules").checked;
 }
 
 $("agreeRules").addEventListener(
-  "change",updatePaymentButton
+  "change",
+  updatePaymentButton
 );
 
 function previewPayment(){
-  if(!$("agreeRules").checked || !selectedPayment){
-    alert("Setujui peraturan dan pilih metode pembayaran.");
+  if(
+    !$("agreeRules").checked ||
+    !selectedPayment
+  ){
+    alert(
+      "Setujui peraturan dan pilih metode pembayaran."
+    );
     return;
   }
 
   alert(
-    "MODE PRATINJAU. Belum ada pembayaran "+
-    "atau penyimpanan data. Integrasi Supabase "+
-    "dan Xendit dilakukan pada tahap berikutnya."
+    "SIMULASI PENDAFTARAN SELESAI.\n\n"+
+    "MODE DEMO / TEST.\n\n"+
+    "Tidak ada data peserta yang dikirim "+
+    "atau disimpan.\n"+
+    "Tidak ada email yang dikirim.\n"+
+    "Tidak ada pembayaran nyata."
   );
 }
 
-/* FULL PARALLAX - SATU SISTEM ANIMASI */
+/* ======================================
+   ANIMASI PARALLAX
+====================================== */
+
 function initializeParallax(){
   if(
     typeof gsap==="undefined" ||
@@ -1664,32 +2678,44 @@ function initializeParallax(){
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Animasi pembukaan.
+  /* ANIMASI HERO */
   const heroTimeline=gsap.timeline({
     defaults:{ease:"power3.out"}
   });
 
   heroTimeline
     .from(".hero-content .kicker",{
-      y:25,opacity:0,duration:.6
+      y:25,
+      opacity:0,
+      duration:.6
     })
     .from(".hero-logo",{
-      y:55,opacity:0,duration:.9
+      y:55,
+      opacity:0,
+      duration:.9
     },"-=.2")
     .from(".hero-category",{
-      y:45,opacity:0,duration:.8
+      y:45,
+      opacity:0,
+      duration:.8
     },"-=.4")
     .from(".hero-info",{
-      y:25,opacity:0,duration:.6
+      y:25,
+      opacity:0,
+      duration:.6
     },"-=.3")
     .from(".hero-actions",{
-      y:25,opacity:0,duration:.6
+      y:25,
+      opacity:0,
+      duration:.6
     },"-=.3")
     .from(".hero-runner",{
-      x:55,opacity:0,duration:1
+      x:55,
+      opacity:0,
+      duration:1
     },"-=.8");
 
-  // Parallax pada setiap judul dan tulisan.
+  /* PARALLAX TULISAN */
   const textSelectors=[
     ".countdown-title",
     ".date-title",
@@ -1714,15 +2740,14 @@ function initializeParallax(){
 
   textSelectors.forEach(selector=>{
     gsap.utils.toArray(selector).forEach(el=>{
-      const section=el.closest("section")||el;
-
-      gsap.fromTo(el,
+      gsap.fromTo(
+        el,
         {y:45},
         {
           y:-12,
           ease:"none",
           scrollTrigger:{
-            trigger:section,
+            trigger:el.closest("section")||el,
             start:"top bottom",
             end:"bottom top",
             scrub:1.4,
@@ -1733,9 +2758,8 @@ function initializeParallax(){
     });
   });
 
-  // Gambar bergerak dengan kecepatan berbeda.
+  /* PARALLAX GAMBAR */
   const imageEffects=[
-    [".hero-runner",-35],
     [".date-runner",-65],
     [".price-runner",-45],
     [".benefit-art",-35],
@@ -1743,25 +2767,28 @@ function initializeParallax(){
     [".ready-runner",-55]
   ];
 
-  imageEffects.forEach(([selector,distance])=>{
-    gsap.utils.toArray(selector).forEach(el=>{
-      gsap.fromTo(el,
-        {y:0},
-        {
-          y:distance,
-          ease:"none",
-          scrollTrigger:{
-            trigger:el.closest("section")||el,
-            start:"top bottom",
-            end:"bottom top",
-            scrub:1.8
+  imageEffects.forEach(
+    ([selector,distance])=>{
+      gsap.utils.toArray(selector).forEach(el=>{
+        gsap.fromTo(
+          el,
+          {y:0},
+          {
+            y:distance,
+            ease:"none",
+            scrollTrigger:{
+              trigger:el.closest("section")||el,
+              start:"top bottom",
+              end:"bottom top",
+              scrub:1.8
+            }
           }
-        }
-      );
-    });
-  });
+        );
+      });
+    }
+  );
 
-  // Dekorasi melayang.
+  /* DEKORASI HERO */
   gsap.to(".hero-deco",{
     y:-90,
     ease:"none",
@@ -1773,34 +2800,26 @@ function initializeParallax(){
     }
   });
 
-  gsap.to(".jersey-deco",{
-    y:-100,
-    ease:"none",
-    scrollTrigger:{
-      trigger:".jersey-section",
-      start:"top bottom",
-      end:"bottom top",
-      scrub:1.5
+  /* HARGA MUNCUL */
+  gsap.utils.toArray(".price-col").forEach(
+    (el,index)=>{
+      gsap.from(el,{
+        x:index===0?-55:55,
+        opacity:0,
+        duration:1,
+        ease:"power3.out",
+        scrollTrigger:{
+          trigger:".price-section",
+          start:"top 78%",
+          once:true
+        }
+      });
     }
-  });
+  );
 
-  // Harga masuk dari arah berlawanan.
-  gsap.utils.toArray(".price-col").forEach((el,index)=>{
-    gsap.from(el,{
-      x:index===0?-55:55,
-      opacity:0,
-      duration:1,
-      ease:"power3.out",
-      scrollTrigger:{
-        trigger:".price-section",
-        start:"top 78%",
-        once:true
-      }
-    });
-  });
-
-  // Zoom peta rute.
-  gsap.fromTo(".route-frame img",
+  /* ZOOM RUTE */
+  gsap.fromTo(
+    ".route-frame img",
     {scale:1.06},
     {
       scale:1,
@@ -1814,7 +2833,7 @@ function initializeParallax(){
     }
   );
 
-  // Elemen noninteraktif muncul secara bertahap.
+  /* ANIMASI ELEMEN PENDUKUNG */
   [
     ".time-box",
     ".jersey-note",
@@ -1822,30 +2841,33 @@ function initializeParallax(){
     ".rules-info-item",
     ".rule"
   ].forEach(selector=>{
-    gsap.utils.toArray(selector).forEach((el,index)=>{
-      gsap.from(el,{
-        y:35,
-        opacity:0,
-        duration:.8,
-        delay:Math.min(index*.07,.3),
-        ease:"power2.out",
-        scrollTrigger:{
-          trigger:el,
-          start:"top 90%",
-          once:true
-        }
-      });
-    });
+    gsap.utils.toArray(selector).forEach(
+      (el,index)=>{
+        gsap.from(el,{
+          y:35,
+          opacity:0,
+          duration:.8,
+          delay:Math.min(index*.07,.3),
+          ease:"power2.out",
+          scrollTrigger:{
+            trigger:el,
+            start:"top 90%",
+            once:true
+          }
+        });
+      }
+    );
   });
 
-  // Formulir sengaja tidak dianimasikan saat diisi.
-  window.addEventListener("load",()=>{
-    ScrollTrigger.refresh();
-  },{once:true});
+  window.addEventListener(
+    "load",
+    ()=>ScrollTrigger.refresh(),
+    {once:true}
+  );
 }
 
 initializeParallax();
-</script>
 
+</script>
 </body>
 </html>
