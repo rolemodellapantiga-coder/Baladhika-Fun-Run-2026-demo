@@ -611,6 +611,73 @@ section{position:relative;overflow:hidden;isolation:isolate}
     transform: none !important;
   }
 }
+  
+/* PERBAIKAN HARGA TIKET KHUSUS HP */
+@media (max-width: 768px) {
+  .price-section .inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 35px;
+    padding: 85px 0 55px;
+    align-items: start;
+  }
+
+  .price-col,
+  .price-col.right {
+    width: 100%;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .price-col .kicker {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .price-title {
+    font-size: clamp(38px, 9vw, 65px);
+    line-height: 1.05;
+    min-height: 100px;
+    margin: 15px 0;
+  }
+
+  .price-number {
+    font-size: clamp(38px, 9vw, 60px);
+    line-height: 1.1;
+    margin: 15px 0 10px;
+  }
+
+  .price-col .ticket-status {
+    font-size: 10px;
+    line-height: 1.5;
+    min-height: 35px;
+    margin: 10px 0;
+  }
+
+  .price-note,
+  .price-col.right .price-note {
+    font-size: 10px;
+    line-height: 1.6;
+    margin: 12px 0;
+  }
+
+  .price-col .btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 8px;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .price-visual {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 340px;
+    max-height: none;
+  }
+}
+
 </style>
 </head>
 
