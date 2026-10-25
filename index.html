@@ -572,6 +572,22 @@ section{position:relative;overflow:hidden;isolation:isolate}
     margin: 20px 0;
   }
 
+.date-day {
+  font-size: 0.65em;
+  color: #f5efdf;
+  margin-bottom: 12px;
+}
+
+.date-start {
+  display: inline-block;
+  margin: 12px 0 24px;
+  color: #ff691f;
+  font-family: Anton, Impact, sans-serif;
+  font-size: clamp(38px, 9vw, 64px);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
   .date-place,
   .date-description {
     position: relative;
@@ -678,16 +694,26 @@ section{position:relative;overflow:hidden;isolation:isolate}
 <section class="date-section" id="tanggal">
   <div class="inner">
     <div class="date-content">
-      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-      <h2 class="date-title parallax-text">
-        <span>6 DESEMBER</span>
-        <span class="orange">2026</span>
-      </h2>
-      <p class="date-place parallax-text">LAPANGAN RAMPAL • KOTA MALANG</p>
-      <p class="date-description copy muted">
-        Pengalaman Fun Run 5K yang penuh energi,
-        semangat, dan kebersamaan. Start pukul 05.30 WIB.
-      </p>
+     
+<p class="kicker orange">BALADHIKA FUN RUN 2026</p>
+
+<h2 class="date-title parallax-text">
+  <span class="date-day">MINGGU</span>
+  <span>6 DESEMBER</span>
+  <span class="orange">2026</span>
+</h2>
+
+<p class="date-start">START 05.30 WIB</p>
+
+<p class="date-place parallax-text">
+  LAPANGAN RAMPAL • KOTA MALANG
+</p>
+
+<p class="date-description copy muted">
+  Pengalaman Fun Run 5K yang penuh energi,
+  semangat, dan kebersamaan.
+</p>
+
     </div>
   </div>
   <img class="date-runner parallax-image" src="pelari-tanggal.png" alt="Pelari Fun Run">
