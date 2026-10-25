@@ -547,8 +547,54 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
-</style>
-</head>
+
+/* PERBAIKAN TANGGAL KHUSUS HP */
+@media (max-width: 768px) {
+  .date-section {
+    display: block;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+
+  .date-section .inner {
+    padding: 85px 0 0;
+  }
+
+  .date-content {
+    width: 100%;
+    position: relative;
+    z-index: 7;
+  }
+
+  .date-title {
+    font-size: clamp(58px, 15vw, 110px);
+    line-height: 1.05;
+    margin: 20px 0;
+  }
+
+  .date-place,
+  .date-description {
+    position: relative;
+    z-index: 7;
+  }
+
+  .date-description {
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .date-runner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    right: auto;
+    bottom: auto;
+    object-fit: contain;
+    transform: none !important;
+  }
+}
 </style>
 </head>
 
