@@ -519,6 +519,36 @@ section{position:relative;overflow:hidden;isolation:isolate}
     transition-duration:.01ms!important;
   }
 }
+/* Kode CSS sebelumnya tetap ada */
+
+/* PERBAIKAN HERO KHUSUS HP */
+@media (max-width: 768px) {
+  .hero-content {
+    position: relative;
+    z-index: 30;
+  }
+
+  .hero-actions {
+    position: relative;
+    z-index: 40;
+  }
+
+  .hero-actions .btn {
+    position: relative;
+    z-index: 41;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .hero-runner,
+  .hero-deco,
+  .scroll-hint {
+    pointer-events: none;
+  }
+}
+
+</style>
+</head>
 </style>
 </head>
 
@@ -552,7 +582,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <h1 class="hero-category">KATEGORI 5K</h1>
       <p class="hero-info">
         ONE RUN • ONE SPIRIT • ONE EXPERIENCE<br>
-        6 DESEMBER 2026 • 05.30 WIB<br>
+       
+       MINGGU, 6 DESEMBER 2026 • 05.30 WIB<br>
+
         LAPANGAN RAMPAL, KOTA MALANG
       </p>
       <div class="hero-actions">
