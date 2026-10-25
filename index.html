@@ -670,7 +670,64 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
   
+/* URUTAN READY TO RUN KHUSUS HP */
+@media (max-width: 768px) {
 
+  .ready-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .ready-section .inner {
+    display: contents;
+  }
+
+  .ready-content {
+    display: contents;
+  }
+
+  .ready-content h2 {
+    order: 1;
+    width: 90%;
+    margin: 75px auto 20px;
+    text-align: center;
+    font-size: clamp(65px, 17vw, 100px);
+  }
+
+  .ready-content .kicker {
+    order: 2;
+    width: 90%;
+    margin: 0 auto 25px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .ready-runner {
+    order: 3;
+    position: relative;
+    width: 100%;
+    height: auto;
+    left: auto;
+    bottom: auto;
+    transform: none !important;
+  }
+
+  .ready-content .copy {
+    order: 4;
+    width: 85%;
+    max-width: 450px;
+    margin: 25px auto;
+    text-align: center;
+  }
+
+  .ready-content .btn {
+    order: 5;
+    align-self: center;
+    margin: 0 auto 75px;
+  }
+
+}
 /* PERBAIKAN HARGA TIKET KHUSUS HP */
 @media (max-width: 768px) {
 
