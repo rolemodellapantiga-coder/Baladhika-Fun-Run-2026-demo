@@ -493,10 +493,40 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .jersey-section{padding:80px 0}
   .jersey-frame{padding:8px}
   .more-section h2{font-size:17vw}
-  .ready-section .inner{align-items:flex-start;padding-top:110px}
-  .ready-content{width:100%}
-  .ready-content h2{font-size:19vw}
-  .ready-runner{width:85%;height:47%;bottom:3%}
+ .ready-section {
+  display: block;
+  min-height: 0;
+}
+
+.ready-section .inner {
+  display: block;
+  min-height: 0;
+  padding: 85px 0 30px;
+}
+
+.ready-content {
+  width: 100%;
+  text-align: center;
+}
+
+.ready-content h2 {
+  font-size: clamp(65px, 17vw, 100px);
+}
+
+.ready-content p {
+  margin: 20px auto 25px;
+}
+
+.ready-runner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  left: auto;
+  bottom: auto;
+  object-fit: contain;
+  transform: none !important;
+}
   .ticket-grid,.field-grid,.rules-list{grid-template-columns:1fr}
   .registration-section,.rules-section{padding:85px 0}
   .registration-panel{padding:20px}
@@ -547,8 +577,238 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
-</style>
-</head>
+
+/* PERBAIKAN TANGGAL KHUSUS HP */
+@media (max-width: 768px) {
+  .date-section {
+    display: block;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+
+  .date-section .inner {
+    padding: 85px 0 0;
+  }
+
+  .date-content {
+    width: 100%;
+    position: relative;
+    z-index: 7;
+  }
+
+  .date-title {
+    font-size: clamp(58px, 15vw, 110px);
+    line-height: 1.05;
+    margin: 20px 0;
+  }
+
+.date-day {
+  font-size: 0.65em;
+  color: #f5efdf;
+  margin-bottom: 12px;
+}
+
+.date-start {
+  display: inline-block;
+  margin: 12px 0 24px;
+  color: #ff691f;
+  font-family: Anton, Impact, sans-serif;
+  font-size: clamp(38px, 9vw, 64px);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+.date-place,
+.date-description {
+  position: relative;
+  z-index: 7;
+}
+
+/* LOKASI KEGIATAN KHUSUS HP */
+.date-place {
+  display: block;
+  font-family: Anton, Impact, sans-serif;
+  font-size: clamp(30px, 7vw, 48px);
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  color: #f5efdf;
+  margin: 30px 0 24px;
+  max-width: 100%;
+}
+
+/* PENGATURAN NAMA LOKASI KHUSUS HP */
+.date-place .place-name {
+  display: block;
+  color: #ff691f;
+  font-size: clamp(38px, 9vw, 60px);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.date-place .place-city {
+  display: block;
+  color: #f5efdf;
+  font-size: clamp(30px, 7vw, 48px);
+  line-height: 1.2;
+}
+
+  .date-description {
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .date-runner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    right: auto;
+    bottom: auto;
+    object-fit: contain;
+    transform: none !important;
+  }
+}
+  
+/* URUTAN READY TO RUN KHUSUS HP */
+@media (max-width: 768px) {
+
+  .ready-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .ready-section .inner {
+    display: contents;
+  }
+
+  .ready-content {
+    display: contents;
+  }
+
+  .ready-content h2 {
+    order: 1;
+    width: 90%;
+    margin: 75px auto 20px;
+    text-align: center;
+    font-size: clamp(65px, 17vw, 100px);
+  }
+
+  .ready-content .kicker {
+    order: 2;
+    width: 90%;
+    margin: 0 auto 25px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .ready-runner {
+    order: 3;
+    position: relative;
+    width: 100%;
+    height: auto;
+    left: auto;
+    bottom: auto;
+    transform: none !important;
+  }
+
+  .ready-content .copy {
+    order: 4;
+    width: 85%;
+    max-width: 450px;
+    margin: 25px auto;
+    text-align: center;
+  }
+
+  .ready-content .btn {
+    order: 5;
+    align-self: center;
+    margin: 0 auto 75px;
+  }
+
+}
+/* PERBAIKAN HARGA TIKET KHUSUS HP */
+@media (max-width: 768px) {
+
+  .price-section .inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: 24px 12px;
+    padding: 85px 0 55px;
+    align-items: stretch;
+  }
+
+  .price-col,
+  .price-col.right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 18px 12px;
+    background: #24362b;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    text-align: left;
+  }
+
+  .price-col .kicker {
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .price-title {
+    display: block;
+    font-size: clamp(32px, 8vw, 52px);
+    line-height: 1;
+    min-height: 72px;
+    margin: 0 0 10px;
+  }
+
+  .price-number {
+    font-size: clamp(38px, 9vw, 58px);
+    line-height: 1;
+    margin: 0 0 27px;
+  }
+
+  .price-col .ticket-status {
+    display: block;
+    font-size: 9px;
+    line-height: 1.5;
+    min-height: 42px;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .price-note,
+  .price-col.right .price-note {
+    font-size: 10px;
+    line-height: 1.6;
+    margin: 0 0 34px;
+    max-width: 100%;
+  }
+
+  .price-col .btn {
+    display: flex;
+    width: 100%;
+    min-height: 52px;
+    padding: 10px 6px;
+    margin-top: auto;
+    font-size: 9px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .price-visual {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 340px;
+    max-height: none;
+  }
+}
+
 </style>
 </head>
 
@@ -632,16 +892,27 @@ section{position:relative;overflow:hidden;isolation:isolate}
 <section class="date-section" id="tanggal">
   <div class="inner">
     <div class="date-content">
-      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-      <h2 class="date-title parallax-text">
-        <span>6 DESEMBER</span>
-        <span class="orange">2026</span>
-      </h2>
-      <p class="date-place parallax-text">LAPANGAN RAMPAL • KOTA MALANG</p>
-      <p class="date-description copy muted">
-        Pengalaman Fun Run 5K yang penuh energi,
-        semangat, dan kebersamaan. Start pukul 05.30 WIB.
-      </p>
+     
+<p class="kicker orange">BALADHIKA FUN RUN 2026</p>
+
+<h2 class="date-title parallax-text">
+  <span class="date-day">MINGGU</span>
+  <span>6 DESEMBER</span>
+  <span class="orange">2026</span>
+</h2>
+
+<p class="date-start">START 05.30 WIB</p>
+
+<p class="date-place parallax-text">
+  <span class="place-name">LAPANGAN RAMPAL</span>
+  <span class="place-city">KOTA MALANG</span>
+</p>
+
+<p class="date-description copy muted">
+  Pengalaman Fun Run 5K yang penuh energi,
+  semangat, dan kebersamaan.
+</p>
+
     </div>
   </div>
   <img class="date-runner parallax-image" src="pelari-tanggal.png" alt="Pelari Fun Run">
