@@ -606,6 +606,22 @@ section{position:relative;overflow:hidden;isolation:isolate}
   max-width: 100%;
 }
 
+/* PENGATURAN NAMA LOKASI KHUSUS HP */
+.date-place .place-name {
+  display: block;
+  color: #ff691f;
+  font-size: clamp(38px, 9vw, 60px);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.date-place .place-city {
+  display: block;
+  color: #f5efdf;
+  font-size: clamp(30px, 7vw, 48px);
+  line-height: 1.2;
+}
+
   .date-description {
     max-width: 100%;
     margin-bottom: 24px;
@@ -801,7 +817,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
 <p class="date-start">START 05.30 WIB</p>
 
 <p class="date-place parallax-text">
-  LAPANGAN RAMPAL • KOTA MALANG
+  <span class="place-name">LAPANGAN RAMPAL</span>
+  <span class="place-city">KOTA MALANG</span>
 </p>
 
 <p class="date-description copy muted">
