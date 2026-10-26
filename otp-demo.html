@@ -171,7 +171,46 @@
     <div id="status" class="status" role="status" aria-live="polite">
       Siap melakukan pengujian.
     </div>
+<button
+  type="button"
+  class="secondary"
+  id="testSecurityButton">
+  UJI KEAMANAN TANPA OTP
+</button>
 
+<script>
+document.getElementById("testSecurityButton")
+  .addEventListener("click", async function () {
+    const statusBox = document.getElementById("status");
+
+    statusBox.textContent = "Memeriksa keamanan API...";
+
+    try {
+      const response = await fetch("/api/order-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({}),
+        cache: "no-store"
+      });
+
+      const result = await response.json();
+
+      if (response.status === 401 && result.ok === false) {
+        statusBox.textContent =
+          "BERHASIL: Akses tanpa OTP ditolak (401 Unauthorized).";
+      } else {
+        statusBox.textContent =
+          "PERLU DIPERIKSA: HTTP " + response.status +
+          " - " + (result.message || "Respons tidak sesuai.");
+      }
+    } catch (error) {
+      statusBox.textContent =
+        "Gagal menghubungi API riwayat pendaftaran.";
+    }
+  });
+</script>
     <div class="note">
       DEMO / TEST ONLY
       <p>Jangan membagikan kode OTP kepada siapa pun.</p>
