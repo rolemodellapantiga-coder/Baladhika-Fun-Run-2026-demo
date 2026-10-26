@@ -253,6 +253,62 @@ document.getElementById("testFakeTokenButton")
     }
   });
 </script>
+    <button
+  type="button"
+  class="secondary"
+  id="testExpiredTokenButton">
+  UJI TOKEN KEDALUWARSA
+</button>
+
+<script>
+document.getElementById("testExpiredTokenButton")
+  .addEventListener("click", async function () {
+    const statusBox = document.getElementById("status");
+
+    statusBox.textContent = "Memeriksa token kedaluwarsa...";
+
+    const payload = {
+      order_number: "ABC123",
+      email: "test@example.com",
+      iss: "baladhika-funrun-2026",
+      exp: Math.floor(Date.now() / 1000) - 3600
+    };
+
+    const encoded = btoa(JSON.stringify(payload))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const fakeExpiredToken = encoded + "." + "0".repeat(64);
+
+    try {
+      const response = await fetch("/api/order-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          session_token: fakeExpiredToken
+        }),
+        cache: "no-store"
+      });
+
+      const result = await response.json();
+
+      if (response.status === 401 && result.ok === false) {
+        statusBox.textContent =
+          "BERHASIL: Token pengujian ditolak (401 Unauthorized).";
+      } else {
+        statusBox.textContent =
+          "PERLU DIPERIKSA: HTTP " + response.status +
+          " - " + (result.message || "Respons tidak sesuai.");
+      }
+    } catch (error) {
+      statusBox.textContent =
+        "Gagal menghubungi API riwayat pendaftaran.";
+    }
+  });
+</script>
     <div class="note">
       DEMO / TEST ONLY
       <p>Jangan membagikan kode OTP kepada siapa pun.</p>
