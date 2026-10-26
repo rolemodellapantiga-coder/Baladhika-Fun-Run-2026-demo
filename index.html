@@ -821,6 +821,18 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .check-order-result{margin-top:22px;padding:20px;background:#142119;border:1px solid #ffffff29;border-radius:12px;overflow-wrap:anywhere;font-size:13px;line-height:1.9}
 @media(max-width:768px){.check-order-layout{grid-template-columns:1fr;gap:25px}.check-order-section{padding:65px 0}.check-order-panel{padding:20px}}
 
+
+/* BATAS PEMBAYARAN — TAMBAHAN TANPA MENGUBAH DESAIN LAMA */
+.payment-deadline{margin:18px 0;padding:19px;border:2px solid #ff691f;border-radius:14px;background:#321e17;color:#fff;text-align:center}
+.payment-deadline strong{display:block;font-size:13px;line-height:1.7}
+.payment-deadline-clock{display:block;font:400 clamp(44px,8vw,72px)/1.1 Anton,Impact,sans-serif;color:#ffae75;margin:10px 0;font-variant-numeric:tabular-nums}
+.payment-deadline p{font-size:12px;line-height:1.8;margin:8px 0}
+.payment-deadline-modal{position:fixed;inset:0;z-index:10000;background:#000c;display:flex;align-items:center;justify-content:center;padding:18px}
+.payment-deadline-dialog{width:min(540px,100%);max-height:90vh;overflow:auto;background:#24362b;border:2px solid #ff691f;border-radius:20px;padding:28px;text-align:center;box-shadow:0 20px 70px #0009}
+.payment-deadline-dialog h2{font:400 clamp(33px,6vw,52px)/1.1 Anton,Impact,sans-serif;color:#ffae75;margin:10px 0}
+.payment-deadline-dialog p{font-size:13px;line-height:1.8}
+.payment-deadline-dialog .btn{margin-top:12px}
+
 </style>
 </head>
 
@@ -1484,6 +1496,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
       p.textContent="Nomor Pesanan: "+data.order_number;result.appendChild(p);
       const status=document.createElement("p");
       status.textContent="Status Pembayaran: "+data.payment_status;result.appendChild(status);
+      if(data.payment_status==="PENDING_DEMO" && data.payment_expires_at){
+        attachPaymentDeadline(result,String(data.payment_expires_at),String(data.order_number));
+      }
       const note=document.createElement("p");
       note.textContent="SIMULASI / TEST — bukan bukti pembayaran nyata.";
       result.appendChild(note);result.hidden=false;
@@ -1492,6 +1507,57 @@ section{position:relative;overflow:hidden;isolation:isolate}
   });
 })();
 
+
+/* BATAS PEMBAYARAN PESANAN — WAKTU OTORITATIF DARI SUPABASE */
+let paymentDeadlineTimer=null;
+function formatPaymentRemaining(ms){
+  const total=Math.max(0,Math.ceil(ms/1000));
+  const minutes=Math.floor(total/60);
+  const seconds=total%60;
+  return String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0");
+}
+function attachPaymentDeadline(container,expiryISO,orderNumber){
+  const expiry=Date.parse(expiryISO||"");
+  if(!Number.isFinite(expiry))return false;
+  if(paymentDeadlineTimer)clearInterval(paymentDeadlineTimer);
+  const card=document.createElement("div");card.className="payment-deadline";
+  const heading=document.createElement("strong");
+  heading.textContent="BATAS WAKTU PEMBAYARAN — NOMOR PESANAN "+orderNumber;
+  const clock=document.createElement("span");clock.className="payment-deadline-clock";
+  clock.setAttribute("role","timer");
+  const note=document.createElement("p");
+  note.textContent="Anda memiliki waktu 1 jam sejak pendaftaran disimpan. Jika belum lunas saat waktu habis, data pendaftaran akan dihapus permanen dan Anda harus mendaftar ulang.";
+  card.append(heading,clock,note);container.prepend(card);
+  const update=()=>{
+    const remaining=expiry-Date.now();
+    clock.textContent=formatPaymentRemaining(remaining);
+    if(remaining<=0){
+      clock.textContent="00:00";
+      heading.textContent="WAKTU PEMBAYARAN TELAH HABIS";
+      note.textContent="Pesanan ini sudah kedaluwarsa dan tidak dapat dibayar. Data akan dihapus otomatis oleh sistem. Silakan mendaftar ulang setelah penghapusan selesai.";
+      if(paymentDeadlineTimer){clearInterval(paymentDeadlineTimer);paymentDeadlineTimer=null;}
+    }
+  };
+  update();
+  if(expiry>Date.now())paymentDeadlineTimer=setInterval(update,1000);
+  return true;
+}
+function showPaymentDeadlineModal(expiryISO,orderNumber){
+  const overlay=document.createElement("div");
+  overlay.className="payment-deadline-modal";
+  overlay.setAttribute("role","dialog");
+  overlay.setAttribute("aria-modal","true");
+  overlay.setAttribute("aria-label","Peringatan batas pembayaran");
+  const dialog=document.createElement("div");dialog.className="payment-deadline-dialog";
+  const heading=document.createElement("h2");heading.textContent="PERHATIAN! BATAS PEMBAYARAN 1 JAM";
+  const description=document.createElement("p");
+  description.textContent="Pesanan "+orderNumber+" sudah tersimpan. Pembayaran wajib diselesaikan dalam 1 jam sejak pendaftaran. Setelah batas waktu, pesanan yang belum dibayar akan dihapus permanen dan harus didaftarkan ulang.";
+  const button=document.createElement("button");button.type="button";button.className="btn";
+  button.textContent="SAYA MENGERTI — LANJUT KE QRIS DEMO";
+  button.onclick=()=>{overlay.remove();document.body.style.overflow="";};
+  dialog.append(heading,description,button);overlay.append(dialog);
+  document.body.append(overlay);document.body.style.overflow="hidden";button.focus();
+}
 
 /* COUNTDOWN */
 const $=id=>document.getElementById(id);
@@ -2148,6 +2214,16 @@ async function previewPayment(){
     const save=document.createElement("button");save.type="button";save.className="btn btn-outline";save.style.cssText="margin:8px;color:#24362b;border-color:#24362b";save.textContent="SIMPAN QR PNG ↓";
     save.onclick=()=>{const canvas=qr.querySelector("canvas"),img=qr.querySelector("img");const url=canvas?.toDataURL("image/png")||img?.src;if(!url){alert("QR belum siap");return;}const a=document.createElement("a");a.href=url;a.download="QR-DEMO-"+orderNumber+".png";a.click();};
     panel.append(save);$("registrationResult").append(panel);
+    // Waktu ditetapkan server saat order dibuat, bukan dihitung dari klik browser.
+    const expiryISO=String(data.payment_expires_at||"");
+    if(attachPaymentDeadline($("registrationResult"),expiryISO,orderNumber)){
+      showPaymentDeadlineModal(expiryISO,orderNumber);
+    }else{
+      const warning=document.createElement("p");
+      warning.className="notice";
+      warning.textContent="Pesanan tersimpan, tetapi waktu batas pembayaran belum dapat ditampilkan. Hubungi panitia dan jangan mengulangi pendaftaran dengan email yang sama.";
+      $("registrationResult").prepend(warning);
+    }
     if(typeof QRCode!=="undefined")new QRCode(qr,{text:paymentUrl.href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
     else {const fallback=document.createElement("p");fallback.textContent="Generator QR belum termuat. Gunakan tombol Buka Halaman Pembayaran.";qr.append(fallback);}
     button.textContent="PENDAFTARAN DEMO TERSIMPAN";
