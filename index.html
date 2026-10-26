@@ -1410,6 +1410,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -2047,47 +2048,33 @@ async function previewPayment(){
     }
 
     registrationCompleted=true;
-    const numbers=Array.isArray(data.registration_numbers)?data.registration_numbers:[];
-    const lines=[
-      "PENDAFTARAN DEMO BERHASIL DISIMPAN",
-      "Nomor pesanan: "+(data.order_number||"-"),
-      "Jumlah peserta: "+data.total_participants,
-      "Total simulasi: "+rupiah(data.total_amount),
-      "Status: PENDING_DEMO",
-      "",
-      "NOMOR REGISTRASI PESERTA:"
-    ];
-    numbers.forEach((number,index)=>{
-      const person=participantData[index];
-      lines.push((index+1)+". "+person.first_name+" "+person.last_name+" — "+number);
-    });
-    lines.push("", "DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.",
-      "Simpan nomor pesanan dan registrasi untuk pengujian. Tidak ada email yang dikirim.");
-    showRegistrationResult(lines.join("\n"),true);
-    // Invoice dibentuk dari respons API pendaftaran yang sukses.
-    const invoice = {
-      orderNumber: String(data.order_number || ""),
-      buyerName: payload.buyer.name,
-      method: selectedPayment,
-      count: Number(data.total_participants),
-      amount: Number(data.total_amount),
-      registrations: numbers.map((number,index)=>({
-        number: String(number),
-        name: [participantData[index]?.first_name,participantData[index]?.last_name].filter(Boolean).join(" "),
-        category: participantData[index]?.category === "early" ? "EARLY BIRD" : "NORMAL"
-      }))
-    };
-    if(invoice.orderNumber && Number.isFinite(invoice.amount)){
-      const invoiceButton=document.createElement("button");
-      invoiceButton.type="button";
-      invoiceButton.className="btn";
-      invoiceButton.style.marginTop="18px";
-      invoiceButton.textContent="UNDUH INVOICE PDF (DEMO) ↓";
-      invoiceButton.addEventListener("click",()=>downloadDemoInvoice(invoice));
-      $("registrationResult").append(document.createElement("br"),invoiceButton);
+    const orderNumber=String(data.order_number||"");
+    const paymentToken=String(data.payment_token||"");
+    if(!orderNumber || !/^[a-f0-9]{64}$/.test(paymentToken)){
+      showRegistrationResult("Pendaftaran tersimpan, tetapi token pembayaran simulasi tidak diterima. Hubungi panitia dengan nomor pesanan: "+orderNumber);
+      button.textContent="PENDAFTARAN TERSIMPAN";
+      return;
     }
+    // Token tidak disimpan di localStorage dan tidak dimasukkan ke tautan publik yang dibagikan.
+    // QR adalah kredensial simulasi khusus pesanan; jangan dibagikan kepada orang lain.
+    const paymentUrl=new URL("payment-demo.html",window.location.href);
+    paymentUrl.hash=new URLSearchParams({order:orderNumber,token:paymentToken}).toString();
+    showRegistrationResult("PENDAFTARAN DEMO TERSIMPAN\nNomor pesanan: "+orderNumber+"\nJumlah peserta: "+data.total_participants+"\nTotal simulasi: "+rupiah(data.total_amount)+"\nStatus: PENDING_DEMO\n\nPindai QR atau buka halaman pembayaran untuk melanjutkan simulasi. Belum lunas.",true);
+    const panel=document.createElement("div");
+    panel.style.cssText="margin-top:20px;padding:18px;background:#fff;color:#24362b;border-radius:14px;text-align:center";
+    const title=document.createElement("h3");title.textContent="QR PEMBAYARAN SIMULASI";title.style.cssText="font-size:24px;margin:5px";
+    const qr=document.createElement("div");qr.style.cssText="display:flex;justify-content:center;margin:15px auto";
+    panel.append(title,qr);
+    const caption=document.createElement("p");caption.textContent="QR khusus pesanan ini. Pindai melalui HP atau simpan gambar QR, lalu gunakan pemindai yang mendukung unggah gambar.";
+    caption.style.cssText="font-size:12px;line-height:1.7";panel.append(caption);
+    const open=document.createElement("a");open.className="btn";open.textContent="BUKA HALAMAN PEMBAYARAN DEMO →";
+    open.href=paymentUrl.href;open.style.margin="8px";panel.append(open);
+    const save=document.createElement("button");save.type="button";save.className="btn btn-outline";save.style.cssText="margin:8px;color:#24362b;border-color:#24362b";save.textContent="SIMPAN QR PNG ↓";
+    save.onclick=()=>{const canvas=qr.querySelector("canvas"),img=qr.querySelector("img");const url=canvas?.toDataURL("image/png")||img?.src;if(!url){alert("QR belum siap");return;}const a=document.createElement("a");a.href=url;a.download="QR-DEMO-"+orderNumber+".png";a.click();};
+    panel.append(save);$("registrationResult").append(panel);
+    if(typeof QRCode!=="undefined")new QRCode(qr,{text:paymentUrl.href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
+    else {const fallback=document.createElement("p");fallback.textContent="Generator QR belum termuat. Gunakan tombol Buka Halaman Pembayaran.";qr.append(fallback);}
     button.textContent="PENDAFTARAN DEMO TERSIMPAN";
-    // Token pembayaran DEMO sengaja tidak ditampilkan atau disimpan di browser.
     await refreshTicketStatus();
   }catch(error){
     showRegistrationResult(error?.message||"Terjadi kesalahan sistem.");
