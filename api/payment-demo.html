@@ -1,9 +1,539 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Pembayaran Simulasi | Baladhika Fun Run</title><style>body{font-family:Arial,sans-serif;background:#17271c;color:#f5efdf;margin:0;padding:24px}main{max-width:620px;margin:25px auto;background:#263c2c;padding:28px;border-radius:20px}h1{color:#ff792c}button{background:#ff792c;border:0;border-radius:12px;padding:15px 20px;font-weight:bold;cursor:pointer;margin:8px 0}button:disabled{opacity:.5}small{line-height:1.7}#invoice{background:white;color:#24362b;padding:20px;border-radius:14px;margin-top:18px}#invoice[hidden]{display:none}#status{white-space:pre-wrap;line-height:1.7}.warn{background:#fff1cf;color:#4a3211;padding:12px;border-radius:8px}li{padding:5px 0}</style></head><body><main><h1>BALADHIKA FUN RUN 2026</h1><h2>Konfirmasi Pembayaran Simulasi</h2><p class="warn"><strong>DEMO / TEST — Tidak ada uang yang dibayarkan.</strong> Memindai QR belum berarti lunas. Klik konfirmasi untuk menjalankan simulasi.</p><p id="order"></p><button id="confirm" disabled>KONFIRMASI PEMBAYARAN DEMO</button><p id="status" role="status"></p><section id="invoice" hidden><h2>LUNAS — DEMO / TEST</h2><p><strong>BUKAN BUKTI PEMBAYARAN NYATA</strong></p><div id="detail"></div><h3>Kode Booking Racepack</h3><ol id="people"></ol><button id="download">SIMPAN INVOICE PDF</button></section><p><small>Invoice ini hanya berlaku untuk simulasi internal. Kode booking digunakan oleh petugas OWNER untuk pemeriksaan racepack.</small></p></main><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script><script>"use strict";
-const params=new URLSearchParams(location.hash.slice(1));const order=params.get('order')||'';const token=params.get('token')||'';
-// Hapus token dari bilah alamat setelah membacanya untuk mengurangi risiko tersalin.
-history.replaceState(null,'',location.pathname);
-const $=id=>document.getElementById(id);let invoice=null;
-if(/^BFR-ORDER-[A-F0-9]{20}$/.test(order)&&/^[a-f0-9]{64}$/.test(token)){$('order').textContent='Pesanan: '+order;$('confirm').disabled=false;}else{$('status').textContent='QR tidak valid atau token tidak ditemukan. Gunakan QR yang diperoleh setelah pendaftaran.';}
-$('confirm').onclick=async()=>{if(!confirm('Konfirmasi pembayaran SIMULASI? Tidak ada transaksi uang nyata.'))return;$('confirm').disabled=true;$('status').textContent='Memproses simulasi...';try{const r=await fetch('/api/confirm-demo-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order_number:order,payment_token:token}),cache:'no-store'});const data=await r.json();if(!r.ok||data.success!==true)throw new Error(data.error||'Konfirmasi gagal');invoice=data;$('status').textContent='Berhasil. Status pembayaran di Supabase: PAID_DEMO.';$('invoice').hidden=false;const info=[['Nomor pesanan',data.order_number],['Nama pemesan',data.buyer_name],['Jumlah peserta',data.total_participants],['Total simulasi','Rp'+Number(data.total_amount).toLocaleString('id-ID')],['Status','PAID_DEMO'],['Waktu konfirmasi',data.paid_at||'-']];$('detail').replaceChildren();for(const [k,v] of info){const p=document.createElement('p');p.textContent=k+': '+v;$('detail').append(p)}$('people').replaceChildren();for(const p of data.participants){const li=document.createElement('li');li.textContent=[p.first_name,p.last_name].filter(Boolean).join(' ')+' — '+p.booking_code+' — '+p.registration_number;$('people').append(li)}}catch(e){$('status').textContent='Gagal: '+e.message;$('confirm').disabled=false;}};
-$('download').onclick=()=>{if(!invoice)return;const ctor=window.jspdf?.jsPDF;if(!ctor){alert('Pustaka PDF belum termuat.');return;}const pdf=new ctor();let y=20;const add=(s,bold=false)=>{if(y>270){pdf.addPage();y=20}pdf.setFont('helvetica',bold?'bold':'normal');const lines=pdf.splitTextToSize(String(s),174);pdf.text(lines,18,y);y+=lines.length*6+4};add('BALADHIKA FUN RUN 2026',true);add('INVOICE LUNAS - DEMO / TEST',true);add('BUKAN BUKTI PEMBAYARAN NYATA',true);y+=4;add('Nomor pesanan: '+invoice.order_number);add('Nama pemesan: '+invoice.buyer_name);add('Total simulasi: Rp'+Number(invoice.total_amount).toLocaleString('id-ID'));add('Status: PAID_DEMO');add('Tanggal konfirmasi: '+(invoice.paid_at||'-'));y+=5;add('PESERTA DAN KODE BOOKING RACEPACK',true);invoice.participants.forEach((p,i)=>add((i+1)+'. '+[p.first_name,p.last_name].filter(Boolean).join(' ')+' | '+p.booking_code+' | '+p.registration_number));y+=4;add('Hanya untuk simulasi. Verifikasi racepack dilakukan oleh petugas OWNER.');pdf.save('INVOICE-LUNAS-DEMO-'+invoice.order_number+'.pdf');};
-</script></body></html>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <meta name="referrer" content="no-referrer">
+
+  <title>
+    Pembayaran Simulasi | Baladhika Fun Run
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #17271c;
+      color: #f5efdf;
+      margin: 0;
+      padding: 24px;
+    }
+
+    main {
+      max-width: 620px;
+      margin: 25px auto;
+      background: #263c2c;
+      padding: 28px;
+      border-radius: 20px;
+    }
+
+    h1 {
+      color: #ff792c;
+    }
+
+    button {
+      background: #ff792c;
+      color: #17271c;
+      border: 0;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 8px 0;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    small {
+      line-height: 1.7;
+    }
+
+    #invoice {
+      background: white;
+      color: #24362b;
+      padding: 20px;
+      border-radius: 14px;
+      margin-top: 18px;
+      overflow-wrap: anywhere;
+    }
+
+    #invoice[hidden] {
+      display: none;
+    }
+
+    #status {
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    .warn {
+      background: #fff1cf;
+      color: #4a3211;
+      padding: 12px;
+      border-radius: 8px;
+      line-height: 1.6;
+    }
+
+    li {
+      padding: 5px 0;
+      line-height: 1.6;
+    }
+
+    #order {
+      overflow-wrap: anywhere;
+      font-weight: bold;
+    }
+
+    #confirm,
+    #download {
+      max-width: 100%;
+    }
+
+    .demo-label {
+      color: #ff792c;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+
+<body>
+
+<main>
+
+  <h1>BALADHIKA FUN RUN 2026</h1>
+
+  <h2>Konfirmasi Pembayaran Simulasi</h2>
+
+  <p class="demo-label">
+    SISTEM DEMO / TEST
+  </p>
+
+  <p class="warn">
+    <strong>
+      DEMO / TEST — Tidak ada uang yang dibayarkan.
+    </strong>
+    Memindai QR belum berarti lunas.
+    Klik tombol konfirmasi untuk menjalankan simulasi.
+  </p>
+
+  <p id="order"></p>
+
+  <button id="confirm" disabled>
+    KONFIRMASI PEMBAYARAN DEMO
+  </button>
+
+  <p id="status" role="status"></p>
+
+  <section id="invoice" hidden>
+
+    <h2>LUNAS — DEMO / TEST</h2>
+
+    <p>
+      <strong>
+        BUKAN BUKTI PEMBAYARAN NYATA
+      </strong>
+    </p>
+
+    <div id="detail"></div>
+
+    <h3>Kode Booking Racepack</h3>
+
+    <ol id="people"></ol>
+
+    <button id="download">
+      SIMPAN INVOICE PDF
+    </button>
+
+  </section>
+
+  <p>
+    <small>
+      Invoice ini hanya berlaku untuk simulasi internal.
+      Kode booking digunakan oleh petugas OWNER
+      untuk pemeriksaan racepack.
+    </small>
+  </p>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+
+<script>
+"use strict";
+
+// =======================================
+// BALADHIKA FUN RUN 2026
+// QR & INVOICE PEMBAYARAN DEMO
+// =======================================
+
+const OLD_ORDER_FORMAT =
+  /^BFR-ORDER-[A-F0-9]{20}$/;
+
+const NEW_ORDER_FORMAT =
+  /^[A-Z0-9]{6}$/;
+
+const TOKEN_FORMAT =
+  /^[a-f0-9]{64}$/;
+
+// Baca data dari fragment URL.
+// Contoh:
+// #order=A7K9B2&token=...
+// atau:
+// #order=BFR-ORDER-...&token=...
+
+const params = new URLSearchParams(
+  location.hash.slice(1)
+);
+
+const order = (
+  params.get("order") || ""
+).trim().toUpperCase();
+
+const token = (
+  params.get("token") || ""
+).trim();
+
+// Hapus token dari bilah alamat setelah dibaca.
+history.replaceState(
+  null,
+  "",
+  location.pathname + location.search
+);
+
+const $ = (id) =>
+  document.getElementById(id);
+
+let invoice = null;
+
+const validOrder =
+  OLD_ORDER_FORMAT.test(order) ||
+  NEW_ORDER_FORMAT.test(order);
+
+const validToken =
+  TOKEN_FORMAT.test(token);
+
+// =======================================
+// VALIDASI QR DEMO
+// =======================================
+
+if (validOrder && validToken) {
+
+  $("order").textContent =
+    "Nomor Pesanan: " + order;
+
+  $("confirm").disabled = false;
+
+  $("status").textContent =
+    "QR DEMO berhasil dibaca. " +
+    "Silakan konfirmasi simulasi pembayaran.";
+
+} else {
+
+  $("status").textContent =
+    "QR tidak valid atau token tidak ditemukan. " +
+    "Gunakan QR yang diperoleh setelah pendaftaran.";
+
+}
+
+// =======================================
+// KONFIRMASI PEMBAYARAN DEMO
+// =======================================
+
+$("confirm").onclick = async () => {
+
+  if (
+    !window.confirm(
+      "Konfirmasi pembayaran SIMULASI?\n\n" +
+      "Tidak ada transaksi uang nyata."
+    )
+  ) {
+    return;
+  }
+
+  $("confirm").disabled = true;
+
+  $("status").textContent =
+    "Memproses simulasi pembayaran...";
+
+  try {
+
+    const response = await fetch(
+      "/api/confirm-demo-payment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          order_number: order,
+          payment_token: token
+        }),
+        cache: "no-store"
+      }
+    );
+
+    const data = await response.json();
+
+    if (
+      !response.ok ||
+      data.success !== true
+    ) {
+      throw new Error(
+        data.error || "Konfirmasi gagal."
+      );
+    }
+
+    invoice = data;
+
+    $("status").textContent =
+      "Berhasil. Status pembayaran di Supabase: " +
+      "PAID_DEMO.";
+
+    $("order").textContent =
+      "Nomor Pesanan: " + data.order_number;
+
+    $("invoice").hidden = false;
+
+    // ===================================
+    // DETAIL INVOICE
+    // ===================================
+
+    const info = [
+      [
+        "Nomor pesanan",
+        data.order_number
+      ],
+      [
+        "Nama pemesan",
+        data.buyer_name
+      ],
+      [
+        "Jumlah peserta",
+        data.total_participants
+      ],
+      [
+        "Total simulasi",
+        "Rp" +
+        Number(data.total_amount)
+          .toLocaleString("id-ID")
+      ],
+      [
+        "Status",
+        "PAID_DEMO"
+      ],
+      [
+        "Waktu konfirmasi",
+        data.paid_at || "-"
+      ]
+    ];
+
+    $("detail").replaceChildren();
+
+    for (const [key, value] of info) {
+
+      const paragraph =
+        document.createElement("p");
+
+      paragraph.textContent =
+        key + ": " + value;
+
+      $("detail").append(paragraph);
+    }
+
+    // ===================================
+    // DATA PESERTA DAN BOOKING RACEPACK
+    // ===================================
+
+    $("people").replaceChildren();
+
+    for (const person of data.participants) {
+
+      const item =
+        document.createElement("li");
+
+      const name = [
+        person.first_name,
+        person.last_name
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      item.textContent =
+        name +
+        " — " +
+        person.booking_code +
+        " — " +
+        person.registration_number;
+
+      $("people").append(item);
+    }
+
+  } catch (error) {
+
+    $("status").textContent =
+      "Gagal: " + error.message;
+
+    $("confirm").disabled = false;
+
+  }
+};
+
+// =======================================
+// DOWNLOAD INVOICE PDF
+// =======================================
+
+$("download").onclick = () => {
+
+  if (!invoice) {
+    return;
+  }
+
+  const PDFConstructor =
+    window.jspdf?.jsPDF;
+
+  if (!PDFConstructor) {
+
+    alert(
+      "Pustaka PDF belum termuat. " +
+      "Periksa koneksi internet."
+    );
+
+    return;
+  }
+
+  const pdf = new PDFConstructor();
+
+  let y = 20;
+
+  const add = (content, bold = false) => {
+
+    pdf.setFont(
+      "helvetica",
+      bold ? "bold" : "normal"
+    );
+
+    const lines = pdf.splitTextToSize(
+      String(content),
+      174
+    );
+
+    for (const line of lines) {
+
+      if (y > 270) {
+        pdf.addPage();
+        y = 20;
+      }
+
+      pdf.text(line, 18, y);
+
+      y += 6;
+    }
+
+    y += 4;
+  };
+
+  add(
+    "BALADHIKA FUN RUN 2026",
+    true
+  );
+
+  add(
+    "INVOICE LUNAS - DEMO / TEST",
+    true
+  );
+
+  add(
+    "BUKAN BUKTI PEMBAYARAN NYATA",
+    true
+  );
+
+  y += 4;
+
+  add(
+    "Nomor pesanan: " +
+    invoice.order_number
+  );
+
+  add(
+    "Nama pemesan: " +
+    invoice.buyer_name
+  );
+
+  add(
+    "Jumlah peserta: " +
+    invoice.total_participants
+  );
+
+  add(
+    "Total simulasi: Rp" +
+    Number(invoice.total_amount)
+      .toLocaleString("id-ID")
+  );
+
+  add(
+    "Status: PAID_DEMO"
+  );
+
+  add(
+    "Tanggal konfirmasi: " +
+    (invoice.paid_at || "-")
+  );
+
+  y += 5;
+
+  add(
+    "PESERTA DAN KODE BOOKING RACEPACK",
+    true
+  );
+
+  invoice.participants.forEach(
+    (person, index) => {
+
+      const name = [
+        person.first_name,
+        person.last_name
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      add(
+        (index + 1) +
+        ". " +
+        name +
+        " | " +
+        person.booking_code +
+        " | " +
+        person.registration_number
+      );
+
+    }
+  );
+
+  y += 4;
+
+  add(
+    "Hanya untuk simulasi. " +
+    "Verifikasi racepack dilakukan " +
+    "oleh petugas OWNER."
+  );
+
+  pdf.save(
+    "INVOICE-LUNAS-DEMO-" +
+    invoice.order_number +
+    ".pdf"
+  );
+};
+</script>
+
+</body>
+</html>
