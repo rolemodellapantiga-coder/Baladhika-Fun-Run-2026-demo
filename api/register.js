@@ -1,4 +1,6 @@
 
+"use strict";
+
 const crypto = require("node:crypto");
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -41,12 +43,25 @@ function required(value, max = 200) {
   return clean(value, max);
 }
 
+// Nomor registrasi peserta tetap memakai format lama.
 function makeCode(prefix) {
   return (
     prefix +
     "-" +
     crypto.randomBytes(10).toString("hex").toUpperCase()
   );
+}
+
+// Nomor PESANAN baru: tepat 6 karakter A-Z dan 0-9.
+function makeOrderNumber() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let value = "";
+
+  for (let i = 0; i < 6; i++) {
+    value += alphabet[crypto.randomInt(alphabet.length)];
+  }
+
+  return value;
 }
 
 function validEmail(email) {
@@ -125,7 +140,7 @@ function supabaseError(result) {
     return {
       status: 409,
       error:
-        "Terjadi duplikasi nomor registrasi. Silakan ulangi pendaftaran.",
+        "Terjadi duplikasi data registrasi. Silakan ulangi pendaftaran.",
     };
   }
 
@@ -134,6 +149,47 @@ function supabaseError(result) {
     error:
       "Pendaftaran gagal disimpan. Silakan coba kembali.",
   };
+}
+
+// Memeriksa apakah nomor pesanan baru sudah dipakai
+// oleh pesanan aktif maupun mapping pesanan lama.
+async function orderNumberExists(number) {
+  const base = SUPABASE_URL.replace(/\/+$/, "");
+  const headers = {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`,
+    Accept: "application/json",
+  };
+
+  const checks = [
+    `${base}/rest/v1/orders?select=id&order_number=eq.${number}&limit=1`,
+    `${base}/rest/v1/order_number_mapping_20261026?select=order_id&new_order_number=eq.${number}&limit=1`,
+  ];
+
+  for (const url of checks) {
+    const response = await fetch(url, {
+      headers,
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Pemeriksaan nomor pesanan gagal: ${response.status}`
+      );
+    }
+
+    const rows = await response.json();
+
+    if (!Array.isArray(rows)) {
+      throw new Error("Respons database tidak valid.");
+    }
+
+    if (rows.length > 0) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 async function createRegistration(order, participants) {
@@ -165,6 +221,15 @@ async function createRegistration(order, participants) {
 
     return {
       error: supabaseError(result),
+      duplicateCode:
+        result?.code === "23505" &&
+        /order_number|orders_order_number_key/i.test(
+          String(result?.message || "") +
+          " " +
+          String(result?.details || "") +
+          " " +
+          String(result?.constraint || "")
+        ),
     };
   }
 
@@ -246,9 +311,11 @@ module.exports = async function handler(req, res) {
     // =====================================
 
     const buyerName = required(buyer.name, 200);
+
     const buyerEmail = required(
       buyer.email, 254
     ).toLowerCase();
+
     const buyerPhone = required(buyer.phone, 30);
 
     if (
@@ -427,10 +494,7 @@ module.exports = async function handler(req, res) {
         });
       }
 
-      if (
-        phone &&
-        !validPhone(phone)
-      ) {
+      if (phone && !validPhone(phone)) {
         return send(res, 400, {
           success: false,
           error:
@@ -512,8 +576,6 @@ module.exports = async function handler(req, res) {
       earlyQty * PRICES.EARLY_BIRD +
       normalQty * PRICES.NORMAL;
 
-    const orderNumber = makeCode("BFR-ORDER");
-
     const paymentToken = crypto
       .randomBytes(32)
       .toString("hex");
@@ -523,32 +585,61 @@ module.exports = async function handler(req, res) {
       .update(paymentToken)
       .digest("hex");
 
-    const order = {
-      order_number: orderNumber,
-
-      buyer_name: buyerName,
-      buyer_email: buyerEmail,
-      buyer_phone: buyerPhone,
-
-      early_bird_qty: earlyQty,
-      normal_qty: normalQty,
-
-      total_participants: participants.length,
-      total_amount: totalAmount,
-
-      payment_method: paymentMethod,
-
-      demo_payment_token_hash: paymentTokenHash,
-    };
-
     // =====================================
     // SIMPAN KE SUPABASE
     // =====================================
 
-    const result = await createRegistration(
-      order,
-      participants
-    );
+    let result = null;
+
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const orderNumber = makeOrderNumber();
+
+      // Cegah benturan dengan nomor pesanan lama
+      // yang sudah disiapkan dalam tabel mapping.
+      const alreadyExists =
+        await orderNumberExists(orderNumber);
+
+      if (alreadyExists) {
+        continue;
+      }
+
+      const order = {
+        order_number: orderNumber,
+
+        buyer_name: buyerName,
+        buyer_email: buyerEmail,
+        buyer_phone: buyerPhone,
+
+        early_bird_qty: earlyQty,
+        normal_qty: normalQty,
+
+        total_participants: participants.length,
+        total_amount: totalAmount,
+
+        payment_method: paymentMethod,
+
+        demo_payment_token_hash: paymentTokenHash,
+      };
+
+      result = await createRegistration(
+        order,
+        participants
+      );
+
+      if (result.duplicateCode) {
+        continue;
+      }
+
+      break;
+    }
+
+    if (!result || result.duplicateCode) {
+      return send(res, 409, {
+        success: false,
+        error:
+          "Nomor pesanan belum berhasil dibuat. Silakan coba kembali.",
+      });
+    }
 
     if (result.error) {
       return send(res, result.error.status, {
