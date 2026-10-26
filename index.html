@@ -809,6 +809,18 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
+
+/* CEK PESANAN — DEMO */
+.check-order-section{padding:85px 0;background:#1b2c21}
+.check-order-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:45px;align-items:center}
+.check-order-title{font:400 clamp(48px,7vw,90px)/1 Anton,Impact,sans-serif;margin:15px 0 22px}
+.check-order-panel{padding:30px;background:#24362b;border:1px solid #ffffff29;border-radius:20px}
+.check-order-panel .field input{width:100%;padding:15px;border:1px solid #ffffff55;border-radius:9px;background:#0f1b14;color:#fff;outline:none}
+.check-order-panel .field input:focus{border-color:var(--orange)}
+.check-order-panel .btn{width:100%}
+.check-order-result{margin-top:22px;padding:20px;background:#142119;border:1px solid #ffffff29;border-radius:12px;overflow-wrap:anywhere;font-size:13px;line-height:1.9}
+@media(max-width:768px){.check-order-layout{grid-template-columns:1fr;gap:25px}.check-order-section{padding:65px 0}.check-order-panel{padding:20px}}
+
 </style>
 </head>
 
@@ -855,6 +867,29 @@ section{position:relative;overflow:hidden;isolation:isolate}
   </div>
   <img class="hero-runner parallax-image" src="pelari-hero.png" alt="Pelari Fun Run">
   <div class="scroll-hint">↓ SCROLL TO EXPLORE</div>
+</section>
+
+
+<!-- CEK PESANAN DEMO -->
+<section class="check-order-section" id="cek-pesanan">
+  <div class="inner check-order-layout">
+    <div>
+      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
+      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
+      <p class="copy muted">Masukkan nomor pesanan untuk memeriksa status pembayaran simulasi.</p>
+      <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
+    </div>
+    <div class="check-order-panel">
+      <form id="checkOrderForm">
+        <div class="field">
+          <label for="checkOrderNumber">NOMOR PESANAN *</label>
+          <input id="checkOrderNumber" name="order_number" maxlength="30" required autocomplete="off" placeholder="Contoh: FE7BE3">
+        </div>
+        <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
+      </form>
+      <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
+    </div>
+  </div>
 </section>
 
 <!-- COUNTDOWN -->
@@ -1416,6 +1451,47 @@ section{position:relative;overflow:hidden;isolation:isolate}
 
 <script>
 "use strict";
+
+/* CEK PESANAN — DEMO */
+(function initializeCheckOrder(){
+  const form=document.getElementById("checkOrderForm");
+  const result=document.getElementById("checkOrderResult");
+  const button=document.getElementById("checkOrderButton");
+  if(!form||!result||!button)return;
+  function showMessage(message){
+    result.replaceChildren();
+    const p=document.createElement("p");p.textContent=message;
+    result.appendChild(p);result.hidden=false;
+  }
+  form.addEventListener("submit",async function(event){
+    event.preventDefault();
+    const order_number=document.getElementById("checkOrderNumber").value.trim().toUpperCase();
+    if(!(/^[A-Z0-9]{6}$/.test(order_number)||/^BFR-ORDER-[A-F0-9]{20}$/.test(order_number))){
+      showMessage("Nomor pesanan harus 6 karakter atau nomor lama BFR-ORDER.");return;
+    }
+    button.disabled=true;button.textContent="MEMERIKSA...";result.hidden=true;
+    try{
+      const response=await fetch("/api/check-order",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({order_number}),cache:"no-store"
+      });
+      const data=await response.json();
+      if(!response.ok||!data.success){showMessage(data.error||"Pesanan belum dapat diperiksa.");return;}
+      result.replaceChildren();
+      const heading=document.createElement("strong");heading.textContent="HASIL CEK PESANAN — DEMO";
+      result.appendChild(heading);
+      const p=document.createElement("p");
+      p.textContent="Nomor Pesanan: "+data.order_number;result.appendChild(p);
+      const status=document.createElement("p");
+      status.textContent="Status Pembayaran: "+data.payment_status;result.appendChild(status);
+      const note=document.createElement("p");
+      note.textContent="SIMULASI / TEST — bukan bukti pembayaran nyata.";
+      result.appendChild(note);result.hidden=false;
+    }catch(error){showMessage("Koneksi gagal. Silakan coba kembali nanti.");}
+    finally{button.disabled=false;button.textContent="CEK STATUS PESANAN →";}
+  });
+})();
+
 
 /* COUNTDOWN */
 const $=id=>document.getElementById(id);
