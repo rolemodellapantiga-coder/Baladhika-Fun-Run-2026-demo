@@ -113,6 +113,14 @@ function validPaymentMethod(value) {
 function supabaseError(result) {
   const message = String(result?.message || "");
 
+  if (message.includes("EMAIL_ALREADY_REGISTERED") ||
+      /registration_email_locks.*(?:duplicate|unique)/i.test(message)) {
+    return {
+      status: 409,
+      error: "Email ini sudah memiliki pendaftaran. Silakan gunakan CEK PESANAN untuk melanjutkan pembayaran atau melihat statusnya.",
+    };
+  }
+
   if (
     message.includes("SOLD OUT") ||
     message.includes("tidak mencukupi") ||
@@ -151,8 +159,8 @@ function supabaseError(result) {
   };
 }
 
-// Memeriksa apakah nomor pesanan baru sudah dipakai
-// oleh pesanan aktif maupun mapping pesanan lama.
+// Memeriksa nomor yang pernah digunakan, termasuk pesanan yang sudah dihapus.
+// Mapping lama tetap diperiksa untuk kompatibilitas.
 async function orderNumberExists(number) {
   const base = SUPABASE_URL.replace(/\/+$/, "");
   const headers = {
@@ -162,7 +170,7 @@ async function orderNumberExists(number) {
   };
 
   const checks = [
-    `${base}/rest/v1/orders?select=id&order_number=eq.${number}&limit=1`,
+    `${base}/rest/v1/used_order_numbers?select=order_number&order_number=eq.${number}&limit=1`,
     `${base}/rest/v1/order_number_mapping_20261026?select=order_id&new_order_number=eq.${number}&limit=1`,
   ];
 
@@ -190,6 +198,31 @@ async function orderNumberExists(number) {
   }
 
   return false;
+}
+
+// Baca waktu kedaluwarsa dari database, bukan menghitung ulang di browser.
+async function getRegistrationExpiry(orderNumber) {
+  const url = SUPABASE_URL.replace(/\/+$/, "") +
+    "/rest/v1/rpc/get_registration_expiry";
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ p_order_number: orderNumber }),
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    console.error("Expiry lookup failed:", response.status);
+    return null;
+  }
+  const result = await response.json().catch(() => null);
+  if (!result || result.order_number !== orderNumber ||
+      result.expiry_policy_version !== 1 ||
+      !result.payment_expires_at) return null;
+  return result.payment_expires_at;
 }
 
 async function createRegistration(order, participants) {
@@ -223,7 +256,7 @@ async function createRegistration(order, participants) {
       error: supabaseError(result),
       duplicateCode:
         result?.code === "23505" &&
-        /order_number|orders_order_number_key/i.test(
+        /order_number|orders_order_number_key|used_order_numbers_pkey/i.test(
           String(result?.message || "") +
           " " +
           String(result?.details || "") +
@@ -648,6 +681,12 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // Pesanan telah tersimpan. Kegagalan membaca expiry tidak boleh
+    // membuat klien mengulang pendaftaran dan menghasilkan duplikasi.
+    const paymentExpiresAt = await getRegistrationExpiry(
+      result.data.order_number
+    );
+
     // =====================================
     // HASIL REGISTRASI DEMO
     // =====================================
@@ -677,6 +716,9 @@ module.exports = async function handler(req, res) {
 
       payment_method: paymentMethod,
       payment_status: "PENDING_DEMO",
+      payment_expires_at: paymentExpiresAt,
+      payment_window_minutes: 60,
+      expiry_notice: "Selesaikan pembayaran dalam 1 jam sejak pendaftaran disimpan. Jika belum dibayar, data pendaftaran akan dihapus permanen dan Anda harus mendaftar ulang.",
 
       payment_token: paymentToken,
 
