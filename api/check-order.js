@@ -2,9 +2,9 @@
 "use strict";
 
 // BALADHIKA FUN RUN 2026 — DEMO ONLY
-// CEK PESANAN: hanya nomor pesanan, tanpa email.
-// Sebelum dibuka untuk umum, aktifkan rate limiting
-// untuk POST /api/check-order melalui Vercel Firewall.
+// API CEK PESANAN
+// Mendukung nomor pesanan lama dan 6 karakter.
+// WAJIB aktifkan rate limiting di Vercel Firewall.
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -18,14 +18,8 @@ const VALID_STATUSES = new Set([
 ]);
 
 function send(res, status, payload) {
-  res.setHeader(
-    "Cache-Control",
-    "private, no-store, max-age=0"
-  );
-  res.setHeader(
-    "X-Content-Type-Options",
-    "nosniff"
-  );
+  res.setHeader("Cache-Control", "private, no-store, max-age=0");
+  res.setHeader("X-Content-Type-Options", "nosniff");
 
   return res.status(status).json(payload);
 }
@@ -52,9 +46,7 @@ async function readRows(table, filters, fields) {
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Supabase HTTP ${response.status}`
-    );
+    throw new Error(`Supabase HTTP ${response.status}`);
   }
 
   const rows = await response.json();
@@ -67,7 +59,6 @@ async function readRows(table, filters, fields) {
 }
 
 module.exports = async function handler(req, res) {
-
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
 
@@ -125,17 +116,17 @@ module.exports = async function handler(req, res) {
       orderId = mappings[0].order_id;
     }
 
-    // Nomor lama dan baru yang sudah dipetakan
-    // dicari menggunakan UUID pesanan.
-    // Pesanan baru yang belum dipetakan
-    // dicari menggunakan order_number.
-
     const orders = await readRows(
       "orders",
       orderId
         ? { id: `eq.${orderId}` }
         : { order_number: `eq.${number}` },
-      "order_number,payment_status"
+      [
+        "order_number",
+        "payment_status",
+        "payment_expires_at",
+        "expiry_policy_version"
+      ].join(",")
     );
 
     if (
@@ -148,20 +139,74 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    const order = orders[0];
+    const paid = order.payment_status === "PAID_DEMO";
+
+    const hasExpiry =
+      Number(order.expiry_policy_version) === 1 &&
+      Boolean(order.payment_expires_at);
+
+    const expiresAt = hasExpiry
+      ? Date.parse(order.payment_expires_at)
+      : NaN;
+
+    const now = Date.now();
+
+    const remainingSeconds =
+      !paid && Number.isFinite(expiresAt)
+        ? Math.max(0, Math.ceil((expiresAt - now) / 1000))
+        : null;
+
+    const expired =
+      !paid &&
+      hasExpiry &&
+      Number.isFinite(expiresAt) &&
+      remainingSeconds === 0;
+
+    let paymentNotice;
+
+    if (paid) {
+      paymentNotice =
+        "Pembayaran DEMO sudah dikonfirmasi.";
+    } else if (expired) {
+      paymentNotice =
+        "Batas pembayaran 1 jam telah berakhir. " +
+        "Pesanan menunggu proses penghapusan otomatis.";
+    } else if (hasExpiry) {
+      paymentNotice =
+        "Selesaikan pembayaran sebelum batas waktu 1 jam berakhir.";
+    } else {
+      paymentNotice =
+        "Pesanan menggunakan ketentuan pembayaran sebelumnya.";
+    }
+
     return send(res, 200, {
       success: true,
       demo: true,
-      order_number: orders[0].order_number,
-      payment_status: orders[0].payment_status,
+
+      order_number: order.order_number,
+      payment_status: order.payment_status,
+
+      payment_expires_at:
+        hasExpiry ? order.payment_expires_at : null,
+
+      expiry_policy_version:
+        Number(order.expiry_policy_version) || 0,
+
+      payment_remaining_seconds: remainingSeconds,
+
+      payment_expired: expired,
+
+      payment_notice: paymentNotice,
+
+      server_time: new Date(now).toISOString(),
+
       notice:
         "SIMULASI / TEST — bukan bukti pembayaran nyata."
     });
 
   } catch (error) {
-    console.error(
-      "Order lookup failed:",
-      error.message
-    );
+    console.error("Order lookup failed:", error.message);
 
     return send(res, 503, {
       success: false,
