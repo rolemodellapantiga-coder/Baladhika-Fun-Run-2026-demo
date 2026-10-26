@@ -1409,6 +1409,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
   <p>© 2026 BALADHIKA FUN RUN • MODE DEMO</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -2063,6 +2064,28 @@ async function previewPayment(){
     lines.push("", "DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.",
       "Simpan nomor pesanan dan registrasi untuk pengujian. Tidak ada email yang dikirim.");
     showRegistrationResult(lines.join("\n"),true);
+    // Invoice dibentuk dari respons API pendaftaran yang sukses.
+    const invoice = {
+      orderNumber: String(data.order_number || ""),
+      buyerName: payload.buyer.name,
+      method: selectedPayment,
+      count: Number(data.total_participants),
+      amount: Number(data.total_amount),
+      registrations: numbers.map((number,index)=>({
+        number: String(number),
+        name: [participantData[index]?.first_name,participantData[index]?.last_name].filter(Boolean).join(" "),
+        category: participantData[index]?.category === "early" ? "EARLY BIRD" : "NORMAL"
+      }))
+    };
+    if(invoice.orderNumber && Number.isFinite(invoice.amount)){
+      const invoiceButton=document.createElement("button");
+      invoiceButton.type="button";
+      invoiceButton.className="btn";
+      invoiceButton.style.marginTop="18px";
+      invoiceButton.textContent="UNDUH INVOICE PDF (DEMO) ↓";
+      invoiceButton.addEventListener("click",()=>downloadDemoInvoice(invoice));
+      $("registrationResult").append(document.createElement("br"),invoiceButton);
+    }
     button.textContent="PENDAFTARAN DEMO TERSIMPAN";
     // Token pembayaran DEMO sengaja tidak ditampilkan atau disimpan di browser.
     await refreshTicketStatus();
@@ -2073,6 +2096,65 @@ async function previewPayment(){
     registrationSubmitting=false;
     button.disabled=registrationCompleted||!selectedPayment||!$("agreeRules").checked;
   }
+}
+
+/* INVOICE PDF DEMO — tanpa transaksi sungguhan */
+function downloadDemoInvoice(invoice){
+  const jsPDF = window.jspdf?.jsPDF;
+  if(!jsPDF){
+    alert("Generator PDF belum termuat. Pastikan koneksi internet aktif, lalu coba kembali.");
+    return;
+  }
+  const pdf=new jsPDF({unit:"mm",format:"a4"});
+  const left=18, right=192;
+  let y=22;
+  pdf.setFillColor(36,54,43);
+  pdf.rect(0,0,210,43,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFont("helvetica","bold");
+  pdf.setFontSize(18);
+  pdf.text("BALADHIKA FUN RUN 2026",left,19);
+  pdf.setFontSize(11);
+  pdf.text("INVOICE PENDAFTARAN - DEMO",left,29);
+  pdf.setFontSize(8);
+  pdf.text("BUKAN BUKTI PEMBAYARAN SAH",left,37);
+  pdf.setTextColor(30,40,32);
+  y=56;
+  const line=(label,value)=>{
+    pdf.setFont("helvetica","normal");pdf.setFontSize(10);
+    pdf.text(label,left,y);
+    pdf.setFont("helvetica","bold");
+    const lines=pdf.splitTextToSize(String(value||"-"),100);
+    pdf.text(lines,88,y);
+    y+=Math.max(9,lines.length*5+4);
+  };
+  line("Nomor pesanan",invoice.orderNumber);
+  line("Nama pemesan",invoice.buyerName);
+  line("Metode simulasi",invoice.method.replaceAll("_"," "));
+  line("Jumlah peserta",String(invoice.count));
+  line("Status","PENDING_DEMO");
+  y+=5;
+  pdf.setDrawColor(210,210,210);pdf.line(left,y,right,y);y+=10;
+  pdf.setFont("helvetica","bold");pdf.setFontSize(11);
+  pdf.text("REGISTRASI PESERTA",left,y);y+=9;
+  pdf.setFontSize(9);
+  invoice.registrations.forEach((p,i)=>{
+    if(y>253){pdf.addPage();y=24;}
+    const text=pdf.splitTextToSize(`${i+1}. ${p.name} - ${p.category} - ${p.number}`,173);
+    pdf.setFont("helvetica","normal");pdf.text(text,left,y);
+    y+=text.length*5+4;
+  });
+  if(y>255){pdf.addPage();y=25;}
+  y+=7;pdf.setDrawColor(210,210,210);pdf.line(left,y,right,y);y+=12;
+  pdf.setFont("helvetica","bold");pdf.setFontSize(14);
+  pdf.text("TOTAL SIMULASI",left,y);
+  pdf.text(rupiah(invoice.amount),right,y,{align:"right"});
+  y+=14;pdf.setFont("helvetica","normal");pdf.setFontSize(9);
+  pdf.setTextColor(140,35,25);
+  pdf.text("DEMO / TEST - TIDAK ADA PEMBAYARAN NYATA.",left,y);
+  pdf.setTextColor(80,80,80);
+  pdf.text("Dokumen ini bukan kuitansi dan tidak menyatakan pembayaran lunas.",left,y+7);
+  pdf.save(`INVOICE-DEMO-${invoice.orderNumber.replace(/[^A-Za-z0-9-]/g,"")}.pdf`);
 }
 
 /* GSAP PARALLAX */
