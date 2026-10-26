@@ -1594,6 +1594,192 @@
         }
       });
 
+    // ==========================================
+    // MONITORING RACEPACK - OWNER
+    // ==========================================
+
+    const racepackSummarySection = document.createElement("section");
+
+    racepackSummarySection.innerHTML = `
+      <h2 class="section-title">Monitoring Pengambilan Racepack</h2>
+
+      <div class="cards">
+        <div class="card">
+          <div class="label">Total Peserta</div>
+          <div class="value" id="rpTotal">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Sudah Diambil</div>
+          <div class="value" id="rpCollected">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Belum Diambil</div>
+          <div class="value" id="rpNotCollected">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Persentase Pengambilan</div>
+          <div class="value" id="rpPercentage">—</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:15px">
+        <strong>Progres Distribusi Racepack</strong>
+
+        <div class="quota-track">
+          <div class="quota-fill" id="rpProgress"></div>
+        </div>
+
+        <p class="info" id="rpInfo">
+          Memuat data dari Supabase...
+        </p>
+
+        <button type="button"
+                class="btn btn-orange"
+                id="rpRefreshButton">
+          Refresh Monitoring
+        </button>
+
+        <button type="button"
+                class="btn"
+                id="rpExportButton">
+          Export Rekap CSV
+        </button>
+
+        <p class="error" id="rpError" role="alert"></p>
+      </div>
+    `;
+
+    const racepackHeading = Array.from(
+      document.querySelectorAll(".section-title")
+    ).find(item =>
+      item.textContent.trim() ===
+      "Verifikasi Pembayaran DEMO & Racepack"
+    );
+
+    if (racepackHeading) {
+      racepackHeading.before(racepackSummarySection);
+    } else {
+      document.querySelector(".container")
+        .appendChild(racepackSummarySection);
+    }
+
+    let racepackSummaryData = null;
+
+    async function loadRacepackSummary() {
+      const data = await rpc("owner_get_racepack_summary", {});
+
+      racepackSummaryData = data;
+
+      const total = Number(data.total_participants || 0);
+      const collected = Number(data.collected || 0);
+      const remaining = Number(data.not_collected || 0);
+      const percentage = Number(data.percentage || 0);
+
+      el("rpTotal").textContent = numberFormat(total);
+      el("rpCollected").textContent = numberFormat(collected);
+      el("rpNotCollected").textContent = numberFormat(remaining);
+      el("rpPercentage").textContent =
+        percentage.toLocaleString("id-ID") + "%";
+
+      el("rpProgress").style.width =
+        Math.min(100, Math.max(0, percentage)) + "%";
+
+      el("rpInfo").textContent =
+        numberFormat(collected) +
+        " dari " +
+        numberFormat(total) +
+        " peserta telah mengambil racepack.";
+
+      el("rpError").textContent = "";
+    }
+
+    async function refreshRacepackSummary() {
+      if (!accessToken) return;
+
+      const button = el("rpRefreshButton");
+      button.disabled = true;
+
+      try {
+        await loadRacepackSummary();
+      } catch (error) {
+        el("rpError").textContent =
+          "Gagal memuat monitoring: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    el("rpRefreshButton").addEventListener(
+      "click",
+      refreshRacepackSummary
+    );
+
+    el("rpExportButton").addEventListener("click", async () => {
+      const button = el("rpExportButton");
+      button.disabled = true;
+
+      try {
+        await loadRacepackSummary();
+
+        const d = racepackSummaryData;
+
+        const rows = [
+          ["Keterangan", "Jumlah"],
+          ["Total Peserta", d.total_participants],
+          ["Sudah Diambil", d.collected],
+          ["Belum Diambil", d.not_collected],
+          ["Persentase", d.percentage + "%"]
+        ];
+
+        const csv = "\uFEFF" +
+          rows.map(row =>
+            row.map(csvCell).join(",")
+          ).join("\r\n");
+
+        const blob = new Blob([csv], {
+          type: "text/csv;charset=utf-8"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download =
+          "Baladhika_Rekap_Racepack_2026.csv";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      } catch (error) {
+        el("rpError").textContent =
+          "Export gagal: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    // Ikut diperbarui saat dashboard di-refresh
+    const refreshDashboardBeforeRacepack = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await refreshDashboardBeforeRacepack();
+
+      if (!accessToken) return;
+
+      try {
+        await loadRacepackSummary();
+      } catch (error) {
+        el("rpError").textContent =
+          "Gagal memuat monitoring: " + error.message;
+      }
+    };
+
     showLogin();
   </script>
 </body>
