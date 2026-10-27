@@ -326,18 +326,6 @@
         </div>
       </div>
 
-      <section id="invoiceReprintSection">
-        <h2 class="section-title">Cetak Ulang Invoice DEMO</h2>
-        <div class="card">
-          <p class="info">Untuk pesanan yang sudah PAID_DEMO. Masukkan nomor pesanan dari daftar pesanan di bawah. Tidak perlu mendaftar ulang.</p>
-          <div class="toolbar" style="margin-top:15px">
-            <input id="invoiceOrderInput" type="text" placeholder="Contoh: A7K9B2 atau BFR-ORDER-..." autocomplete="off" aria-label="Nomor pesanan untuk cetak invoice">
-            <button class="btn btn-orange" id="invoiceLoadButton" type="button">Cari & Cetak Invoice</button>
-          </div>
-          <p id="invoiceReprintMessage" class="info" role="status"></p>
-        </div>
-      </section>
-
       <h2 class="section-title">Daftar Peserta</h2>
       <div class="toolbar">
         <input
@@ -756,7 +744,7 @@
     exportButton.style.background = "#e88932";
     exportButton.style.color = "#17271c";
 
-    document.querySelector(".toolbar").appendChild(exportButton);
+    el("searchButton").parentElement.appendChild(exportButton);
 
     function csvCell(value) {
       let text = String(value ?? "");
@@ -1059,67 +1047,6 @@
         }
       });
 
-    
-    // CETAK ULANG INVOICE: data diverifikasi di Supabase oleh RPC khusus OWNER.
-    // Tidak menggunakan library PDF eksternal: browser dapat Save as PDF.
-    async function reprintDemoInvoice(orderNumber) {
-      const btn = el("invoiceLoadButton");
-      const status = el("invoiceReprintMessage");
-      if (!(/^[A-Z0-9]{6}$/.test(orderNumber) || /^BDJ-[A-Z0-9]{5}$/.test(orderNumber) || /^BFR-ORDER-[A-F0-9]{20}$/.test(orderNumber))) {
-        status.textContent = "Masukkan nomor pesanan BDJ-XXXXX, 6 karakter, atau nomor BFR-ORDER lama yang lengkap.";
-        return;
-      }
-      btn.disabled = true;
-      status.textContent = "Mengambil invoice dari Supabase...";
-      // Buka tab saat klik (sebelum await) agar tidak diblokir pop-up browser.
-      const popup = window.open("", "_blank");
-      if (!popup) {
-        status.textContent = "Izinkan pop-up untuk website ini, kemudian coba lagi.";
-        btn.disabled = false;
-        return;
-      }
-      popup.document.write('<!doctype html><html><head><title>Memuat invoice</title></head><body><p>Menyiapkan invoice...</p></body></html>');
-      popup.document.close();
-      try {
-        const data = await rpc("owner_get_demo_invoice", { p_order_number: orderNumber });
-        if (!data || data.payment_status !== "PAID_DEMO") {
-          throw new Error("Pesanan belum berstatus PAID_DEMO.");
-        }
-        const people = Array.isArray(data.participants) ? data.participants : [];
-        const esc = value => String(value ?? "-").replace(/[&<>"']/g, c => ({
-          "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-        }[c]));
-        const formattedAmount = rupiah(data.total_amount);
-        const rows = people.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name)}</td><td>${esc(p.ticket_category)}</td><td>${esc(p.booking_code)}</td><td>${esc(p.registration_number)}</td></tr>`).join("");
-        const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(data.order_number)}</title>
-          <style>body{font-family:Arial,sans-serif;color:#1d3326;margin:0;background:#e9eee9}.paper{max-width:790px;margin:24px auto;padding:36px;background:white;border-radius:12px}.logo{display:block;max-width:100%;width:auto;max-height:130px;object-fit:contain;margin:auto}.invoice-header{background:#263D2B;width:100%;padding:22px 24px;border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:center;box-sizing:border-box}@media print{.invoice-header{background:#263D2B!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}.tag{color:#bd3c24;font-weight:800;font-size:22px}.alert{padding:12px;background:#fff1d7;font-weight:bold;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left;overflow-wrap:anywhere}.actions{margin:18px 0}.actions button{padding:13px 20px;border:0;border-radius:8px;background:#f08b35;font-weight:bold;cursor:pointer}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.actions{display:none}@page{size:A4;margin:16mm}}</style></head>
-          <body><div class="paper">
-<div class="invoice-header">
-  <img class="logo" src="/logo-baladhika.png"
-       alt="Logo Baladhika Fun Run 2026"
-       onerror="this.style.display='none'">
-</div>
-<h1 class="tag">INVOICE LUNAS — DEMO / TEST</h1><div class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</div>
-          <p><b>Nomor pesanan:</b> ${esc(data.order_number)}</p><p><b>Pemesan:</b> ${esc(data.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(data.total_participants)}</p><p><b>Total simulasi:</b> ${esc(formattedAmount)}</p><p><b>Status:</b> PAID_DEMO</p><p><b>Waktu konfirmasi:</b> ${esc(displayDate(data.paid_at))} WIB</p>
-          <h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>Nomor Registrasi</th></tr></thead><tbody>${rows}</tbody></table>
-          <p>Petugas OWNER memeriksa kode booking sebelum menyerahkan racepack.</p><div class="actions"><button onclick="window.print()">SIMPAN SEBAGAI PDF / CETAK</button></div><small>Baladhika Fun Run 2026 — Invoice simulasi internal.</small></div></body></html>`;
-        popup.document.open();
-        popup.document.write(html);
-        popup.document.close();
-        status.textContent = "Invoice terbuka di tab baru. Klik SIMPAN SEBAGAI PDF / CETAK, lalu pilih Save as PDF.";
-      } catch (error) {
-        popup.close();
-        status.textContent = "Gagal: " + error.message + ". Pastikan SQL owner_get_demo_invoice sudah dipasang.";
-      } finally {
-        btn.disabled = false;
-      }
-    }
-    el("invoiceLoadButton").addEventListener("click", () => {
-      reprintDemoInvoice(el("invoiceOrderInput").value.trim().toUpperCase());
-    });
-    el("invoiceOrderInput").addEventListener("keydown", e => {
-      if (e.key === "Enter") { e.preventDefault(); el("invoiceLoadButton").click(); }
-    });
 
     // ==============================================
     // VERIFIKASI PEMBAYARAN DAN RACEPACK — DEMO
