@@ -1442,6 +1442,40 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
+
+/* HERO FINAL SESUAI ACUAN BERWARNA: tanggal menimpa badan 6, medali muka berwarna di kanan, suriken di bawah */
+.block-hero .hero-shell{isolation:isolate!important}
+.block-hero .hero-six{top:32%!important;left:-5%!important;color:rgba(221,235,224,.20)!important;z-index:1!important}
+.block-hero .hero-event-date{top:44%!important;left:3%!important;z-index:13!important}
+.block-hero .hero-medal-backdrop{
+  top:31%!important;right:-18%!important;bottom:auto!important;
+  width:92%!important;height:50%!important;
+  object-fit:contain!important;object-position:center!important;
+  opacity:.72!important;z-index:5!important;
+  animation:heroMedalColorIn 1.3s .35s both!important;
+}
+@keyframes heroMedalColorIn{
+  from{opacity:0;filter:blur(9px);transform:translateY(55px) scale(.95)}
+  to{opacity:.72;filter:blur(0);transform:translateY(0) scale(1)}
+}
+.block-hero .hero-people{z-index:9!important}
+.block-hero .hero-spark{top:71%!important;right:-6%!important;width:25%!important;z-index:7!important}
+@media(max-width:768px){
+ .block-hero .hero-six{top:33%!important;left:-5%!important}
+ .block-hero .hero-event-date{top:44%!important;left:3%!important}
+ .block-hero .hero-medal-backdrop{top:31%!important;right:-25%!important;width:112%!important;height:49%!important}
+ .block-hero .hero-spark{top:72%!important;right:-8%!important;width:29%!important}
+}
+@media(max-width:430px){
+ .block-hero .hero-six{top:33%!important;left:-5%!important}
+ .block-hero .hero-event-date{top:44%!important;left:3%!important}
+ .block-hero .hero-medal-backdrop{top:31%!important;right:-28%!important;width:120%!important;height:49%!important}
+ .block-hero .hero-spark{top:72%!important;right:-9%!important;width:31%!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .block-hero .hero-medal-backdrop{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1493,7 +1527,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <div class="hero-venue">
       <span>LAPANGAN</span><strong>RAMPAL</strong><span>KOTA MALANG</span>
     </div>
-    <img class="hero-medal-backdrop" src="medali.png" alt="" aria-hidden="true" loading="eager">
+    <img class="hero-medal-backdrop" src="medali-warna-depan.png" alt="" aria-hidden="true" loading="eager">
     <img class="hero-people" src="pelari-hero.png" alt="Dua pelari Baladhika Fun Run">
   </div>
 </section>
