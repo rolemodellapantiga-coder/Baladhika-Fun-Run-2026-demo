@@ -1546,6 +1546,48 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-hero img.hero-people{left:auto!important;right:0%!important}
  .block-hero img.hero-medal-backdrop{right:2%!important;width:95%!important;height:52%!important}
 }
+
+/* KOREKSI TERARAH 27 OKTOBER — hanya gambar pelari dan medali.
+   Dasar: index.html yang pengguna unggah, tanpa mengganti konten/formulir. */
+/* Pelari 10 poin persen ke KIRI dari file yang diunggah:
+   desktop 4 -> 14; tablet -1 -> 9; HP 0 -> 10. */
+.block-hero .hero-shell > img.hero-people{
+  left:auto!important;
+  right:14%!important;
+  max-width:none!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
+/* Medali tidak keluar dari sisi kanan: lebar disesuaikan agar lingkaran
+   utuh dalam area Hero, tanpa mengubah gambar berwarna atau opacity 20%. */
+.block-hero .hero-shell > img.hero-medal-backdrop{
+  left:auto!important;
+  right:9%!important;
+  top:29%!important;
+  bottom:auto!important;
+  width:80%!important;
+  height:51%!important;
+  max-width:none!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  opacity:.20!important;
+  z-index:6!important;
+}
+@media(max-width:768px){
+  .block-hero .hero-shell > img.hero-people{right:9%!important}
+  .block-hero .hero-shell > img.hero-medal-backdrop{
+    right:7%!important;top:28%!important;
+    width:85%!important;height:52%!important;
+  }
+}
+@media(max-width:430px){
+  .block-hero .hero-shell > img.hero-people{right:10%!important}
+  .block-hero .hero-shell > img.hero-medal-backdrop{
+    right:7%!important;top:28%!important;
+    width:85%!important;height:52%!important;
+  }
+}
+
 </style>
 </head>
 <body>
