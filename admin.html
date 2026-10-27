@@ -331,7 +331,7 @@
         <input
           id="searchInput"
           type="search"
-          placeholder="Cari nama, nomor registrasi, atau nomor pesanan"
+          placeholder="Cari nama, nomor registrasi, pesanan (HP jika didukung server)"
         >
         <button class="btn" id="searchButton">Cari</button>
         <button class="btn" id="refreshButton">Refresh</button>
@@ -344,6 +344,7 @@
               <th>No.</th>
               <th>Nomor Registrasi</th>
               <th>Nama Peserta</th>
+              <th>HP Peserta / Kelompok</th>
               <th>Nomor Pesanan</th>
               <th>Kategori</th>
               <th>Jersey</th>
@@ -354,7 +355,7 @@
             </tr>
           </thead>
           <tbody id="participantRows">
-            <tr><td colspan="10">Memuat data...</td></tr>
+            <tr><td colspan="11">Memuat data...</td></tr>
           </tbody>
         </table>
       </div>
@@ -552,6 +553,28 @@
       });
     }
 
+    // Nomor HP hanya berasal dari hasil RPC khusus OWNER.
+    // Jika fungsi Supabase belum mengembalikan nomor, tampilkan "—".
+    function ownerPhone(item, keys) {
+      for (const key of keys) {
+        const value = item && item[key];
+        if (typeof value === "string" || typeof value === "number") {
+          const phone = String(value).trim();
+          if (phone) return phone;
+        }
+      }
+      return "—";
+    }
+
+    const participantPhone = p => ownerPhone(p, [
+      "phone", "phone_number", "whatsapp", "whatsapp_number",
+      "participant_phone", "buyer_phone", "contact_phone", "no_hp"
+    ]);
+    const orderPhone = o => ownerPhone(o, [
+      "buyer_phone", "phone", "phone_number", "whatsapp",
+      "whatsapp_number", "contact_phone", "no_hp"
+    ]);
+
     function renderParticipants(items) {
       const tbody = el("participantRows");
       tbody.replaceChildren();
@@ -559,7 +582,7 @@
       if (!items.length) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
-        td.colSpan = 10;
+        td.colSpan = 11;
         td.textContent = "Tidak ada peserta yang ditemukan.";
         tr.appendChild(td);
         tbody.appendChild(tr);
@@ -572,6 +595,7 @@
         addCell(tr, currentPage * PAGE_SIZE + index + 1);
         addCell(tr, p.registration_number);
         addCell(tr, p.full_name);
+        addCell(tr, participantPhone(p));
         addCell(tr, p.order_number);
         addCell(tr, p.ticket_category);
         addCell(tr, p.jersey_size);
@@ -806,6 +830,7 @@
           "No",
           "Nomor Registrasi",
           "Nama Peserta",
+          "HP Peserta / Kelompok",
           "Nomor Pesanan",
           "Kategori Tiket",
           "Ukuran Jersey",
@@ -820,6 +845,7 @@
           index + 1,
           p.registration_number,
           p.full_name,
+          participantPhone(p),
           p.order_number,
           p.ticket_category,
           p.jersey_size,
@@ -1094,6 +1120,7 @@
                 <th>No.</th>
                 <th>Nomor Pesanan</th>
                 <th>Nama Pemesan</th>
+                <th>HP Pemesan / Ketua Kelompok</th>
                 <th>Early Bird</th>
                 <th>Normal</th>
                 <th>Jumlah Peserta</th>
@@ -1107,7 +1134,7 @@
             </thead>
             <tbody id="orderRows">
               <tr>
-                <td colspan="12">Memuat data pesanan...</td>
+                <td colspan="13">Memuat data pesanan...</td>
               </tr>
             </tbody>
           </table>
@@ -1232,7 +1259,7 @@
       if (!items.length) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
-        cell.colSpan = 12;
+        cell.colSpan = 13;
         cell.textContent = "Tidak ada pesanan yang ditemukan.";
         row.appendChild(cell);
         tbody.appendChild(row);
@@ -1245,6 +1272,7 @@
         addCell(row, orderPage * ORDER_PAGE_SIZE + index + 1);
         addCell(row, order.order_number);
         addCell(row, order.buyer_name);
+        addCell(row, orderPhone(order));
         addCell(row, order.early_bird_qty);
         addCell(row, order.normal_qty);
         addCell(row, order.total_participants);
@@ -1450,6 +1478,7 @@
             "No",
             "Nomor Pesanan",
             "Nama Pemesan",
+            "HP Pemesan / Ketua Kelompok",
             "Early Bird",
             "Normal",
             "Jumlah Peserta",
@@ -1465,6 +1494,7 @@
             index + 1,
             o.order_number,
             o.buyer_name,
+            orderPhone(o),
             o.early_bird_qty,
             o.normal_qty,
             o.total_participants,
