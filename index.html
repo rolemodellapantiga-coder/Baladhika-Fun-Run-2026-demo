@@ -1409,6 +1409,63 @@ section{position:relative;overflow:hidden;isolation:isolate}
       const notice=document.createElement("p");
       notice.textContent="DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.";
       result.append(heading,number,payment,notice);
+      if(data.payment_status==="PENDING_DEMO"){
+        const fullOrder=String(data.order_number||"").toUpperCase();
+        const stored=sessionStorage.getItem("bdj_demo_payment_"+fullOrder);
+        let savedToken="";
+        try{
+          const parsed=JSON.parse(stored||"null");
+          if(parsed && parsed.order===fullOrder && Date.now()-parsed.savedAt<86400000 &&
+             /^[a-f0-9]{64}$/.test(parsed.token)) savedToken=parsed.token;
+        }catch(_){}
+        const label=document.createElement("p");
+        label.textContent="LANJUTKAN PEMBAYARAN DEMO";
+        label.style.fontWeight="800";
+        const help=document.createElement("p");
+        help.textContent="Untuk keamanan, masukkan tautan pembayaran yang diterima setelah mendaftar. Jika masih tersimpan di browser ini, tombol lanjutkan akan aktif otomatis.";
+        const linkInput=document.createElement("input");
+        linkInput.type="text";
+        linkInput.autocomplete="off";
+        linkInput.placeholder="Tempel tautan pembayaran DEMO (rahasia)";
+        linkInput.setAttribute("aria-label","Tautan pembayaran DEMO");
+        linkInput.style.cssText="width:100%;padding:13px;border-radius:9px;margin:8px 0;color:#fff;background:#0f1b14;border:1px solid #ffffff55";
+        const resume=document.createElement("button");
+        resume.type="button";
+        resume.className="btn";
+        resume.textContent="LANJUTKAN PEMBAYARAN →";
+        resume.style.width="100%";
+        const feedback=document.createElement("p");
+        feedback.setAttribute("role","status");
+        if(savedToken) {
+          feedback.textContent="Akses pembayaran ditemukan pada sesi browser ini.";
+        }
+        resume.addEventListener("click",()=>{
+          let accessToken=savedToken;
+          const entered=linkInput.value.trim();
+          if(entered){
+            try{
+              const u=new URL(entered,location.origin);
+              if(u.origin!==location.origin || !u.pathname.endsWith("/payment-demo.html"))
+                throw new Error("Tautan tidak sesuai.");
+              const q=new URLSearchParams(u.hash.replace(/^#/,""));
+              if(q.get("order")!==fullOrder || !/^[a-f0-9]{64}$/.test(q.get("token")||""))
+                throw new Error("Nomor pesanan atau token tidak sesuai.");
+              accessToken=q.get("token");
+            }catch(_){
+              feedback.textContent="Tautan pembayaran tidak valid atau bukan untuk pesanan ini.";
+              return;
+            }
+          }
+          if(!accessToken){
+            feedback.textContent="Akses pembayaran belum tersedia. Gunakan tautan/QR asli dari pendaftaran atau hubungi panitia untuk verifikasi dan pemulihan akses. Nomor pesanan saja tidak cukup.";
+            return;
+          }
+          const u=new URL("/payment-demo.html",location.origin);
+          u.hash=new URLSearchParams({order:fullOrder,token:accessToken}).toString();
+          location.assign(u.href);
+        });
+        result.append(label,help,linkInput,resume,feedback);
+      }
       result.hidden=false;
     }catch(error){
       showMessage("Koneksi gagal. Silakan coba kembali nanti.");
@@ -2054,7 +2111,12 @@ async function previewPayment(){
       button.textContent="PENDAFTARAN TERSIMPAN";
       return;
     }
-    // Token tidak disimpan di localStorage dan tidak dimasukkan ke tautan publik yang dibagikan.
+    // Akses hanya disimpan di sessionStorage pada tab browser ini (maksimal 24 jam).
+    // Jangan bagikan token/tautan; cek pesanan publik tidak pernah mengembalikan token.
+    try {
+      sessionStorage.setItem("bdj_demo_payment_"+orderNumber,
+        JSON.stringify({order:orderNumber,token:paymentToken,savedAt:Date.now()}));
+    } catch (_) {}
     // QR adalah kredensial simulasi khusus pesanan; jangan dibagikan kepada orang lain.
     const paymentUrl=new URL("payment-demo.html",window.location.href);
     paymentUrl.hash=new URLSearchParams({order:orderNumber,token:paymentToken}).toString();
