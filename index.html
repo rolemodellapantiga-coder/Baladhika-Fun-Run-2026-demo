@@ -1316,6 +1316,44 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .block-hero .hero-people{right:0%!important}
 }
 
+
+/* HERO REVISI 7: angka 6 masuk + parallax, medali dekoratif 20% di belakang pelari */
+.block-hero .hero-six{z-index:1!important;pointer-events:none}
+.block-hero .hero-six-inner{
+  display:block;
+  animation:heroSixReveal 1.45s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes heroSixReveal{
+  from{opacity:0;transform:translateY(75px) scale(.94);filter:blur(8px)}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+.block-hero .hero-medal-backdrop{
+  position:absolute;
+  right:13%;
+  bottom:12%;
+  width:42%;
+  height:47%;
+  object-fit:contain;
+  object-position:center;
+  opacity:.20;
+  z-index:5;
+  pointer-events:none;
+  animation:heroMedalReveal 1.4s .35s both;
+}
+@keyframes heroMedalReveal{
+  from{opacity:0;filter:blur(8px)}
+  to{opacity:.20;filter:blur(0)}
+}
+@media(max-width:768px){
+ .block-hero .hero-medal-backdrop{width:54%;height:40%;right:10%;bottom:15%}
+}
+@media(max-width:430px){
+ .block-hero .hero-medal-backdrop{width:62%;height:38%;right:7%;bottom:17%}
+}
+@media(prefers-reduced-motion:reduce){
+ .block-hero .hero-six-inner,.block-hero .hero-medal-backdrop{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1355,7 +1393,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <img class="hero-wordmark" src="logo-baladhika.png" alt="Baladhika Fun Run 2026">
       <div class="hero-brand-tagline">EXPERIENCE FUN RUN 5K</div>
     </div>
-    <div class="hero-six" aria-hidden="true">6</div>
+    <div class="hero-six" aria-hidden="true"><span class="hero-six-inner">6</span></div>
     <div class="hero-event-date">
       <span class="hero-weekday">Minggu</span>
       <span class="hero-date-main">6 DESEMBER</span>
@@ -1367,6 +1405,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <div class="hero-venue">
       <span>LAPANGAN</span><strong>RAMPAL</strong><span>KOTA MALANG</span>
     </div>
+    <img class="hero-medal-backdrop" src="medali.png" alt="" aria-hidden="true" loading="eager">
     <img class="hero-people" src="pelari-hero.png" alt="Dua pelari Baladhika Fun Run">
   </div>
 </section>
@@ -2566,7 +2605,8 @@ function initializeParallax(){
     const mobileHero = window.matchMedia("(max-width: 768px)").matches;
     [
       [".block-hero .hero-people", mobileHero ? 105 : 160],
-      [".block-hero .hero-six", mobileHero ? -65 : -100],
+      [".block-hero .hero-six", mobileHero ? -110 : -180],
+      [".block-hero .hero-medal-backdrop", mobileHero ? 65 : 110],
       [".block-hero .hero-spark", mobileHero ? -50 : -80],
       [".block-hero .hero-brand", mobileHero ? -38 : -70]
     ].forEach(([selector, distance])=>{
