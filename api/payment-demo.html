@@ -3,82 +3,197 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17271c">
 <meta name="referrer" content="no-referrer">
-<title>Pembayaran DEMO | Baladhika Fun Run 2026</title>
+<title>QRIS DEMO | Baladhika Fun Run 2026</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:20px;background:#17271c;color:#f5efdf;font-family:Arial,sans-serif}
-main{max-width:620px;margin:20px auto;background:#263c2c;padding:26px;border-radius:18px}
-h1{color:#ff792c;font-size:25px}
-h2{font-size:19px}
-.panel{border:1px solid #617766;padding:18px;margin:18px 0;border-radius:12px}
-.warning{background:#fff1cf;color:#4a3211;padding:15px;border-radius:10px;line-height:1.6}
-.qris{background:white;color:#17271c;padding:24px;border-radius:12px;text-align:center}
-.qris strong{font-size:25px}
-.qris .symbol{font-size:70px;margin:15px}
-button,.link{display:block;width:100%;background:#ff792c;color:#17271c;border:0;border-radius:10px;padding:15px;margin:12px 0;font-weight:bold;cursor:pointer;text-align:center;text-decoration:none}
-button:disabled{opacity:.5;cursor:not-allowed}
-input[type=file]{width:100%;padding:12px;background:white;color:#17271c;border-radius:8px}
-#status{white-space:pre-wrap;line-height:1.7}
-.success{color:#b8f4bd;font-weight:bold}
-small{color:#cdd8ce;line-height:1.7}
+body{
+  margin:0;
+  padding:20px;
+  background:#17271c;
+  color:#f5efdf;
+  font-family:Arial,sans-serif;
+}
+main{
+  max-width:650px;
+  margin:20px auto;
+  padding:28px;
+  background:#263c2c;
+  border-radius:20px;
+}
+h1{
+  color:#ff792c;
+  font-size:27px;
+  line-height:1.2;
+}
+h2{font-size:20px}
+p{line-height:1.7}
+.panel{
+  padding:20px;
+  margin:20px 0;
+  border:1px solid #647767;
+  border-radius:14px;
+}
+.warning{
+  background:#fff0ca;
+  color:#49320c;
+  padding:17px;
+  border-radius:12px;
+  line-height:1.7;
+}
+.order{
+  padding:14px;
+  background:#142119;
+  border-radius:10px;
+  overflow-wrap:anywhere;
+}
+.qris{
+  padding:25px 15px;
+  background:#fff;
+  color:#17271c;
+  border-radius:12px;
+  text-align:center;
+}
+.qris-title{
+  font-size:30px;
+  font-weight:900;
+}
+.qris-symbol{
+  font-size:85px;
+  margin:15px;
+}
+button{
+  width:100%;
+  padding:16px;
+  margin-top:15px;
+  border:0;
+  border-radius:12px;
+  background:#ff792c;
+  color:#17271c;
+  font-weight:900;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+input[type=file]{
+  width:100%;
+  padding:13px;
+  background:#fff;
+  color:#17271c;
+  border-radius:10px;
+}
+#status{
+  padding:16px;
+  background:#142119;
+  border-radius:10px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.success{
+  color:#a9f0af;
+  font-weight:bold;
+}
+small{
+  display:block;
+  color:#c5d2c6;
+  line-height:1.8;
+}
 [hidden]{display:none!important}
 </style>
 </head>
+
 <body>
 <main>
+
 <h1>BALADHIKA FUN RUN 2026</h1>
 <h2>PEMBAYARAN QRIS DEMO</h2>
 
 <div class="warning">
 <strong>DEMO / TEST — BUKAN PEMBAYARAN NYATA.</strong>
 <br>
-Tidak ada transaksi uang atau QRIS perbankan.
+Halaman ini hanya digunakan untuk simulasi.
+Tidak ada transfer uang atau transaksi perbankan.
 </div>
 
-<p id="orderLabel">Memeriksa pesanan...</p>
+<p class="order" id="orderLabel">
+Memeriksa nomor pesanan...
+</p>
 
 <section class="panel">
-<h2>1. QRIS Simulasi</h2>
+<h2>1. QRIS SIMULASI</h2>
+
 <div class="qris">
-<strong>QRIS DEMO</strong>
-<div class="symbol">▦</div>
-<p>TIDAK BERLAKU UNTUK PEMBAYARAN</p>
-<p id="qrOrder"></p>
+  <div class="qris-title">QRIS DEMO</div>
+  <div class="qris-symbol">▦</div>
+  <strong id="qrOrder">-</strong>
+  <p>BUKAN QRIS PEMBAYARAN BANK</p>
 </div>
+
+<p>
+Simulasi ini menggunakan bukti yang diterbitkan
+oleh sistem, bukan pembayaran uang sungguhan.
+</p>
 </section>
 
 <section class="panel">
-<h2>2. Download Bukti Simulasi</h2>
-<p>Unduh bukti DEMO untuk menguji proses unggah.</p>
+<h2>2. DOWNLOAD BUKTI SIMULASI</h2>
+
+<p>
+Klik tombol berikut untuk membuat bukti pembayaran
+DEMO sesuai nomor pesanan.
+</p>
+
 <button id="downloadProof" disabled>
 DOWNLOAD BUKTI PEMBAYARAN DEMO
 </button>
 </section>
 
 <section class="panel">
-<h2>3. Upload Bukti Simulasi</h2>
-<p>PNG, JPG, WEBP. Maksimal 1 MB.</p>
-<input id="proofFile" type="file"
- accept="image/png,image/jpeg,image/webp" disabled>
+<h2>3. UPLOAD BUKTI SIMULASI</h2>
+
+<p>
+Pilih file bukti DEMO yang telah diunduh.
+Format PNG, JPG, atau WEBP.
+Maksimal 1 MB.
+</p>
+
+<input
+  type="file"
+  id="proofFile"
+  accept="image/png,image/jpeg,image/webp"
+  disabled
+>
+
 <button id="uploadProof" disabled>
 UPLOAD & VERIFIKASI DEMO
 </button>
 </section>
 
-<p id="status" role="status"></p>
+<div id="status" role="status"></div>
 
-<section id="successPanel" hidden>
-<p class="success">STATUS: PAID_DEMO</p>
-<p>Unggahan simulasi berhasil dicatat.</p>
-<a class="link" href="/#check-order">CARI PESANAN</a>
+<section id="successPanel" class="panel" hidden>
+  <h2 class="success">STATUS: PAID_DEMO</h2>
+  <p>
+    Pembayaran simulasi berhasil dicatat.
+    Ini bukan konfirmasi pembayaran nyata.
+  </p>
+  <a href="/#cek-pesanan" style="color:#ff792c">
+    LIHAT STATUS PESANAN
+  </a>
 </section>
 
 <small>
 DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.
-Invoice racepack akan dihubungkan pada tahap berikutnya.
+<br>
+Kode pesanan dan token hanya digunakan
+untuk pengujian sistem.
 </small>
+
 </main>
 
 <script>
@@ -90,119 +205,191 @@ const ORDER_RE = /^BDJ-[A-HJ-NP-Z2-9]{5}$/;
 const TOKEN_RE = /^[a-f0-9]{64}$/;
 const MAX_BYTES = 1048576;
 
-const params = new URLSearchParams(location.hash.slice(1));
-const order = (params.get("order") || "").trim().toUpperCase();
-const token = (params.get("token") || "").trim();
+const params = new URLSearchParams(
+  window.location.hash.slice(1)
+);
 
-history.replaceState(null,"",location.pathname+location.search);
+const order = String(
+  params.get("order") || ""
+).trim().toUpperCase();
 
-const valid = ORDER_RE.test(order) && TOKEN_RE.test(token);
+const token = String(
+  params.get("token") || ""
+).trim();
+
+const valid =
+  ORDER_RE.test(order) &&
+  TOKEN_RE.test(token);
+
+// Hapus token dari alamat yang terlihat.
+history.replaceState(
+  null,
+  "",
+  location.pathname + location.search
+);
 
 let issuedProof = null;
 let selectedFile = null;
 let busy = false;
 
-function status(message) {
+function showStatus(message){
   $("status").textContent = message;
 }
 
 $("orderLabel").textContent = valid
-  ? "Nomor Pesanan: " + order
+  ? "NOMOR PESANAN: " + order
   : "Nomor pesanan atau token tidak valid.";
 
 $("qrOrder").textContent = valid ? order : "-";
+
 $("downloadProof").disabled = !valid;
 
-status(valid
-  ? "Silakan unduh bukti DEMO terlebih dahulu."
+showStatus(valid
+  ? "Silakan download bukti DEMO terlebih dahulu."
   : "Buka halaman ini melalui tautan setelah pendaftaran."
 );
 
-function makeCanvas(proof) {
+function makeCanvas(proof){
   const canvas = document.createElement("canvas");
+
   canvas.width = 1000;
   canvas.height = 650;
 
   const ctx = canvas.getContext("2d");
+
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0,0,1000,650);
 
   ctx.fillStyle = "#263c2c";
-  ctx.fillRect(0,0,1000,125);
+  ctx.fillRect(0,0,1000,130);
 
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 38px Arial";
-  ctx.fillText("BALADHIKA FUN RUN 2026",35,78);
+  ctx.fillText(
+    "BALADHIKA FUN RUN 2026",
+    35,80
+  );
 
   ctx.fillStyle = "#c24120";
   ctx.font = "bold 48px Arial";
-  ctx.fillText("BUKTI SIMULASI",35,205);
+  ctx.fillText(
+    "BUKTI SIMULASI",
+    35,205
+  );
 
   ctx.fillStyle = "#24362b";
   ctx.font = "28px Arial";
-  ctx.fillText("Nomor Pesanan: " + order,35,285);
-  ctx.fillText("Metode: QRIS DEMO",35,340);
-  ctx.fillText("Status: SIMULASI / TEST",35,395);
 
-  ctx.font = "bold 29px Arial";
+  ctx.fillText(
+    "Nomor Pesanan: " + order,
+    35,285
+  );
+
+  ctx.fillText(
+    "Metode: QRIS DEMO",
+    35,340
+  );
+
+  ctx.fillText(
+    "Status: SIMULASI / TEST",
+    35,395
+  );
+
   ctx.fillStyle = "#b42318";
-  ctx.fillText("BUKAN BUKTI PEMBAYARAN SAH",35,485);
+  ctx.font = "bold 29px Arial";
+
+  ctx.fillText(
+    "BUKAN BUKTI PEMBAYARAN SAH",
+    35,485
+  );
 
   ctx.fillStyle = "#24362b";
   ctx.font = "19px Arial";
-  ctx.fillText("Referensi bukti:",35,540);
+  ctx.fillText(
+    "Referensi verifikasi:",
+    35,540
+  );
+
   ctx.font = "15px monospace";
-  ctx.fillText(proof.proof_signature.slice(0,48),35,570);
+  ctx.fillText(
+    proof.proof_signature.slice(0,48),
+    35,570
+  );
 
   return canvas;
 }
 
-function canvasBlob(canvas) {
-  return new Promise((resolve,reject) => {
-    canvas.toBlob(blob => {
-      if (blob) resolve(blob);
-      else reject(new Error("Gagal membuat gambar."));
+function canvasBlob(canvas){
+  return new Promise((resolve,reject)=>{
+    canvas.toBlob(blob=>{
+      if(blob){
+        resolve(blob);
+      }else{
+        reject(new Error(
+          "Gagal membuat gambar bukti."
+        ));
+      }
     },"image/png");
   });
 }
 
-$("downloadProof").onclick = async () => {
-  if (!valid || busy) return;
+$("downloadProof").onclick = async ()=>{
+  if(!valid || busy) return;
 
   busy = true;
   $("downloadProof").disabled = true;
-  status("Meminta kode bukti DEMO dari server...");
 
-  try {
-    const response = await fetch("/api/issue-demo-proof",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      cache:"no-store",
-      body:JSON.stringify({
-        order_number:order,
-        payment_token:token
-      })
-    });
+  showStatus(
+    "Meminta kode bukti DEMO dari server..."
+  );
+
+  try{
+    const response = await fetch(
+      "/api/issue-demo-proof",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        cache:"no-store",
+        body:JSON.stringify({
+          order_number:order,
+          payment_token:token
+        })
+      }
+    );
 
     const data = await response.json();
 
-    if (!response.ok || data.success !== true) {
-      throw new Error(data.error || "Gagal menerbitkan bukti.");
+    if(
+      !response.ok ||
+      data.success !== true
+    ){
+      throw new Error(
+        data.error ||
+        "Gagal menerbitkan bukti DEMO."
+      );
     }
 
-    if (
+    if(
       data.order_number !== order ||
       typeof data.proof_payload !== "string" ||
-      !/^[a-f0-9]{64}$/.test(data.proof_signature || "")
-    ) {
-      throw new Error("Respons verifikasi tidak valid.");
+      !/^[a-f0-9]{64}$/.test(
+        data.proof_signature || ""
+      )
+    ){
+      throw new Error(
+        "Respons verifikasi tidak valid."
+      );
     }
 
     const canvas = makeCanvas(data);
     const blob = await canvasBlob(canvas);
 
-    if (blob.size > MAX_BYTES) {
-      throw new Error("Gambar bukti melebihi 1 MB.");
+    if(blob.size > MAX_BYTES){
+      throw new Error(
+        "Ukuran gambar melebihi 1 MB."
+      );
     }
 
     issuedProof = {
@@ -211,115 +398,188 @@ $("downloadProof").onclick = async () => {
     };
 
     const url = URL.createObjectURL(blob);
+
     const link = document.createElement("a");
     link.href = url;
-    link.download = "BUKTI-DEMO-" + order + ".png";
+    link.download =
+      "BUKTI-DEMO-" + order + ".png";
+
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    setTimeout(() => URL.revokeObjectURL(url),10000);
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+    },10000);
 
     $("proofFile").disabled = false;
-    status("Bukti DEMO dibuat. Pilih file yang telah diunduh untuk diunggah.");
 
-  } catch(error) {
+    showStatus(
+      "Bukti DEMO berhasil dibuat.\n" +
+      "Silakan pilih file yang diunduh " +
+      "untuk proses upload."
+    );
+
+  }catch(error){
     issuedProof = null;
-    status("Gagal: " + error.message);
-  } finally {
+
+    showStatus(
+      "GAGAL: " + error.message
+    );
+
+  }finally{
     busy = false;
     $("downloadProof").disabled = !valid;
   }
 };
 
-$("proofFile").onchange = () => {
+$("proofFile").onchange = ()=>{
   selectedFile = null;
   $("uploadProof").disabled = true;
 
   const file = $("proofFile").files[0];
 
-  if (!file || !issuedProof) return;
+  if(!file || !issuedProof) return;
 
-  if (!["image/png","image/jpeg","image/webp"].includes(file.type)) {
-    status("Format file tidak didukung.");
+  const allowed = [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ];
+
+  if(!allowed.includes(file.type)){
+    showStatus(
+      "Format file tidak didukung."
+    );
     return;
   }
 
-  if (file.size < 1 || file.size > MAX_BYTES) {
-    status("Ukuran file harus maksimal 1 MB.");
+  if(
+    file.size < 1 ||
+    file.size > MAX_BYTES
+  ){
+    showStatus(
+      "Ukuran file maksimal 1 MB."
+    );
     return;
   }
 
   selectedFile = file;
   $("uploadProof").disabled = false;
-  status("File siap diunggah: " + file.name);
+
+  showStatus(
+    "File siap diunggah: " + file.name
+  );
 };
 
-function base64(file) {
-  return new Promise((resolve,reject) => {
+function readBase64(file){
+  return new Promise((resolve,reject)=>{
     const reader = new FileReader();
 
-    reader.onload = () => {
-      const value = String(reader.result || "");
+    reader.onload = ()=>{
+      const value = String(
+        reader.result || ""
+      );
+
       const comma = value.indexOf(",");
 
-      if (comma < 0) {
-        reject(new Error("Gagal membaca file."));
-      } else {
+      if(comma < 0){
+        reject(
+          new Error("Gagal membaca file.")
+        );
+      }else{
         resolve(value.slice(comma+1));
       }
     };
 
-    reader.onerror = () => reject(new Error("Gagal membaca file."));
+    reader.onerror = ()=>reject(
+      new Error("Gagal membaca file.")
+    );
+
     reader.readAsDataURL(file);
   });
 }
 
-$("uploadProof").onclick = async () => {
-  if (!valid || !issuedProof || !selectedFile || busy) return;
+$("uploadProof").onclick = async ()=>{
+  if(
+    !valid ||
+    !issuedProof ||
+    !selectedFile ||
+    busy
+  ) return;
 
   busy = true;
   $("uploadProof").disabled = true;
-  status("Mengunggah bukti DEMO...");
 
-  try {
-    const encoded = await base64(selectedFile);
+  showStatus(
+    "Mengunggah bukti DEMO..."
+  );
 
-    const response = await fetch("/api/upload-demo-proof",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      cache:"no-store",
-      body:JSON.stringify({
-        order_number:order,
-        payment_token:token,
-        mime_type:selectedFile.type,
-        file_base64:encoded,
-        proof_payload:issuedProof.payload,
-        proof_signature:issuedProof.signature
-      })
-    });
+  try{
+    const encoded = await readBase64(
+      selectedFile
+    );
+
+    const response = await fetch(
+      "/api/upload-demo-proof",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        cache:"no-store",
+        body:JSON.stringify({
+          order_number:order,
+          payment_token:token,
+          mime_type:selectedFile.type,
+          file_base64:encoded,
+          proof_payload:issuedProof.payload,
+          proof_signature:issuedProof.signature
+        })
+      }
+    );
 
     const data = await response.json();
 
-    if (!response.ok || data.success !== true) {
-      throw new Error(data.message || data.error || "Upload gagal.");
+    if(
+      !response.ok ||
+      data.success !== true
+    ){
+      throw new Error(
+        data.error ||
+        data.message ||
+        "Upload gagal."
+      );
     }
 
-    if (data.payment_status !== "PAID_DEMO") {
-      throw new Error("Status belum berhasil diperbarui.");
+    if(
+      data.payment_status !== "PAID_DEMO"
+    ){
+      throw new Error(
+        "Status belum berhasil diperbarui."
+      );
     }
 
-    status("Berhasil. Status pembayaran simulasi: PAID_DEMO.");
+    showStatus(
+      "BERHASIL!\n" +
+      "Status pembayaran: PAID_DEMO."
+    );
+
     $("successPanel").hidden = false;
     $("proofFile").disabled = true;
     $("downloadProof").disabled = true;
+
     issuedProof = null;
     selectedFile = null;
 
-  } catch(error) {
-    status("Gagal: " + error.message);
+  }catch(error){
+    showStatus(
+      "GAGAL: " + error.message
+    );
+
     $("uploadProof").disabled = false;
-  } finally {
+
+  }finally{
     busy = false;
   }
 };
