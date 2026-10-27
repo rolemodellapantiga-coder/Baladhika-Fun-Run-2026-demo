@@ -811,6 +811,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
 
 
 /* CEK PESANAN — DEMO */
+.order-code-row{display:flex;align-items:stretch;gap:10px}
+.order-code-prefix{display:flex;align-items:center;padding:0 18px;border-radius:9px;background:#344938;font-weight:900;letter-spacing:1px}
+.order-code-row input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:3px;font-weight:800}
 .check-order-section{padding:85px 0;background:#1b2c21}
 .check-order-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:45px;align-items:center}
 .check-order-title{font:400 clamp(48px,7vw,90px)/1 Anton,Impact,sans-serif;margin:15px 0 22px}
@@ -822,16 +825,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
 @media(max-width:768px){.check-order-layout{grid-template-columns:1fr;gap:25px}.check-order-section{padding:65px 0}.check-order-panel{padding:20px}}
 
 
-/* BATAS PEMBAYARAN — TAMBAHAN TANPA MENGUBAH DESAIN LAMA */
-.payment-deadline{margin:18px 0;padding:19px;border:2px solid #ff691f;border-radius:14px;background:#321e17;color:#fff;text-align:center}
-.payment-deadline strong{display:block;font-size:13px;line-height:1.7}
-.payment-deadline-clock{display:block;font:400 clamp(44px,8vw,72px)/1.1 Anton,Impact,sans-serif;color:#ffae75;margin:10px 0;font-variant-numeric:tabular-nums}
-.payment-deadline p{font-size:12px;line-height:1.8;margin:8px 0}
-.payment-deadline-modal{position:fixed;inset:0;z-index:10000;background:#000c;display:flex;align-items:center;justify-content:center;padding:18px}
-.payment-deadline-dialog{width:min(540px,100%);max-height:90vh;overflow:auto;background:#24362b;border:2px solid #ff691f;border-radius:20px;padding:28px;text-align:center;box-shadow:0 20px 70px #0009}
-.payment-deadline-dialog h2{font:400 clamp(33px,6vw,52px)/1.1 Anton,Impact,sans-serif;color:#ffae75;margin:10px 0}
-.payment-deadline-dialog p{font-size:13px;line-height:1.8}
-.payment-deadline-dialog .btn{margin-top:12px}
 
 </style>
 </head>
@@ -888,14 +881,14 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <div>
       <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
       <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
-      <p class="copy muted">Masukkan nomor pesanan untuk memeriksa status pembayaran simulasi.</p>
+      <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
       <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
     </div>
     <div class="check-order-panel">
       <form id="checkOrderForm">
         <div class="field">
           <label for="checkOrderNumber">NOMOR PESANAN *</label>
-          <input id="checkOrderNumber" name="order_number" maxlength="30" required autocomplete="off" placeholder="Contoh: FE7BE3">
+          <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="5" minlength="5" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{5}" placeholder="A7K9B"></div>
         </div>
         <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
       </form>
@@ -1252,13 +1245,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
                 data-method="QRIS_DEMO"
                 onclick="selectPayment('QRIS_DEMO')">
           <strong>▦ QRIS</strong>
-          <span>Pratinjau pembayaran QRIS</span>
-        </button>
-        <button class="payment-option" type="button"
-                data-method="VA_MANDIRI_DEMO"
-                onclick="selectPayment('VA_MANDIRI_DEMO')">
-          <strong>▣ VA MANDIRI</strong>
-          <span>Pratinjau Virtual Account Mandiri</span>
+          <span>Simulasi QRIS — tanpa transfer uang nyata</span>
         </button>
       </div>
 
@@ -1363,7 +1350,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
   <p>© 2026 BALADHIKA FUN RUN • MODE DEMO</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -1376,95 +1362,62 @@ section{position:relative;overflow:hidden;isolation:isolate}
   const form=document.getElementById("checkOrderForm");
   const result=document.getElementById("checkOrderResult");
   const button=document.getElementById("checkOrderButton");
-  if(!form||!result||!button)return;
+  const input=document.getElementById("checkOrderNumber");
+  if(!form||!result||!button||!input)return;
+
+  input.addEventListener("input",()=>{
+    input.value=input.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,"").slice(0,5);
+  });
+
   function showMessage(message){
     result.replaceChildren();
-    const p=document.createElement("p");p.textContent=message;
-    result.appendChild(p);result.hidden=false;
+    const p=document.createElement("p");
+    p.textContent=message;
+    result.appendChild(p);
+    result.hidden=false;
   }
-  form.addEventListener("submit",async function(event){
+
+  form.addEventListener("submit",async event=>{
     event.preventDefault();
-    const order_number=document.getElementById("checkOrderNumber").value.trim().toUpperCase();
-    if(!(/^[A-Z0-9]{6}$/.test(order_number)||/^BFR-ORDER-[A-F0-9]{20}$/.test(order_number))){
-      showMessage("Nomor pesanan harus 6 karakter atau nomor lama BFR-ORDER.");return;
+    const code=input.value.trim().toUpperCase();
+    if(!/^[A-HJ-NP-Z2-9]{5}$/.test(code)){
+      showMessage("Masukkan tepat 5 karakter kode pesanan setelah BDJ-.");
+      return;
     }
-    button.disabled=true;button.textContent="MEMERIKSA...";result.hidden=true;
+    button.disabled=true;
+    button.textContent="MEMERIKSA...";
+    result.hidden=true;
     try{
       const response=await fetch("/api/check-order",{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({order_number}),cache:"no-store"
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({order_number:code}),
+        cache:"no-store"
       });
       const data=await response.json();
-      if(!response.ok||!data.success){showMessage(data.error||"Pesanan belum dapat diperiksa.");return;}
-      result.replaceChildren();
-      const heading=document.createElement("strong");heading.textContent="HASIL CEK PESANAN — DEMO";
-      result.appendChild(heading);
-      const p=document.createElement("p");
-      p.textContent="Nomor Pesanan: "+data.order_number;result.appendChild(p);
-      const status=document.createElement("p");
-      status.textContent="Status Pembayaran: "+data.payment_status;result.appendChild(status);
-      if(data.payment_status==="PENDING_DEMO" && data.payment_expires_at){
-        attachPaymentDeadline(result,String(data.payment_expires_at),String(data.order_number));
+      if(!response.ok||data.success!==true){
+        showMessage(data.error||"Pesanan belum dapat diperiksa.");
+        return;
       }
-      const note=document.createElement("p");
-      note.textContent="SIMULASI / TEST — bukan bukti pembayaran nyata.";
-      result.appendChild(note);result.hidden=false;
-    }catch(error){showMessage("Koneksi gagal. Silakan coba kembali nanti.");}
-    finally{button.disabled=false;button.textContent="CEK STATUS PESANAN →";}
+      result.replaceChildren();
+      const heading=document.createElement("strong");
+      heading.textContent="HASIL CEK PESANAN — DEMO";
+      const number=document.createElement("p");
+      number.textContent="Nomor Pesanan: "+data.order_number;
+      const payment=document.createElement("p");
+      payment.textContent="Status Pembayaran: "+data.payment_status;
+      const notice=document.createElement("p");
+      notice.textContent="DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.";
+      result.append(heading,number,payment,notice);
+      result.hidden=false;
+    }catch(error){
+      showMessage("Koneksi gagal. Silakan coba kembali nanti.");
+    }finally{
+      button.disabled=false;
+      button.textContent="CEK STATUS PESANAN →";
+    }
   });
 })();
-
-
-/* BATAS PEMBAYARAN PESANAN — WAKTU OTORITATIF DARI SUPABASE */
-let paymentDeadlineTimer=null;
-function formatPaymentRemaining(ms){
-  const total=Math.max(0,Math.ceil(ms/1000));
-  const minutes=Math.floor(total/60);
-  const seconds=total%60;
-  return String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0");
-}
-function attachPaymentDeadline(container,expiryISO,orderNumber){
-  const expiry=Date.parse(expiryISO||"");
-  if(!Number.isFinite(expiry))return false;
-  if(paymentDeadlineTimer)clearInterval(paymentDeadlineTimer);
-  const card=document.createElement("div");card.className="payment-deadline";
-  const heading=document.createElement("strong");
-  heading.textContent="BATAS WAKTU PEMBAYARAN — NOMOR PESANAN "+orderNumber;
-  const clock=document.createElement("span");clock.className="payment-deadline-clock";
-  clock.setAttribute("role","timer");
-  const note=document.createElement("p");
-  note.textContent="Anda memiliki waktu 1 jam sejak pendaftaran disimpan. Jika belum lunas saat waktu habis, data pendaftaran akan dihapus permanen dan Anda harus mendaftar ulang.";
-  card.append(heading,clock,note);container.prepend(card);
-  const update=()=>{
-    const remaining=expiry-Date.now();
-    clock.textContent=formatPaymentRemaining(remaining);
-    if(remaining<=0){
-      clock.textContent="00:00";
-      heading.textContent="WAKTU PEMBAYARAN TELAH HABIS";
-      note.textContent="Pesanan ini sudah kedaluwarsa dan tidak dapat dibayar. Data akan dihapus otomatis oleh sistem. Silakan mendaftar ulang setelah penghapusan selesai.";
-      if(paymentDeadlineTimer){clearInterval(paymentDeadlineTimer);paymentDeadlineTimer=null;}
-    }
-  };
-  update();
-  if(expiry>Date.now())paymentDeadlineTimer=setInterval(update,1000);
-  return true;
-}
-function showPaymentDeadlineModal(expiryISO,orderNumber){
-  const overlay=document.createElement("div");
-  overlay.className="payment-deadline-modal";
-  overlay.setAttribute("role","dialog");
-  overlay.setAttribute("aria-modal","true");
-  overlay.setAttribute("aria-label","Peringatan batas pembayaran");
-  const dialog=document.createElement("div");dialog.className="payment-deadline-dialog";
-  const heading=document.createElement("h2");heading.textContent="PERHATIAN! BATAS PEMBAYARAN 1 JAM";
-  const description=document.createElement("p");
-  description.textContent="Pesanan "+orderNumber+" sudah tersimpan. Pembayaran wajib diselesaikan dalam 1 jam sejak pendaftaran. Setelah batas waktu, pesanan yang belum dibayar akan dihapus permanen dan harus didaftarkan ulang.";
-  const button=document.createElement("button");button.type="button";button.className="btn";
-  button.textContent="SAYA MENGERTI — LANJUT KE QRIS DEMO";
-  button.onclick=()=>{overlay.remove();document.body.style.overflow="";};
-  dialog.append(heading,description,button);overlay.append(dialog);
-  document.body.append(overlay);document.body.style.overflow="hidden";button.focus();
-}
 
 /* COUNTDOWN */
 const $=id=>document.getElementById(id);
@@ -2004,10 +1957,7 @@ $("registrationForm").addEventListener("submit",event=>{
   $("reviewCount").textContent=totalPeople()+" orang";
   $("reviewTotal").textContent=rupiah(totalPrice());
   $("agreeRules").checked=false;
-  selectedPayment="";
-  document.querySelectorAll(".payment-option").forEach(button=>{
-    button.classList.remove("selected");
-  });
+  selectPayment("QRIS_DEMO");
   updatePaymentButton();
   showRegistrationStep(3);
 });
@@ -2099,7 +2049,7 @@ async function previewPayment(){
     registrationCompleted=true;
     const orderNumber=String(data.order_number||"");
     const paymentToken=String(data.payment_token||"");
-    if(!orderNumber || !/^[a-f0-9]{64}$/.test(paymentToken)){
+    if(!/^BDJ-[A-HJ-NP-Z2-9]{5}$/.test(orderNumber) || !/^[a-f0-9]{64}$/.test(paymentToken)){
       showRegistrationResult("Pendaftaran tersimpan, tetapi token pembayaran simulasi tidak diterima. Hubungi panitia dengan nomor pesanan: "+orderNumber);
       button.textContent="PENDAFTARAN TERSIMPAN";
       return;
@@ -2108,29 +2058,19 @@ async function previewPayment(){
     // QR adalah kredensial simulasi khusus pesanan; jangan dibagikan kepada orang lain.
     const paymentUrl=new URL("payment-demo.html",window.location.href);
     paymentUrl.hash=new URLSearchParams({order:orderNumber,token:paymentToken}).toString();
-    showRegistrationResult("PENDAFTARAN DEMO TERSIMPAN\nNomor pesanan: "+orderNumber+"\nJumlah peserta: "+data.total_participants+"\nTotal simulasi: "+rupiah(data.total_amount)+"\nStatus: PENDING_DEMO\n\nPindai QR atau buka halaman pembayaran untuk melanjutkan simulasi. Belum lunas.",true);
+    showRegistrationResult("PENDAFTARAN DEMO TERSIMPAN\nNomor pesanan: "+orderNumber+"\nJumlah peserta: "+data.total_participants+"\nTotal simulasi: "+rupiah(data.total_amount)+"\nStatus: PENDING_DEMO\n\nPindai QR tautan atau buka halaman pembayaran DEMO untuk melanjutkan simulasi. Belum lunas.",true);
     const panel=document.createElement("div");
     panel.style.cssText="margin-top:20px;padding:18px;background:#fff;color:#24362b;border-radius:14px;text-align:center";
-    const title=document.createElement("h3");title.textContent="QR PEMBAYARAN SIMULASI";title.style.cssText="font-size:24px;margin:5px";
+    const title=document.createElement("h3");title.textContent="QR TAUTAN SIMULASI";title.style.cssText="font-size:24px;margin:5px";
     const qr=document.createElement("div");qr.style.cssText="display:flex;justify-content:center;margin:15px auto";
     panel.append(title,qr);
-    const caption=document.createElement("p");caption.textContent="QR khusus pesanan ini. Pindai melalui HP atau simpan gambar QR, lalu gunakan pemindai yang mendukung unggah gambar.";
+    const caption=document.createElement("p");caption.textContent="QR ini membuka halaman DEMO khusus pesanan, bukan QRIS bank. Jangan bagikan QR karena berisi akses simulasi pesanan.";
     caption.style.cssText="font-size:12px;line-height:1.7";panel.append(caption);
     const open=document.createElement("a");open.className="btn";open.textContent="BUKA HALAMAN PEMBAYARAN DEMO →";
     open.href=paymentUrl.href;open.style.margin="8px";panel.append(open);
-    const save=document.createElement("button");save.type="button";save.className="btn btn-outline";save.style.cssText="margin:8px;color:#24362b;border-color:#24362b";save.textContent="SIMPAN QR PNG ↓";
+    const save=document.createElement("button");save.type="button";save.className="btn btn-outline";save.style.cssText="margin:8px;color:#24362b;border-color:#24362b";save.textContent="SIMPAN QR TAUTAN ↓";
     save.onclick=()=>{const canvas=qr.querySelector("canvas"),img=qr.querySelector("img");const url=canvas?.toDataURL("image/png")||img?.src;if(!url){alert("QR belum siap");return;}const a=document.createElement("a");a.href=url;a.download="QR-DEMO-"+orderNumber+".png";a.click();};
     panel.append(save);$("registrationResult").append(panel);
-    // Waktu ditetapkan server saat order dibuat, bukan dihitung dari klik browser.
-    const expiryISO=String(data.payment_expires_at||"");
-    if(attachPaymentDeadline($("registrationResult"),expiryISO,orderNumber)){
-      showPaymentDeadlineModal(expiryISO,orderNumber);
-    }else{
-      const warning=document.createElement("p");
-      warning.className="notice";
-      warning.textContent="Pesanan tersimpan, tetapi waktu batas pembayaran belum dapat ditampilkan. Hubungi panitia dan jangan mengulangi pendaftaran dengan email yang sama.";
-      $("registrationResult").prepend(warning);
-    }
     if(typeof QRCode!=="undefined")new QRCode(qr,{text:paymentUrl.href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
     else {const fallback=document.createElement("p");fallback.textContent="Generator QR belum termuat. Gunakan tombol Buka Halaman Pembayaran.";qr.append(fallback);}
     button.textContent="PENDAFTARAN DEMO TERSIMPAN";
@@ -2142,65 +2082,6 @@ async function previewPayment(){
     registrationSubmitting=false;
     button.disabled=registrationCompleted||!selectedPayment||!$("agreeRules").checked;
   }
-}
-
-/* INVOICE PDF DEMO — tanpa transaksi sungguhan */
-function downloadDemoInvoice(invoice){
-  const jsPDF = window.jspdf?.jsPDF;
-  if(!jsPDF){
-    alert("Generator PDF belum termuat. Pastikan koneksi internet aktif, lalu coba kembali.");
-    return;
-  }
-  const pdf=new jsPDF({unit:"mm",format:"a4"});
-  const left=18, right=192;
-  let y=22;
-  pdf.setFillColor(36,54,43);
-  pdf.rect(0,0,210,43,"F");
-  pdf.setTextColor(255,255,255);
-  pdf.setFont("helvetica","bold");
-  pdf.setFontSize(18);
-  pdf.text("BALADHIKA FUN RUN 2026",left,19);
-  pdf.setFontSize(11);
-  pdf.text("INVOICE PENDAFTARAN - DEMO",left,29);
-  pdf.setFontSize(8);
-  pdf.text("BUKAN BUKTI PEMBAYARAN SAH",left,37);
-  pdf.setTextColor(30,40,32);
-  y=56;
-  const line=(label,value)=>{
-    pdf.setFont("helvetica","normal");pdf.setFontSize(10);
-    pdf.text(label,left,y);
-    pdf.setFont("helvetica","bold");
-    const lines=pdf.splitTextToSize(String(value||"-"),100);
-    pdf.text(lines,88,y);
-    y+=Math.max(9,lines.length*5+4);
-  };
-  line("Nomor pesanan",invoice.orderNumber);
-  line("Nama pemesan",invoice.buyerName);
-  line("Metode simulasi",invoice.method.replaceAll("_"," "));
-  line("Jumlah peserta",String(invoice.count));
-  line("Status","PENDING_DEMO");
-  y+=5;
-  pdf.setDrawColor(210,210,210);pdf.line(left,y,right,y);y+=10;
-  pdf.setFont("helvetica","bold");pdf.setFontSize(11);
-  pdf.text("REGISTRASI PESERTA",left,y);y+=9;
-  pdf.setFontSize(9);
-  invoice.registrations.forEach((p,i)=>{
-    if(y>253){pdf.addPage();y=24;}
-    const text=pdf.splitTextToSize(`${i+1}. ${p.name} - ${p.category} - ${p.number}`,173);
-    pdf.setFont("helvetica","normal");pdf.text(text,left,y);
-    y+=text.length*5+4;
-  });
-  if(y>255){pdf.addPage();y=25;}
-  y+=7;pdf.setDrawColor(210,210,210);pdf.line(left,y,right,y);y+=12;
-  pdf.setFont("helvetica","bold");pdf.setFontSize(14);
-  pdf.text("TOTAL SIMULASI",left,y);
-  pdf.text(rupiah(invoice.amount),right,y,{align:"right"});
-  y+=14;pdf.setFont("helvetica","normal");pdf.setFontSize(9);
-  pdf.setTextColor(140,35,25);
-  pdf.text("DEMO / TEST - TIDAK ADA PEMBAYARAN NYATA.",left,y);
-  pdf.setTextColor(80,80,80);
-  pdf.text("Dokumen ini bukan kuitansi dan tidak menyatakan pembayaran lunas.",left,y+7);
-  pdf.save(`INVOICE-DEMO-${invoice.orderNumber.replace(/[^A-Za-z0-9-]/g,"")}.pdf`);
 }
 
 /* GSAP PARALLAX */
