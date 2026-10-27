@@ -1065,8 +1065,8 @@
     async function reprintDemoInvoice(orderNumber) {
       const btn = el("invoiceLoadButton");
       const status = el("invoiceReprintMessage");
-      if (!(/^[A-Z0-9]{6}$/.test(orderNumber) || /^BFR-ORDER-[A-F0-9]{20}$/.test(orderNumber))) {
-        status.textContent = "Masukkan nomor pesanan 6 karakter atau nomor BFR-ORDER lama yang lengkap.";
+      if (!(/^[A-Z0-9]{6}$/.test(orderNumber) || /^BDJ-[A-Z0-9]{5}$/.test(orderNumber) || /^BFR-ORDER-[A-F0-9]{20}$/.test(orderNumber))) {
+        status.textContent = "Masukkan nomor pesanan BDJ-XXXXX, 6 karakter, atau nomor BFR-ORDER lama yang lengkap.";
         return;
       }
       btn.disabled = true;
