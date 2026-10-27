@@ -1547,47 +1547,44 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-hero img.hero-medal-backdrop{right:2%!important;width:95%!important;height:52%!important}
 }
 
-/* KOREKSI TERARAH 27 OKTOBER — hanya gambar pelari dan medali.
-   Dasar: index.html yang pengguna unggah, tanpa mengganti konten/formulir. */
-/* Pelari 10 poin persen ke KIRI dari file yang diunggah:
-   desktop 4 -> 14; tablet -1 -> 9; HP 0 -> 10. */
-.block-hero .hero-shell > img.hero-people{
-  left:auto!important;
-  right:14%!important;
-  max-width:none!important;
-  object-fit:contain!important;
-  object-position:center bottom!important;
-}
-/* Medali tidak keluar dari sisi kanan: lebar disesuaikan agar lingkaran
-   utuh dalam area Hero, tanpa mengubah gambar berwarna atau opacity 20%. */
-.block-hero .hero-shell > img.hero-medal-backdrop{
-  left:auto!important;
+
+/* FIX MEDALI UTUH — 27 OKTOBER: ruang aman di semua sisi.
+   Medali tidak bergerak keluar hero saat scroll; pelari tetap parallax. */
+.block-hero .hero-shell{overflow:hidden!important}
+.block-hero img.hero-medal-backdrop{
+  position:absolute!important;
+  top:27%!important;
   right:9%!important;
-  top:29%!important;
+  left:auto!important;
   bottom:auto!important;
-  width:80%!important;
-  height:51%!important;
+  width:72%!important;
+  height:49%!important;
   max-width:none!important;
   object-fit:contain!important;
   object-position:center center!important;
   opacity:.20!important;
   z-index:6!important;
+  transform:none!important;
+  animation:none!important;
+  filter:none!important;
+  pointer-events:none!important;
 }
 @media(max-width:768px){
-  .block-hero .hero-shell > img.hero-people{right:9%!important}
-  .block-hero .hero-shell > img.hero-medal-backdrop{
-    right:7%!important;top:28%!important;
-    width:85%!important;height:52%!important;
+  .block-hero img.hero-medal-backdrop{
+    top:28%!important;
+    right:6%!important;
+    width:86%!important;
+    height:47%!important;
   }
 }
 @media(max-width:430px){
-  .block-hero .hero-shell > img.hero-people{right:10%!important}
-  .block-hero .hero-shell > img.hero-medal-backdrop{
-    right:7%!important;top:28%!important;
-    width:85%!important;height:52%!important;
+  .block-hero img.hero-medal-backdrop{
+    top:29%!important;
+    right:5%!important;
+    width:88%!important;
+    height:46%!important;
   }
 }
-
 </style>
 </head>
 <body>
@@ -2837,7 +2834,6 @@ function initializeParallax(){
     [
       [".block-hero .hero-people", mobileHero ? 105 : 160],
       [".block-hero .hero-six", mobileHero ? -110 : -180],
-      [".block-hero .hero-medal-backdrop", mobileHero ? 65 : 110],
       [".block-hero .hero-spark", mobileHero ? -50 : -80],
       [".block-hero .hero-brand", mobileHero ? -38 : -70]
     ].forEach(([selector, distance])=>{
