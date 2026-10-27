@@ -1418,53 +1418,41 @@ section{position:relative;overflow:hidden;isolation:isolate}
           if(parsed && parsed.order===fullOrder && Date.now()-parsed.savedAt<86400000 &&
              /^[a-f0-9]{64}$/.test(parsed.token)) savedToken=parsed.token;
         }catch(_){}
-        const label=document.createElement("p");
-        label.textContent="LANJUTKAN PEMBAYARAN DEMO";
-        label.style.fontWeight="800";
-        const help=document.createElement("p");
-        help.textContent="Untuk keamanan, masukkan tautan pembayaran yang diterima setelah mendaftar. Jika masih tersimpan di browser ini, tombol lanjutkan akan aktif otomatis.";
-        const linkInput=document.createElement("input");
-        linkInput.type="text";
-        linkInput.autocomplete="off";
-        linkInput.placeholder="Tempel tautan pembayaran DEMO (rahasia)";
-        linkInput.setAttribute("aria-label","Tautan pembayaran DEMO");
-        linkInput.style.cssText="width:100%;padding:13px;border-radius:9px;margin:8px 0;color:#fff;background:#0f1b14;border:1px solid #ffffff55";
-        const resume=document.createElement("button");
-        resume.type="button";
-        resume.className="btn";
-        resume.textContent="LANJUTKAN PEMBAYARAN →";
-        resume.style.width="100%";
-        const feedback=document.createElement("p");
-        feedback.setAttribute("role","status");
-        if(savedToken) {
-          feedback.textContent="Akses pembayaran ditemukan pada sesi browser ini.";
+        const section=document.createElement("section");
+        section.style.cssText="margin-top:18px;padding:18px;border:1px solid #ffffff44;border-radius:14px;text-align:center";
+        const label=document.createElement("h3");
+        label.textContent="QRIS SIMULASI — "+fullOrder;
+        label.style.cssText="font-size:18px;margin:0 0 12px;color:#fff";
+        const qrImg=document.createElement("img");
+        qrImg.alt="Kode QR demonstrasi, bukan QRIS bank dan tidak dapat menerima pembayaran";
+        qrImg.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANcAAADXAQAAAAChBvkYAAACeElEQVR4nO1YMY7bQAwceg2sOzrIA9Yvke5bAXwn+XRAvpGnaPMSqku5qrIC1poUMpAmd0nj2xTHRgJZkCA5Qy6FeE24e9UEfNjezwauANCgsywsgCQgb4YKcSqZoXscKPuQeTwHtKTVydlFAFxPjAnQmFwEZX9Hf3+xyTRweYKzDO3fwd8fZb99eHQ4iC6nH3n+XJY6sewAdITwUcAjprkN/QRhqRPLLHLg0Vlu8NU2bRQ51cD0JskZ2oSQge6mendMg6sWADoQwhLQwNGv2lfgF3DVwfyoBbnRgVyVzI32oQbXSQLmh3kw/zwvIjtc5CDJxSr9kjpyhGNuAOQ2nYG2Vr8AQMseHJXmYzoHT9Lq1MiZf55LODRAWB7gDFH6u/l7Q8jUWYYWeHIwjlrAmM51cATHm3MtQMuhHr+QtAw4+pgQtv2l0Vpc1wfGjXw75kYL/Kg1evdWGbnVKPhRSTKd63Dd1Adeg7dlh5dpfgIm8Hg/f28ImZzlNp0Dmc4hS0JAy1IhL+CqNDIBXNHd/kbU2L3BVXtkwBkjaX5VMrcJVfJCluBHdAQ2RA3GyFIlL7d+cZYlnQEAAY0OlTA9GFcdmFv2ITebusYM2AHz0oqblpN/ngfTyAIfk2OVN4l6w3f18fDz03LKwEsw7vDN6ryPplPzHY9w63USWV2U+/n7h3fAqjQAnUFYwLXWbASARmmeyZEjnN228Cq8y9xoCSRJT/ZbfFVwhIsAcw+R40UAOJOdllDlFqT9tjyhJS23JD2Tq7J7AwAkvUwc5z74Z1xPyw5fTnXyQuY2OfrIgblRMkul2fj7Xtdu86gzP6JG78rHffe/t/0CJEXosITwT6cAAAAASUVORK5CYII=";
+        qrImg.style.cssText="display:block;margin:0 auto;max-width:230px;width:80%;height:auto;border:12px solid white;border-radius:10px";
+        const disclaimer=document.createElement("p");
+        disclaimer.textContent="DEMO / TEST — QR ini hanya contoh tampilan, bukan QRIS bank. Memindainya tidak membayar pesanan.";
+        disclaimer.style.cssText="font-size:12px;line-height:1.6;color:#ffd6b7";
+        const info=document.createElement("p");
+        info.textContent="Untuk versi LIVE, QRIS pembayaran asli akan dibuat oleh penyedia pembayaran berdasarkan nomor dan nominal pesanan. Status lunas hanya boleh diperbarui dari notifikasi pembayaran terverifikasi.";
+        info.style.cssText="font-size:12px;line-height:1.6;text-align:left";
+        section.append(label,qrImg,disclaimer,info);
+        result.append(section);
+        if(savedToken){
+          const resume=document.createElement("button");
+          resume.type="button";
+          resume.className="btn";
+          resume.style.width="100%";
+          resume.textContent="LANJUTKAN SIMULASI PEMBAYARAN →";
+          resume.addEventListener("click",()=>{
+            const u=new URL("/payment-demo.html",location.origin);
+            u.hash=new URLSearchParams({order:fullOrder,token:savedToken}).toString();
+            location.assign(u.href);
+          });
+          result.append(resume);
+        }else{
+          const help=document.createElement("p");
+          help.textContent="Pesanan lama: akses untuk menerbitkan bukti DEMO belum tersedia pada browser ini. Hubungi panitia untuk verifikasi dan pemulihan akses. QR contoh di atas tidak dapat mengubah status pembayaran.";
+          help.style.cssText="font-size:12px;line-height:1.7";
+          result.append(help);
         }
-        resume.addEventListener("click",()=>{
-          let accessToken=savedToken;
-          const entered=linkInput.value.trim();
-          if(entered){
-            try{
-              const u=new URL(entered,location.origin);
-              if(u.origin!==location.origin || !u.pathname.endsWith("/payment-demo.html"))
-                throw new Error("Tautan tidak sesuai.");
-              const q=new URLSearchParams(u.hash.replace(/^#/,""));
-              if(q.get("order")!==fullOrder || !/^[a-f0-9]{64}$/.test(q.get("token")||""))
-                throw new Error("Nomor pesanan atau token tidak sesuai.");
-              accessToken=q.get("token");
-            }catch(_){
-              feedback.textContent="Tautan pembayaran tidak valid atau bukan untuk pesanan ini.";
-              return;
-            }
-          }
-          if(!accessToken){
-            feedback.textContent="Akses pembayaran belum tersedia. Gunakan tautan/QR asli dari pendaftaran atau hubungi panitia untuk verifikasi dan pemulihan akses. Nomor pesanan saja tidak cukup.";
-            return;
-          }
-          const u=new URL("/payment-demo.html",location.origin);
-          u.hash=new URLSearchParams({order:fullOrder,token:accessToken}).toString();
-          location.assign(u.href);
-        });
-        result.append(label,help,linkInput,resume,feedback);
       }
       result.hidden=false;
     }catch(error){
