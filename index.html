@@ -1063,6 +1063,39 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-last .rules-title,.block-last .racepack-title{font-size:clamp(45px,11vw,70px)}
 }
 
+
+/* REVISI VISUAL: SATU TOMBOL HERO DAN PALET BAGIAN 2 & 4 */
+/* Bagian 2: oranye hangat yang lebih lembut, konsisten pada seluruh elemen tiket */
+.block-registration,
+.block-registration .registration-section,
+.block-registration #ticketStep {background-color:#e9824c !important;}
+.block-registration #ticketStep h3 {color:#fff8ed;}
+.block-registration #ticketStep h3 span,
+.block-registration #cardEarly .ticket-name,
+.block-registration #cardEarly .ticket-price,
+.block-registration #cardEarly p {color:#192d22;}
+.block-registration .registration-panel {background-color:#1d3227;color:#fff8ed;}
+.block-registration .registration-intro {color:#f6e6d6;}
+.block-registration .order-summary,
+.block-registration #ticketStep>.notice,
+.block-registration #ticketStep .registration-actions .btn {background-color:#1d3227;color:#fff8ed;}
+/* Bagian 4: krem terang, kontras dengan bagian 3 hijau army */
+.block-last,
+.block-last .racepack-section,
+.block-last .rules-section {background-color:#f1e6d2 !important;color:#1d3227;}
+.block-last .racepack-title,
+.block-last .rules-title,
+.block-last .racepack-section .kicker,
+.block-last .rules-section .kicker {color:#1d3227;}
+.block-last .rules-info-item {background-color:#253c2f;color:#fff8ed;}
+.block-last .rules-info-item span {color:#e3dccb;}
+.block-last .rules-section .registration-intro {color:#253c2f;}
+.block-last .rules-section .btn-outline {color:#253c2f;border-color:#253c2f;}
+@media(max-width:768px){
+ .block-registration,.block-registration .registration-section,.block-registration #ticketStep{background-color:#e9824c !important;}
+ .block-last,.block-last .racepack-section,.block-last .rules-section{background-color:#f1e6d2 !important;}
+}
+
 </style>
 </head>
 <body>
@@ -1079,7 +1112,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <a href="#jersey">JERSEY</a>
     <a href="#rute">RUTE</a>
     <a href="#rules">PERATURAN</a>
-    <a class="btn" href="#registration">DAFTAR SEKARANG ↗</a>
+    
   </div>
 </nav>
 
