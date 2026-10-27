@@ -1633,6 +1633,65 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .block-hero .hero-shell img.hero-medal-backdrop{top:17%!important}
 @media(max-width:768px){.block-hero .hero-shell img.hero-medal-backdrop{top:17.5%!important}}
 @media(max-width:430px){.block-hero .hero-shell img.hero-medal-backdrop{top:17.5%!important}}
+
+/* BAGIAN 2 SAJA — desain putih hijau oranye, responsif HP + desktop */
+.block-registration,.block-registration .registration-section{background:#fff!important;color:#102f20!important;}
+.block-registration .registration-section{padding:24px 0 85px!important;overflow:hidden;}
+.block-registration .registration-section>.inner{position:relative;isolation:isolate;max-width:1300px;width:90%;}
+.block-registration .reg-topline{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 40px;position:relative;z-index:8;}
+.block-registration .reg-mini-brand{font:italic 900 clamp(17px,2.2vw,27px)/1 Montserrat,sans-serif;color:#103522;letter-spacing:-1px;}
+.block-registration .reg-mini-brand b{color:#ff5d16;font-weight:900;}
+.block-registration .reg-nav-cta{border-radius:35px;background:#ff5d16;color:white;padding:13px 22px;font:900 11px Montserrat,sans-serif;white-space:nowrap;}
+.block-registration .reg-art{position:absolute;top:95px;right:-8%;width:66%;z-index:1;pointer-events:none;}
+.block-registration .reg-art img{display:block;width:100%;max-width:none;filter:drop-shadow(0 14px 12px rgba(10,33,21,.06));}
+.block-registration .registration-section>.inner>.kicker{display:none!important;}
+.block-registration .registration-section>.inner>.registration-intro{max-width:49%;margin:0 0 26px;color:#163d2a!important;font:500 clamp(13px,1.45vw,18px)/1.6 Montserrat,sans-serif;position:relative;z-index:6;}
+.block-registration .registration-steps{width:60%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 30px!important;position:relative;z-index:6;}
+.block-registration .registration-step{border-top:5px solid #d3d3d3!important;color:#777!important;font-size:clamp(8px,.85vw,12px)!important;padding-top:11px;}
+.block-registration .registration-step.active{border-color:#ff5d16!important;color:#ff5d16!important;}
+.block-registration .registration-panel{position:relative;z-index:5;}
+.block-registration #ticketStep{padding:0!important;border:0!important;max-width:55%;background:transparent!important;color:#103522!important;}
+.block-registration #ticketStep>.kicker,.block-registration #ticketStep>.registration-intro{display:none!important;}
+.block-registration #ticketStep h3{font:italic 900 clamp(40px,5.4vw,84px)/.99 Anton,Impact,sans-serif!important;color:#103522!important;max-width:750px;margin:0 0 25px!important;letter-spacing:.01em;}
+.block-registration #ticketStep h3 span{display:block;color:#ff5d16!important;font-size:1.45em;line-height:1.02;text-shadow:none;}
+.block-registration #cardEarly{display:none!important;}
+.block-registration #cardNormal{display:block!important;opacity:1!important;background:#103522!important;color:white!important;border:0!important;border-radius:20px!important;padding:30px!important;box-shadow:0 18px 30px #12352222;}
+.block-registration #cardNormal .ticket-name{font:italic 900 clamp(34px,3.4vw,54px)/1 Anton,Impact,sans-serif;color:white!important;}
+.block-registration #cardNormal .ticket-price{font:900 clamp(42px,4.8vw,78px)/1 Anton,Impact,sans-serif;color:#ff5d16!important;margin:10px 0!important;}
+.block-registration #cardNormal p{color:#e8f0e9!important;font-size:13px!important;}
+.block-registration #cardNormal .ticket-status{color:#fff!important;font-size:12px!important;}
+.block-registration #cardNormal .ticket-counter{justify-content:flex-start;gap:18px;}
+.block-registration #cardNormal .ticket-counter button{border:2px solid #fff;color:#fff;background:transparent;width:47px;height:47px;}
+.block-registration #cardNormal .ticket-counter #normalPlus{background:#ff5d16;border-color:#ff5d16;color:white;}
+.block-registration #cardNormal .ticket-counter strong{color:#ffad75;}
+.block-registration .ticket-grid{max-width:100%;display:block;margin:0!important;}
+.block-registration #ticketStep>.order-summary{margin:14px 0 0!important;background:#103522!important;color:white!important;border-radius:18px!important;padding:24px 30px!important;}
+.block-registration #ticketStep>.order-summary .summary-line:has(#earlySubtotal){display:none!important;}
+.block-registration #ticketStep>.order-summary .summary-line:has(#normalSubtotal){display:none!important;}
+.block-registration #ticketStep>.notice{background:#103522!important;color:white!important;border-left:6px solid #ff5d16!important;border-radius:8px;padding:18px!important;font-size:12px;}
+.block-registration #ticketStep .registration-actions .btn{background:#ff5d16!important;color:white!important;}
+.block-registration #detailsStep,.block-registration #reviewStep,.block-registration #paymentStep{background:#103522!important;color:white!important;max-width:920px;margin:auto;}
+.block-registration #detailsStep .registration-intro,.block-registration #reviewStep .registration-intro{color:#e2eee5!important;}
+@media(max-width:768px){
+ .block-registration .registration-section{padding:18px 0 60px!important;}
+ .block-registration .reg-topline{margin-bottom:30px;}
+ .block-registration .reg-mini-brand{font-size:16px;letter-spacing:-.5px;}
+ .block-registration .reg-nav-cta{font-size:9px;padding:10px 12px;}
+ .block-registration .registration-section>.inner>.registration-intro{max-width:100%;font-size:13px;line-height:1.7;margin:0 0 25px;}
+ .block-registration .registration-steps{width:100%;gap:6px;margin-bottom:22px!important;}
+ .block-registration .registration-step{font-size:8px!important;border-top-width:4px!important;}
+ .block-registration #ticketStep{max-width:100%;}
+ .block-registration #ticketStep h3{font-size:clamp(48px,12vw,75px)!important;margin-bottom:12px!important;}
+ .block-registration #ticketStep h3 span{font-size:1.18em;}
+ .block-registration .reg-art{position:relative;top:auto;right:auto;width:116%;margin:0 -8% -5% -4%;z-index:2;}
+ .block-registration .reg-art img{width:100%;}
+ .block-registration #cardNormal{padding:23px!important;border-radius:16px!important;}
+ .block-registration #cardNormal .ticket-name{font-size:clamp(36px,9vw,55px);}
+ .block-registration #cardNormal .ticket-price{font-size:clamp(46px,12vw,70px);}
+ .block-registration #ticketStep>.order-summary{padding:20px 23px!important;}
+ .block-registration #ticketStep>.notice{font-size:11px;}
+}
+
 </style>
 </head>
 <body>
@@ -1688,6 +1747,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </div>
 <div class="event-block block-registration" id="bagian-2"><section class="registration-section" id="registration">
   <div class="inner">
+    <div class="reg-topline"><span class="reg-mini-brand">BALADHIKA <b>FUN RUN 2026</b></span><a href="#registration" class="reg-nav-cta">DAFTAR SEKARANG</a></div>
+    <div class="reg-art" aria-hidden="true"><img src="pelari-registrasi.png" alt=""></div>
     <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
     <h2 class="registration-title">
       REGIS<span class="orange">TRATION.</span>
@@ -1732,7 +1793,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 
         <div class="ticket-card unavailable" id="cardNormal">
           <div class="ticket-name">
-            NORMAL
+            REGULER
             <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
           </div>
           <div class="ticket-price">RP150.000</div>
@@ -1753,7 +1814,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
           <span>Early Bird</span><strong id="earlySubtotal">Rp0</strong>
         </div>
         <div class="summary-line">
-          <span>Normal</span><strong id="normalSubtotal">Rp0</strong>
+          <span>Reguler</span><strong id="normalSubtotal">Rp0</strong>
         </div>
         <div class="summary-line">
           <span>Jumlah Peserta</span><strong id="totalPeople">0 orang</strong>
@@ -2220,7 +2281,7 @@ function totalPeople(){return qty.early+qty.normal}
 function totalPrice(){return qty.early*prices.early+qty.normal*prices.normal}
 
 function isAvailable(category){
-  if(category==="normal")return false; // Tahap Early Bird saja; cegah memilih Normal
+  if(category==="early")return false; // Halaman 2 hanya menampilkan tiket Reguler
   if(!ticketStatus)return false;
   const key=category==="early"?"early_bird":"normal";
   return ticketStatus.registration_open===true &&
@@ -2253,7 +2314,7 @@ function updateTicketDisplay(){
     if(ticketStatus){
       status=sold?"SOLD OUT":
         available?"PENDAFTARAN DIBUKA":
-        key==="normal"?"SEGERA DIBUKA":"BELUM TERSEDIA";
+        "BELUM TERSEDIA";
     }
     $(priceStatus).textContent=status;
     $(cardStatus).textContent=status;
@@ -2288,7 +2349,7 @@ async function refreshTicketStatus(){
 }
 
 function changeQty(category,change){
-  if(category==="normal")return; // Normal tidak dapat dipilih pada tahap ini
+  if(category==="early")return; // Tiket Early Bird tidak ditawarkan di halaman ini
   if(!["early","normal"].includes(category))return;
   if(!isAvailable(category)){
     alert("Kategori tiket belum tersedia.");
@@ -2543,7 +2604,7 @@ function createParticipant(index,category){
   title.textContent="PESERTA "+(index+1);
   const pill=document.createElement("span");
   pill.className="category-pill";
-  pill.textContent=category==="early"?"EARLY BIRD":"NORMAL";
+  pill.textContent=category==="early"?"EARLY BIRD":"REGULER";
   header.append(title,pill);
   card.append(header);
 
@@ -2707,7 +2768,7 @@ $("registrationForm").addEventListener("submit",event=>{
     addReviewLine(card,"Nama: "+person.first_name+" "+person.last_name);
     addReviewLine(card,"Nama BIB: "+person.bib_name);
     addReviewLine(card,"Kategori: "+
-      (person.category==="early"?"Early Bird":"Normal"));
+      (person.category==="early"?"Early Bird":"Reguler"));
     addReviewLine(card,"Tanggal Lahir: "+person.birth_date);
     addReviewLine(card,"Jenis Kelamin: "+person.gender);
     addReviewLine(card,"Ukuran Jersey: "+person.jersey_size);
