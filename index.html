@@ -1434,13 +1434,37 @@ section{position:relative;overflow:hidden;isolation:isolate}
         info.textContent="Untuk versi LIVE, QRIS pembayaran asli akan dibuat oleh penyedia pembayaran berdasarkan nomor dan nominal pesanan. Status lunas hanya boleh diperbarui dari notifikasi pembayaran terverifikasi.";
         info.style.cssText="font-size:12px;line-height:1.6;text-align:left";
         section.append(label,qrImg,disclaimer,info);
+        const qrDownload=document.createElement("button");
+        qrDownload.type="button";qrDownload.className="btn";
+        qrDownload.textContent="DOWNLOAD QRIS DEMO ↓";
+        qrDownload.style.cssText="width:100%;margin:12px 0";
+        qrDownload.addEventListener("click",()=>{
+          const canvas=document.createElement("canvas");canvas.width=640;canvas.height=760;
+          const ctx=canvas.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,640,760);
+          ctx.fillStyle="#163022";ctx.textAlign="center";ctx.font="bold 29px Arial";
+          ctx.fillText("BALADHIKA FUN RUN 2026",320,58);
+          ctx.font="bold 24px Arial";ctx.fillText("QRIS SIMULASI",320,105);
+          ctx.fillText(fullOrder,320,145);
+          const paint=()=>{
+            ctx.drawImage(qrImg,135,180,370,370);
+            ctx.font="bold 19px Arial";ctx.fillStyle="#aa2c12";
+            ctx.fillText("DEMO / TEST - BUKAN QRIS BANK",320,615);
+            ctx.font="17px Arial";ctx.fillStyle="#163022";
+            ctx.fillText("TIDAK UNTUK PEMBAYARAN NYATA",320,650);
+            const a=document.createElement("a");a.download="QRIS-DEMO-"+fullOrder+".png";
+            a.href=canvas.toDataURL("image/png");a.click();
+          };
+          if(qrImg.complete&&qrImg.naturalWidth)paint();
+          else qrImg.addEventListener("load",paint,{once:true});
+        });
+        section.append(qrDownload);
         result.append(section);
         if(savedToken){
           const resume=document.createElement("button");
           resume.type="button";
           resume.className="btn";
           resume.style.width="100%";
-          resume.textContent="LANJUTKAN SIMULASI PEMBAYARAN →";
+          resume.textContent="UPLOAD BUKTI & TERBITKAN INVOICE DEMO →";
           resume.addEventListener("click",()=>{
             const u=new URL("/payment-demo.html",location.origin);
             u.hash=new URLSearchParams({order:fullOrder,token:savedToken}).toString();
@@ -1449,7 +1473,11 @@ section{position:relative;overflow:hidden;isolation:isolate}
           result.append(resume);
         }else{
           const help=document.createElement("p");
-          help.textContent="Pesanan lama: akses untuk menerbitkan bukti DEMO belum tersedia pada browser ini. Hubungi panitia untuk verifikasi dan pemulihan akses. QR contoh di atas tidak dapat mengubah status pembayaran.";
+          help.textContent="Untuk mengunggah bukti dan menerbitkan invoice, akses pesanan lama perlu dipulihkan oleh panitia setelah verifikasi pemilik. QR contoh ini dapat diunduh, tetapi tidak dapat mengubah status pembayaran.";
+          const locked=document.createElement("button");locked.type="button";locked.className="btn";
+          locked.style.width="100%";locked.disabled=true;
+          locked.textContent="UPLOAD BUKTI & INVOICE — MENUNGGU VERIFIKASI";
+          result.append(locked);
           help.style.cssText="font-size:12px;line-height:1.7";
           result.append(help);
         }
