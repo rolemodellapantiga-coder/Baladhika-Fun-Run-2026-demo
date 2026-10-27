@@ -1692,6 +1692,43 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-registration #ticketStep>.notice{font-size:11px;}
 }
 
+
+/* REVISI HALAMAN PENDAFTARAN: panel terlebih dahulu, pelari setelahnya.
+   Hanya blok .block-registration; bagian hero / halaman pertama tidak disentuh. */
+.block-registration, .block-registration .registration-section{background:#fff!important;}
+.block-registration .registration-section{padding:50px 0 70px!important;}
+.block-registration .registration-section>.inner{max-width:1180px;width:min(92%,1180px);}
+.block-registration .registration-steps{width:100%;max-width:950px;margin:0 0 35px!important;}
+.block-registration .registration-step{border-color:#d9d9d9!important;color:#777!important;}
+.block-registration .registration-step.active{border-color:#ff5d16!important;color:#ff5d16!important;}
+.block-registration #ticketStep{max-width:850px!important;margin:0 auto!important;width:100%;}
+.block-registration #ticketStep h3{font:italic 900 clamp(52px,7.8vw,108px)/.96 Anton,Impact,sans-serif!important;color:#103522!important;letter-spacing:-.025em;margin:0 0 28px!important;}
+.block-registration #ticketStep h3 span{color:#ff5d16!important;display:block;line-height:1.06;}
+.block-registration #cardNormal{background:#103522!important;border-radius:24px!important;padding:34px 42px!important;}
+.block-registration #cardNormal .ticket-name{color:#fff!important;}
+.block-registration #cardNormal .ticket-price{color:#ff5d16!important;}
+.block-registration #ticketStep>.order-summary{background:#103522!important;border-radius:20px!important;}
+.block-registration #ticketStep>.notice{background:#103522!important;color:#fff!important;}
+.block-registration .reg-after-ticket{max-width:1050px;margin:46px auto 0;position:relative;z-index:2;}
+.block-registration .reg-after-ticket>.registration-intro{max-width:900px!important;margin:0 auto 14px!important;color:#103522!important;font:500 clamp(15px,1.7vw,20px)/1.75 Montserrat,sans-serif!important;}
+.block-registration .reg-after-ticket .reg-art{position:relative!important;top:auto!important;right:auto!important;left:auto!important;width:100%!important;max-width:980px;margin:0 auto!important;z-index:1;}
+.block-registration .reg-after-ticket .reg-art img{display:block;width:100%;height:auto;object-fit:contain;}
+.block-registration .registration-section:has(#ticketStep[hidden]) .reg-after-ticket{display:none!important;}
+@media(max-width:768px){
+ .block-registration .registration-section{padding:26px 0 55px!important;}
+ .block-registration .registration-section>.inner{width:90%!important;}
+ .block-registration .registration-steps{gap:7px;margin:0 0 26px!important;}
+ .block-registration .registration-step{font-size:clamp(8px,2.1vw,12px)!important;line-height:1.35;}
+ .block-registration #ticketStep{max-width:100%!important;}
+ .block-registration #ticketStep h3{font-size:clamp(49px,11vw,82px)!important;letter-spacing:-.03em;margin-bottom:20px!important;}
+ .block-registration #ticketStep h3 span{font-size:1.18em;}
+ .block-registration #cardNormal{padding:26px 22px!important;border-radius:19px!important;}
+ .block-registration #cardNormal .ticket-name{font-size:clamp(36px,9vw,55px)!important;}
+ .block-registration #cardNormal .ticket-price{font-size:clamp(46px,11vw,68px)!important;}
+ .block-registration .reg-after-ticket{margin-top:35px!important;}
+ .block-registration .reg-after-ticket>.registration-intro{font-size:clamp(13px,3.5vw,17px)!important;line-height:1.75!important;}
+ .block-registration .reg-after-ticket .reg-art{width:112%!important;margin:8px -6% 0!important;}
+}
 </style>
 </head>
 <body>
@@ -1747,17 +1784,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </div>
 <div class="event-block block-registration" id="bagian-2"><section class="registration-section" id="registration">
   <div class="inner">
-    <div class="reg-topline"><span class="reg-mini-brand">BALADHIKA <b>FUN RUN 2026</b></span><a href="#registration" class="reg-nav-cta">DAFTAR SEKARANG</a></div>
-    <div class="reg-art" aria-hidden="true"><img src="pelari-registrasi.png" alt=""></div>
-    <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-    <h2 class="registration-title">
-      REGIS<span class="orange">TRATION.</span>
-    </h2>
-    <p class="registration-intro copy">
-      Satu email utama untuk setiap pesanan, baik individu maupun rombongan.
-      Setiap peserta tetap mengisi identitas, alamat lengkap,
-      ukuran jersey, dan kontak darurat.
-    </p>
 
     <div class="registration-steps">
       <div class="registration-step active" id="step1">01 — PILIH TIKET</div>
@@ -1836,6 +1862,15 @@ section{position:relative;overflow:hidden;isolation:isolate}
           CONTINUE REGISTRATION →
         </button>
       </div>
+    </div>
+
+    <div class="reg-after-ticket">
+    <p class="registration-intro copy">
+      Satu email utama untuk setiap pesanan, baik individu maupun rombongan.
+      Setiap peserta tetap mengisi identitas, alamat lengkap,
+      ukuran jersey, dan kontak darurat.
+    </p>
+    <div class="reg-art" aria-hidden="true"><img src="pelari-registrasi.png" alt="Dua pelari Baladhika Fun Run mengenakan jersey merah"></div>
     </div>
 
     <!-- STEP 2 -->
