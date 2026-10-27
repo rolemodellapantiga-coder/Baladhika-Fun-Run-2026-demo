@@ -2041,6 +2041,25 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-info .event-contact-section .hero-actions .btn{width:100%;text-align:center}
 }
 
+
+/* FINAL: CEK PESANAN DALAM SLIDE 2, SPASI RINGKAS */
+.block-registration .check-order-section{background:#fff7e1!important;color:#103522!important;padding:32px 0 45px!important}
+.block-registration .check-order-section .inner{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px!important;align-items:center!important}
+.block-registration .check-order-title{color:#103522!important;font-style:normal!important;transform:none!important;margin:0 0 14px!important}
+.block-registration .check-order-section .copy{color:#2d4839!important;margin:0 0 12px!important}
+.block-registration .check-order-panel{background:#103522!important;color:#fff7e1!important;margin:0!important}
+.block-registration .check-order-panel label{color:#fff7e1!important}
+.block-registration .check-order-section .check-order-title span{color:#ff641b!important}
+.block-registration .check-order-section *{font-style:normal!important}
+.block-info .jersey-section{padding-top:clamp(130px,16vw,180px)!important;background:linear-gradient(180deg,#fff7e1 0,#e5e3cb 32px,#9cae98 85px,#47614b 145px,#24362b 185px,#24362b 100%)!important;position:relative!important}
+.block-info .jersey-section::before{content:"";position:absolute;top:0;left:0;right:0;height:120px;pointer-events:none;opacity:.35;background:url("baladhika-brush-transisi.png") center / cover no-repeat}
+.block-info .jersey-section>.inner{position:relative;z-index:1}
+.block-info .jersey-section,.block-info .route-section,.block-info .racepack-section,.block-info .rules-section{padding-bottom:35px!important}
+.block-info .route-section,.block-info .racepack-section,.block-info .rules-section{padding-top:35px!important}
+.block-info .jersey-section .kicker,.block-info .route-section .kicker,.block-info .racepack-section .kicker,.block-info .rules-section .kicker{margin-bottom:10px!important}
+.block-info .jersey-section h2,.block-info .route-section h2,.block-info .racepack-section h2,.block-info .rules-section h2{margin-top:0!important;margin-bottom:14px!important;font-style:normal!important;transform:none!important}
+@media(max-width:768px){.block-registration .check-order-section{padding:20px 0 35px!important}.block-registration .check-order-section .inner{grid-template-columns:1fr!important;gap:14px!important}.block-registration .check-order-panel{margin-top:4px!important}.block-info .jersey-section{padding-top:135px!important;padding-bottom:28px!important}.block-info .route-section,.block-info .racepack-section,.block-info .rules-section{padding-top:28px!important;padding-bottom:28px!important}}
+
 </style>
 </head>
 <body>
@@ -2300,13 +2319,13 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </p>
     </div>
   </div>
-</section></div>
-<div class="event-block block-info" id="bagian-3"><section class="check-order-section" id="cek-pesanan">
+</section>
+<section class="check-order-section" id="cek-pesanan">
   <div class="inner check-order-layout">
 
     <div>
-      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
+      
+      <h2 class="check-order-title">CEK <span class="orange">PESANAN</span></h2>
       <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
       <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
     </div>
@@ -2321,11 +2340,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
     </div>
   </div>
-</section><section class="jersey-section" id="jersey">
+</section></div>
+<div class="event-block block-info" id="bagian-3"><section class="jersey-section" id="jersey">
   <div class="inner">
     <p class="kicker orange">FIND YOUR PERFECT FIT</p>
     <h2 class="jersey-title parallax-text">
-      JERSEY <span class="orange">SIZE CHART.</span>
+      JERSEY <span class="orange">SIZE CHART</span>
     </h2>
     <p class="jersey-description">
       Pilih ukuran jersey yang sesuai sebelum melengkapi formulir pendaftaran.
@@ -2349,7 +2369,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
   <div class="inner">
     <p class="kicker orange">OFFICIAL EVENT INFORMATION</p>
     <h2 class="racepack-title parallax-text">
-      RACEPACK <span class="orange">COLLECTION.</span>
+      RACEPACK <span class="orange">COLLECTION</span>
     </h2>
     <div class="racepack-card">
       <p><strong>TANGGAL:</strong> 4–5 DESEMBER 2026</p>
@@ -2366,7 +2386,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <p class="kicker orange">OFFICIAL EVENT INFORMATION</p>
 
     <h2 class="rules-title">
-      EVENT <span class="orange">RULES.</span>
+      EVENT <span class="orange">RULES</span>
     </h2>
 
     <p class="registration-intro copy">
@@ -2396,16 +2416,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
     </div>
   </div>
 </section>
-<section class="event-contact-section" id="kontak">
-  <div class="inner">
-    <p class="kicker orange">INFORMASI EVENT</p>
-    <h2 class="heading">CONTACT <span class="orange">PERSON.</span></h2>
-    <p class="copy">Hubungi panitia melalui WhatsApp atau Instagram.</p>
-    <div class="hero-actions">
-      <a class="btn" href="https://wa.me/6282320758805" target="_blank" rel="noopener noreferrer">WHATSAPP PANITIA ↗</a>
-      <a class="btn btn-outline" href="https://www.instagram.com/Bhaladhika_funrun2026/" target="_blank" rel="noopener noreferrer">INSTAGRAM ↗</a>
-    </div>
-  </div>
 </div>
 </main>
 
