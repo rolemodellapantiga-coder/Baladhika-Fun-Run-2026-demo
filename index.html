@@ -961,6 +961,108 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
+
+/* EMPAT BAGIAN UTAMA — SUSUNAN KONSISTEN DESKTOP DAN HP */
+.event-block{position:relative;overflow:hidden}
+.event-block section{min-height:0!important}
+.block-hero,.block-hero .hero{background:#24362b}
+.block-registration,.block-registration .registration-section{background:#ff691f}
+.block-info,.block-info section{background:#24362b}
+.block-last,.block-last .racepack-section,.block-last .rules-section{background:#ff691f}
+.block-registration .registration-section{padding:55px 0 65px}
+.block-registration .registration-title{display:none}
+.block-registration .registration-section>.inner>.kicker{display:none}
+.block-registration .registration-intro{color:#d3dfd3}
+.block-registration .registration-panel{background:#142119;color:#f5efdf}
+.block-registration .registration-steps{margin:10px 0 20px}
+.block-registration .registration-step{color:#15251b;border-color:#14211966}
+.block-registration .registration-step.active{color:#142119;border-color:#142119}
+.block-registration .ticket-grid{margin:12px 0}
+.block-registration #ticketStep{background:#ff691f;color:#142119;border:0;padding:8px 0}
+.block-registration #ticketStep .kicker,.block-registration #ticketStep>.registration-intro{display:none}
+.block-registration #ticketStep h3{font-size:clamp(36px,5vw,72px);color:#fff;margin:0 0 15px}
+.block-registration #ticketStep h3 span{color:#142119}
+.block-registration #cardEarly{background:transparent;border:0;padding:0}
+.block-registration #cardEarly .ticket-name{color:#142119;font-size:clamp(43px,7vw,100px)}
+.block-registration #cardEarly .ticket-price{color:#142119;font-size:clamp(45px,8vw,100px);margin:0}
+.block-registration #cardEarly p{color:#142119}
+.block-registration #cardEarly .ticket-counter button{color:#142119;border:2px solid #142119}
+.block-registration .order-summary{background:#142119;color:#fff}
+.block-registration #ticketStep>.notice{background:#142119;color:#fff}
+.block-registration #ticketStep .registration-actions{margin-top:14px}
+.block-registration #ticketStep .registration-actions .btn{background:#142119;color:white}
+.block-info .check-order-section{padding:65px 0 30px}
+.block-info .check-order-layout{grid-template-columns:1fr 1.2fr;gap:24px}
+.block-info .medal-visual{grid-column:1/-1;justify-self:end;width:min(360px,55%);max-height:240px;object-fit:contain;margin-bottom:-75px;z-index:2}
+.block-info .jersey-section{padding:40px 0 25px}
+.block-info .route-section .inner{padding:35px 0 60px}
+.block-info .jersey-title,.block-info .route-section .heading{font-size:clamp(45px,6vw,95px)}
+.block-info .jersey-frame{width:min(720px,100%)}
+.block-info .route-frame{width:min(850px,100%)}
+.block-info .jersey-description{margin-bottom:15px}
+.block-info .jersey-note{margin:12px 0}
+.block-last .racepack-section{padding:65px 0 30px}
+.block-last .rules-section{padding:30px 0 65px;color:#142119}
+.block-last .rules-title,.block-last .racepack-title{font-size:clamp(48px,7vw,105px)}
+.block-last .rules-info-item{background:#344938;color:#fff}
+.block-last .rules-info-item span{color:#c5d0c4}
+.block-last .rules-section .registration-intro{color:#142119}
+.block-last .rules-section .btn-outline{color:#142119;border-color:#142119}
+.block-last .racepack-card{max-width:780px}
+.block-hero .hero{min-height:720px!important}
+.block-hero .hero .inner{min-height:720px;padding:165px 0 55px}
+.block-hero .hero-content{width:68%}
+.block-hero .hero-logo{width:min(650px,100%);max-height:210px}
+.block-hero .hero-category{font:900 clamp(19px,3vw,44px)/1.1 Montserrat,sans-serif;margin:15px 0 35px}
+.block-hero .hero-info{font-size:15px;line-height:1.2}
+.block-hero .hero-day{color:#ff691f;font-weight:900;font-size:clamp(18px,2.5vw,32px)}
+.block-hero .hero-date{display:inline-block;font:400 clamp(48px,7vw,110px)/.97 Anton,sans-serif;margin:8px 0 25px}
+.block-hero .hero-date em{font-style:normal;color:#ff691f}
+.block-hero .hero-place{display:inline-block;font:400 clamp(30px,4vw,65px)/1 Anton,sans-serif}
+.block-hero .hero-place b{color:#ff691f}
+.block-hero .hero-runner{height:62%;width:48%}
+.block-hero .hero-countdown{position:absolute;z-index:80;right:5%;top:22px;width:300px;text-align:center}
+.block-hero .hero-countdown .kicker{margin-bottom:8px}
+.block-hero .hero-countdown .time-grid{gap:5px}
+.block-hero .hero-countdown .time-box{padding:10px 4px;border-radius:5px}
+.block-hero .hero-countdown .time-value{font-size:30px}
+.block-hero .hero-countdown .time-label{font-size:8px;margin-top:3px}
+.block-hero .hero-countdown .btn{margin-top:12px;padding:12px 20px}
+.block-hero .scroll-hint{display:none}
+@media(max-width:768px){
+ .inner{width:90%}
+ .block-hero .hero{min-height:0!important}
+ .block-hero .hero .inner{padding:210px 0 0;min-height:0}
+ .block-hero .hero-countdown{top:10px;right:5%;width:45%;max-width:185px}
+ .block-hero .hero-countdown .kicker{font-size:9px;letter-spacing:0}
+ .block-hero .hero-countdown .time-box{padding:7px 2px}
+ .block-hero .hero-countdown .time-value{font-size:20px}
+ .block-hero .hero-countdown .time-label{font-size:6px}
+ .block-hero .hero-countdown .btn{font-size:9px;padding:11px 7px}
+ .block-hero .hero-logo{width:100%;max-height:135px}
+ .block-hero .hero-category{font-size:clamp(18px,5vw,30px);margin:15px 0 22px}
+ .block-hero .hero-content{width:100%}
+ .block-hero .hero-day{font-size:19px}
+ .block-hero .hero-date{font-size:clamp(51px,12vw,85px)}
+ .block-hero .hero-place{font-size:clamp(29px,8vw,48px)}
+ .block-hero .hero-runner{position:relative;width:100%;height:auto;margin:0;max-height:540px;object-fit:contain}
+ .block-registration .registration-section{padding:40px 0 50px}
+ .block-registration #ticketStep h3{font-size:clamp(32px,9vw,54px)}
+ .block-registration #cardEarly .ticket-name{font-size:clamp(42px,12vw,70px)}
+ .block-registration #cardEarly .ticket-price{font-size:clamp(48px,14vw,75px)}
+ .block-registration .registration-steps{gap:6px}
+ .block-registration .registration-step{font-size:8px}
+ .block-info .check-order-section{padding:35px 0 20px}
+ .block-info .check-order-layout{grid-template-columns:1fr;gap:15px}
+ .block-info .medal-visual{width:70%;max-height:190px;margin:0 0 -15px auto}
+ .block-info .jersey-section{padding:35px 0 15px}
+ .block-info .route-section .inner{padding:35px 0 45px}
+ .block-info .jersey-title,.block-info .route-section .heading{font-size:clamp(48px,12vw,76px)}
+ .block-last .racepack-section{padding:45px 0 20px}
+ .block-last .rules-section{padding:25px 0 50px}
+ .block-last .rules-title,.block-last .racepack-title{font-size:clamp(45px,11vw,70px)}
+}
+
 </style>
 </head>
 <body>
@@ -982,10 +1084,26 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </nav>
 
 <main>
-
-<!-- HERO -->
-<section class="hero" id="home">
+<div class="event-block block-hero" id="bagian-1"><section class="hero" id="home">
   <div class="hero-deco"></div>
+<div class="hero-countdown"><p class="kicker orange">THE COUNTDOWN IS ON</p><div class="time-grid">
+      <div class="time-box">
+        <span class="time-value" id="days">--</span>
+        <span class="time-label">HARI</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="hours">--</span>
+        <span class="time-label">JAM</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="minutes">--</span>
+        <span class="time-label">MENIT</span>
+      </div>
+      <div class="time-box">
+        <span class="time-value" id="seconds">--</span>
+        <span class="time-label">DETIK</span>
+      </div>
+    </div><a class="btn" href="#registration">DAFTAR SEKARANG ↗</a></div>
   <div class="inner">
     <div class="hero-content">
       <p class="kicker">EXPERIENCE FUN RUN 5K</p>
@@ -1006,188 +1124,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
   </div>
   <img class="hero-runner parallax-image" src="pelari-hero.png" alt="Pelari Fun Run">
   <div class="scroll-hint">↓ SCROLL TO EXPLORE</div>
-</section>
-
-
-<!-- COUNTDOWN -->
-<section class="countdown">
-  <div class="inner countdown-grid">
-    <div>
-      <p class="kicker orange">THE COUNTDOWN IS ON</p>
-      <h2 class="countdown-title parallax-text">
-        READY FOR<br><span class="orange">RACE DAY?</span>
-      </h2>
-      <p class="copy muted">Hitung mundur menuju BALADHIKA FUN RUN 2026.</p>
-    </div>
-    <div class="time-grid">
-      <div class="time-box">
-        <span class="time-value" id="days">--</span>
-        <span class="time-label">HARI</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="hours">--</span>
-        <span class="time-label">JAM</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="minutes">--</span>
-        <span class="time-label">MENIT</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="seconds">--</span>
-        <span class="time-label">DETIK</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DATE -->
-<section class="date-section" id="tanggal">
-  <div class="inner">
-    <div class="date-content">
-     
-<p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-
-<h2 class="date-title parallax-text">
-  <span class="date-day">MINGGU</span>
-  <span>6 DESEMBER</span>
-  <span class="orange">2026</span>
-</h2>
-
-<p class="date-start">START 05.30 WIB</p>
-
-<p class="date-place parallax-text">
-  <span class="place-name">LAPANGAN RAMPAL</span>
-  <span class="place-city">KOTA MALANG</span>
-</p>
-
-<p class="date-description copy muted">
-  Pengalaman Fun Run 5K yang penuh energi,
-  semangat, dan kebersamaan.
-</p>
-
-    </div>
-  </div>
-  <img class="date-runner parallax-image" src="pelari-tanggal.png" alt="Pelari Fun Run">
-</section>
-
-<!-- PRICE -->
-<section class="price-section" id="harga">
-  <div class="inner">
-    <div class="price-col" id="priceEarly">
-      <p class="kicker">REGISTRATION</p>
-      <h2 class="price-title">
-        EARLY<br>BIRD
-        <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
-      </h2>
-      <div class="price-number">150K</div>
-      <span class="ticket-status" id="priceEarlyStatus">MEMERIKSA STATUS...</span>
-      
-      <a class="btn disabled-link" href="#registration"
-         id="priceEarlyButton" aria-disabled="true">MEMERIKSA STATUS</a>
-    </div>
-
-    <div class="price-visual">
-      <div class="price-ring"></div>
-      <img class="price-runner parallax-image" src="pelari-harga.png" alt="Pelari">
-    </div>
-
-    <div class="price-col right" id="priceNormal">
-      <p class="kicker">REGISTRATION</p>
-      <h2 class="price-title">
-        NORMAL
-        <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
-      </h2>
-      <div class="price-number">150K</div>
-      <span class="ticket-status" id="priceNormalStatus">MEMERIKSA STATUS...</span>
-      <p class="price-note">Kategori Normal tersedia sesuai tahapan pendaftaran.</p>
-      <a class="btn disabled-link" href="#registration"
-         id="priceNormalButton" aria-disabled="true">MEMERIKSA STATUS</a>
-    </div>
-  </div>
-</section>
-
-<!-- BENEFITS -->
-<section class="benefit-section" id="benefit">
-  <div class="inner">
-    <p class="kicker">RUN WITH MORE</p>
-    <h2 class="heading parallax-text">YOUR BENEFIT</h2>
-    <p class="copy">Fasilitas peserta BALADHIKA FUN RUN 2026.</p>
-    <img class="benefit-art parallax-image"
-         src="banner-benefit.png" alt="Fasilitas peserta">
-  </div>
-</section>
-
-<!-- JERSEY -->
-<section class="jersey-section" id="jersey">
-  <div class="inner">
-    <p class="kicker orange">FIND YOUR PERFECT FIT</p>
-    <h2 class="jersey-title parallax-text">
-      JERSEY <span class="orange">SIZE CHART.</span>
-    </h2>
-    <p class="jersey-description">
-      Pilih ukuran jersey yang sesuai sebelum melengkapi formulir pendaftaran.
-    </p>
-    <div class="jersey-frame">
-      <img src="size-chart.png" alt="Jersey Size Chart" loading="lazy">
-    </div>
-    <p class="jersey-note">PILIHAN UKURAN: XS • S • M • L • XL • XXL • XXXL</p>
-    <a class="btn" href="#registration">PILIH UKURAN & DAFTAR ↗</a>
-  </div>
-</section>
-
-<!-- ROUTE -->
-<section class="route-section" id="rute">
-  <div class="inner">
-    <p class="kicker orange">EXPLORE THE COURSE</p>
-    <h2 class="heading parallax-text">RUTE <span class="orange">5K</span></h2>
-    <p class="copy">Kenali rute sebelum memulai lari.</p>
-    <div class="route-frame">
-      <img src="banner-rute-5k.png" alt="Rute 5K" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<!-- READY -->
-<section class="ready-section">
-  <img class="ready-runner parallax-image"
-       src="pelari-finish.png" alt="Pelari menuju garis finis">
-  <div class="inner">
-    <div class="ready-content">
-      <p class="kicker">BALADHIKA FUN RUN 2026</p>
-      <h2 class="heading parallax-text">READY<br>TO RUN?</h2>
-      <p class="copy">
-        Satu pemesan dapat mendaftarkan beberapa peserta
-        dengan satu email utama.
-      </p>
-      <a class="btn" href="#registration">REGISTER NOW ↗</a>
-    </div>
-  </div>
-</section>
-
-<!-- CEK PESANAN DEMO -->
-<section class="check-order-section" id="cek-pesanan">
-  <div class="inner check-order-layout">
-    <div>
-      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
-      <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
-      <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
-    </div>
-    <div class="check-order-panel">
-      <form id="checkOrderForm">
-        <div class="field">
-          <label for="checkOrderNumber">NOMOR PESANAN *</label>
-          <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="5" minlength="5" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{5}" placeholder="A7K9B"></div>
-        </div>
-        <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
-      </form>
-      <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
-    </div>
-  </div>
-</section>
-
-<!-- REGISTRATION -->
-<section class="registration-section" id="registration">
+</section></div>
+<div class="event-block block-registration" id="bagian-2"><section class="registration-section" id="registration">
   <div class="inner">
     <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
     <h2 class="registration-title">
@@ -1384,10 +1322,53 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </p>
     </div>
   </div>
-</section>
-
-<!-- RACEPACK -->
-<section class="racepack-section" id="racepack">
+</section></div>
+<div class="event-block block-info" id="bagian-3"><section class="check-order-section" id="cek-pesanan">
+  <div class="inner check-order-layout">
+<img class="medal-visual" src="medali.png" alt="Medali Baladhika Fun Run 2026" loading="lazy">
+    <div>
+      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
+      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
+      <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
+      <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
+    </div>
+    <div class="check-order-panel">
+      <form id="checkOrderForm">
+        <div class="field">
+          <label for="checkOrderNumber">NOMOR PESANAN *</label>
+          <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="5" minlength="5" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{5}" placeholder="A7K9B"></div>
+        </div>
+        <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
+      </form>
+      <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
+    </div>
+  </div>
+</section><section class="jersey-section" id="jersey">
+  <div class="inner">
+    <p class="kicker orange">FIND YOUR PERFECT FIT</p>
+    <h2 class="jersey-title parallax-text">
+      JERSEY <span class="orange">SIZE CHART.</span>
+    </h2>
+    <p class="jersey-description">
+      Pilih ukuran jersey yang sesuai sebelum melengkapi formulir pendaftaran.
+    </p>
+    <div class="jersey-frame">
+      <img src="size-chart.png" alt="Jersey Size Chart" loading="lazy">
+    </div>
+    <p class="jersey-note">PILIHAN UKURAN: XS • S • M • L • XL • XXL • XXXL</p>
+    <a class="btn" href="#registration">PILIH UKURAN & DAFTAR ↗</a>
+  </div>
+</section><section class="route-section" id="rute">
+  <div class="inner">
+    <p class="kicker orange">EXPLORE THE COURSE</p>
+    <h2 class="heading parallax-text">RUTE <span class="orange">5K</span></h2>
+    <p class="copy">Kenali rute sebelum memulai lari.</p>
+    <div class="route-frame">
+      <img src="banner-rute-5k.png" alt="Rute 5K" loading="lazy">
+    </div>
+  </div>
+</section></div>
+<div class="event-block block-last" id="bagian-4"><section class="racepack-section" id="racepack">
   <div class="inner">
     <p class="kicker orange">OFFICIAL EVENT INFORMATION</p>
     <h2 class="racepack-title parallax-text">
@@ -1403,10 +1384,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </a>
     </div>
   </div>
-</section>
-
-<!-- EVENT RULES: PDF RESMI -->
-<section class="rules-section" id="rules">
+</section><section class="rules-section" id="rules">
   <div class="inner">
     <p class="kicker orange">OFFICIAL EVENT INFORMATION</p>
 
@@ -1449,8 +1427,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </a>
     </div>
   </div>
-</section>
-
+</section></div>
 </main>
 
 <footer class="footer">
