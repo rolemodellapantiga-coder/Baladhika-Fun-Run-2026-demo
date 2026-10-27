@@ -1980,6 +1980,67 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .block-registration .reg-benefits-banner{padding:12px!important;border-radius:22px!important;}
 }
 
+
+/* ===== FINAL: WEBSITE 3 SLIDE, SLIDE 2 DAN 3 MENYATU ===== */
+.block-registration { background:#fff7e1!important; }
+.block-registration .registration-section { background:#fff7e1!important; }
+.block-info {
+  background:#24362b!important;
+  position:relative!important;
+  isolation:isolate;
+}
+.block-info .check-order-section {
+  position:relative!important;
+  background:linear-gradient(180deg,
+    #fff7e1 0px,
+    #fff7e1 8px,
+    #f5f0da 65px,
+    #c6c9aa 138px,
+    #819782 225px,
+    #405b46 310px,
+    #24362b 410px,
+    #24362b 100%)!important;
+  padding-top:clamp(140px,24vw,250px)!important;
+}
+.block-info .check-order-section::before {
+  content:"";position:absolute;top:60px;left:0;right:0;
+  height:clamp(100px,18vw,190px);pointer-events:none;opacity:.5;
+  background:url("baladhika-brush-transisi.png") center / cover no-repeat;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 40%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,#000 40%,transparent);
+}
+.block-info .check-order-section>.inner{position:relative;z-index:1}
+.block-info .check-order-layout .medal-visual{display:none!important}
+.block-info .jersey-section,
+.block-info .route-section,
+.block-info .racepack-section,
+.block-info .rules-section,
+.block-info .event-contact-section{background:#24362b!important;color:#fff7e1!important}
+.block-info .event-contact-section{padding:85px 0 110px}
+.block-info .event-contact-section .hero-actions{display:flex;flex-wrap:wrap;gap:15px}
+.block-info .event-contact-section .btn-outline{border:2px solid #fff7e1!important;color:#fff7e1!important}
+.block-info h2,.block-info .jersey-title,.block-info .racepack-title,
+.block-info .rules-title,.block-info .check-order-title{
+ font-style:normal!important;transform:none!important;
+ font-family:Anton,Impact,"Arial Narrow",sans-serif!important;
+ font-weight:900!important;
+}
+.block-info p,.block-info label,.block-info a,.block-info button{
+ font-style:normal!important;
+}
+@media(max-width:768px){
+ .block-info .check-order-section{
+  padding-top:155px!important;
+  background:linear-gradient(180deg,
+    #fff7e1 0px,#f7f2df 32px,#d9d8ba 85px,
+    #91a28c 160px,#3f5844 245px,#24362b 320px,#24362b 100%)!important;
+ }
+ .block-info .check-order-section::before{top:35px;height:145px}
+ .block-info .event-contact-section{padding:60px 0 80px}
+ .block-info .event-contact-section .hero-actions{flex-direction:column}
+ .block-info .event-contact-section .hero-actions .btn{width:100%;text-align:center}
+}
+
 </style>
 </head>
 <body>
@@ -2242,7 +2303,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </section></div>
 <div class="event-block block-info" id="bagian-3"><section class="check-order-section" id="cek-pesanan">
   <div class="inner check-order-layout">
-<img class="medal-visual" src="medali.png" alt="Medali Baladhika Fun Run 2026" loading="lazy">
+
     <div>
       <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
       <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
@@ -2284,8 +2345,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
       <img src="banner-rute-5k.png" alt="Rute 5K" loading="lazy">
     </div>
   </div>
-</section></div>
-<div class="event-block block-last" id="bagian-4"><section class="racepack-section" id="racepack">
+</section><section class="racepack-section" id="racepack">
   <div class="inner">
     <p class="kicker orange">OFFICIAL EVENT INFORMATION</p>
     <h2 class="racepack-title parallax-text">
@@ -2330,21 +2390,23 @@ section{position:relative;overflow:hidden;isolation:isolate}
     </div>
 
     <div class="hero-actions">
-      <a class="btn"
-         href="peraturan-baladhika-fun-run-2026.pdf"
-         target="_blank"
-         rel="noopener noreferrer">
-        LIHAT PERATURAN ↗
-      </a>
-
-      <a class="btn btn-outline"
-         href="peraturan-baladhika-fun-run-2026.pdf"
-         download>
-        DOWNLOAD PDF ↓
+      <a class="btn" href="peraturan-baladhika-fun-run-2026.pdf" download="Peraturan-Baladhika-Fun-Run-2026.pdf">
+        DOWNLOAD EVENT RULES (PDF) ↓
       </a>
     </div>
   </div>
-</section></div>
+</section>
+<section class="event-contact-section" id="kontak">
+  <div class="inner">
+    <p class="kicker orange">INFORMASI EVENT</p>
+    <h2 class="heading">CONTACT <span class="orange">PERSON.</span></h2>
+    <p class="copy">Hubungi panitia melalui WhatsApp atau Instagram.</p>
+    <div class="hero-actions">
+      <a class="btn" href="https://wa.me/6282320758805" target="_blank" rel="noopener noreferrer">WHATSAPP PANITIA ↗</a>
+      <a class="btn btn-outline" href="https://www.instagram.com/Bhaladhika_funrun2026/" target="_blank" rel="noopener noreferrer">INSTAGRAM ↗</a>
+    </div>
+  </div>
+</div>
 </main>
 
 <footer class="footer">
