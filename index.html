@@ -65,7 +65,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 }
 .nav-logo{
   width:auto;
-  height:55px;
+  height:85px;
   max-width:100%;
   object-fit:contain;
 }
@@ -462,9 +462,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .price-ring{border-width:32px}
 }
 @media(max-width:768px){
-  .nav-logo{
+.nav-logo{
   width:auto;
-  height:42px;
+  height:65px;
   max-width:100%;
   object-fit:contain;
 }
@@ -835,10 +835,40 @@ section{position:relative;overflow:hidden;isolation:isolate}
 @media(max-width:768px){.check-order-layout{grid-template-columns:1fr;gap:25px}.check-order-section{padding:65px 0}.check-order-panel{padding:20px}}
 
 
+/* Kode CSS sebelumnya tetap ada */
+
+/* PERBAIKAN HERO KHUSUS HP */
+@media (max-width: 768px) {
+  .hero-content {
+    position: relative;
+    z-index: 30;
+  }
+
+  .hero-actions {
+    position: relative;
+    z-index: 40;
+    margin-bottom: 30px;
+  }
+
+  .hero-actions .btn {
+    position: relative;
+    z-index: 41;
+  }
+
+  .hero-runner {
+    height: 34%;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .hero-deco,
+  .scroll-hint {
+    pointer-events: none;
+  }
+}
 
 </style>
 </head>
-
 <body>
 
 <div class="demo-ribbon">DEMO / TEST ONLY</div>
