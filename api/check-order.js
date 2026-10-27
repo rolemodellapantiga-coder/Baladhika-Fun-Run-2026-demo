@@ -1,16 +1,15 @@
 
 "use strict";
 
-// BALADHIKA FUN RUN 2026 — DEMO ONLY
-// API CEK PESANAN
-// Mendukung nomor pesanan lama dan 6 karakter.
-// WAJIB aktifkan rate limiting di Vercel Firewall.
+// BALADHIKA FUN RUN 2026
+// API CARI PESANAN — DEMO ONLY
+// Hanya menampilkan status pembayaran simulasi.
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const OLD_FORMAT = /^BFR-ORDER-[A-F0-9]{20}$/;
-const NEW_FORMAT = /^[A-Z0-9]{6}$/;
+const SHORT_FORMAT = /^[A-HJ-NP-Z2-9]{5}$/;
+const FULL_FORMAT = /^BDJ-[A-HJ-NP-Z2-9]{5}$/;
 
 const VALID_STATUSES = new Set([
   "PENDING_DEMO",
@@ -20,20 +19,19 @@ const VALID_STATUSES = new Set([
 function send(res, status, payload) {
   res.setHeader("Cache-Control", "private, no-store, max-age=0");
   res.setHeader("X-Content-Type-Options", "nosniff");
-
   return res.status(status).json(payload);
 }
 
-async function readRows(table, filters, fields) {
+async function findOrder(orderNumber) {
   const query = new URLSearchParams({
-    select: fields,
-    ...filters,
+    select: "order_number,payment_status",
+    order_number: `eq.${orderNumber}`,
     limit: "1"
   });
 
   const url =
     `${SUPABASE_URL.replace(/\/+$/, "")}` +
-    `/rest/v1/${table}?${query}`;
+    `/rest/v1/orders?${query.toString()}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -52,10 +50,10 @@ async function readRows(table, filters, fields) {
   const rows = await response.json();
 
   if (!Array.isArray(rows)) {
-    throw new Error("Invalid Supabase response");
+    throw new Error("Respons Supabase tidak valid.");
   }
 
-  return rows;
+  return rows[0] || null;
 }
 
 module.exports = async function handler(req, res) {
@@ -75,142 +73,73 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const body =
-    req.body &&
-    typeof req.body === "object" &&
-    !Array.isArray(req.body)
-      ? req.body
-      : {};
+  let body;
 
-  const number =
-    typeof body.order_number === "string"
-      ? body.order_number.trim().toUpperCase()
-      : "";
-
-  if (
-    !OLD_FORMAT.test(number) &&
-    !NEW_FORMAT.test(number)
-  ) {
+  try {
+    body = typeof req.body === "string"
+      ? JSON.parse(req.body)
+      : req.body;
+  } catch {
     return send(res, 400, {
       success: false,
-      error: "Format nomor pesanan tidak valid."
+      error: "Format JSON tidak valid."
+    });
+  }
+
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return send(res, 400, {
+      success: false,
+      error: "Data permintaan tidak valid."
+    });
+  }
+
+  const input = typeof body.order_number === "string"
+    ? body.order_number.trim().toUpperCase()
+    : "";
+
+  let orderNumber;
+
+  if (SHORT_FORMAT.test(input)) {
+    orderNumber = `BDJ-${input}`;
+  } else if (FULL_FORMAT.test(input)) {
+    orderNumber = input;
+  } else {
+    return send(res, 400, {
+      success: false,
+      error: "Masukkan 5 karakter kode pesanan yang valid."
     });
   }
 
   try {
-    let orderId = null;
+    const order = await findOrder(orderNumber);
 
-    const filterName = OLD_FORMAT.test(number)
-      ? "old_order_number"
-      : "new_order_number";
-
-    const mappings = await readRows(
-      "order_number_mapping_20261026",
-      {
-        [filterName]: `eq.${number}`
-      },
-      "order_id"
-    );
-
-    if (mappings.length) {
-      orderId = mappings[0].order_id;
-    }
-
-    const orders = await readRows(
-      "orders",
-      orderId
-        ? { id: `eq.${orderId}` }
-        : { order_number: `eq.${number}` },
-      [
-        "order_number",
-        "payment_status",
-        "payment_expires_at",
-        "expiry_policy_version"
-      ].join(",")
-    );
-
-    if (
-      !orders.length ||
-      !VALID_STATUSES.has(orders[0].payment_status)
-    ) {
+    if (!order || !VALID_STATUSES.has(order.payment_status)) {
       return send(res, 404, {
         success: false,
         error: "Pesanan tidak ditemukan."
       });
     }
 
-    const order = orders[0];
     const paid = order.payment_status === "PAID_DEMO";
-
-    const hasExpiry =
-      Number(order.expiry_policy_version) === 1 &&
-      Boolean(order.payment_expires_at);
-
-    const expiresAt = hasExpiry
-      ? Date.parse(order.payment_expires_at)
-      : NaN;
-
-    const now = Date.now();
-
-    const remainingSeconds =
-      !paid && Number.isFinite(expiresAt)
-        ? Math.max(0, Math.ceil((expiresAt - now) / 1000))
-        : null;
-
-    const expired =
-      !paid &&
-      hasExpiry &&
-      Number.isFinite(expiresAt) &&
-      remainingSeconds === 0;
-
-    let paymentNotice;
-
-    if (paid) {
-      paymentNotice =
-        "Pembayaran DEMO sudah dikonfirmasi.";
-    } else if (expired) {
-      paymentNotice =
-        "Batas pembayaran 1 jam telah berakhir. " +
-        "Pesanan menunggu proses penghapusan otomatis.";
-    } else if (hasExpiry) {
-      paymentNotice =
-        "Selesaikan pembayaran sebelum batas waktu 1 jam berakhir.";
-    } else {
-      paymentNotice =
-        "Pesanan menggunakan ketentuan pembayaran sebelumnya.";
-    }
 
     return send(res, 200, {
       success: true,
       demo: true,
-
       order_number: order.order_number,
       payment_status: order.payment_status,
-
-      payment_expires_at:
-        hasExpiry ? order.payment_expires_at : null,
-
-      expiry_policy_version:
-        Number(order.expiry_policy_version) || 0,
-
-      payment_remaining_seconds: remainingSeconds,
-
-      payment_expired: expired,
-
-      payment_notice: paymentNotice,
-
-      server_time: new Date(now).toISOString(),
-
+      payment_notice: paid
+        ? "Pembayaran simulasi telah dikonfirmasi."
+        : "Pembayaran simulasi belum dikonfirmasi.",
       notice:
-        "SIMULASI / TEST — bukan bukti pembayaran nyata."
+        "DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH"
     });
 
   } catch (error) {
-    console.error("Order lookup failed:", error.message);
+    console.error("check-order:", error.message);
 
     return send(res, 503, {
       success: false,
-      error: "Pemeriksaan pesanan belum tersedia."
+      error: "Pemeriksaan pesanan sementara belum tersedia."
     });
   }
 };
