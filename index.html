@@ -2525,17 +2525,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
           // Buka jendela secara langsung agar tidak diblokir popup blocker.
           const popup=window.open("","_blank");
           if(!popup){msg.textContent="Izinkan pop-up untuk mengunduh invoice.";return;}
-          popup.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Menyiapkan invoice DEMO</title></head><body><p>Menyiapkan invoice DEMO...</p>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const heading = document.getElementById('chooseYourTicketHeading');
-  if (heading) {
-    const ticket = heading.querySelector('.orange');
-    if (ticket) ticket.textContent = 'TICKET';
-  }
-});
-</script>
-</body></html>");
+          popup.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Menyiapkan invoice DEMO</title></head><body><p>Menyiapkan invoice DEMO...</p></body></html>");
           popup.document.close();
           download.disabled=true;msg.textContent="Memverifikasi email dan menyiapkan invoice...";
           try{
@@ -3318,6 +3308,8 @@ function initializeParallax(){
   if(typeof gsap==="undefined" || typeof ScrollTrigger==="undefined") return;
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   gsap.registerPlugin(ScrollTrigger);
+  const ticketHeading=document.getElementById("chooseYourTicketHeading");
+  if(ticketHeading){const ticket=ticketHeading.querySelector(".orange");if(ticket)ticket.textContent="TICKET";}
   const mobile=window.matchMedia("(max-width:768px)").matches;
   const hero=document.querySelector(".block-hero .hero-shell");
 
@@ -3355,34 +3347,24 @@ function initializeParallax(){
   // Semua judul, narasi, gambar, kartu dan tombol di slide 2 & 3.
   // Transform reveal hanya untuk elemen yang tidak sedang digerakkan oleh parallax lain.
   const revealSelectors=[
-    ".block-registration .registration-steps",
-    ".block-registration #ticketStep h3",
-    ".block-registration #cardNormal",
-    ".block-registration #cardEarly",
-    ".block-registration .order-summary",
-    ".block-registration #ticketStep > .notice",
-    ".block-registration #ticketStep .registration-actions",
-    ".block-registration .reg-medal-visual",
-    ".block-registration .reg-benefits-showcase h3",
-    ".block-registration .reg-benefits-banner",
-    ".block-registration .check-order-section h2",
-    ".block-registration .check-order-section .copy",
-    ".block-registration .check-order-panel",
-    ".block-info .jersey-section h2",
-    ".block-info .jersey-description",
-    ".block-info .jersey-frame",
-    ".block-info .jersey-note",
-    ".block-info .route-section h2",
-    ".block-info .route-frame",
-    ".block-info .racepack-section h2",
-    ".block-info .racepack-card",
-    ".block-info .rules-section h2",
-    ".block-info .rules-section .hero-actions",
-    ".block-info .rules-section .btn"
+    ".block-registration section h1, .block-registration section h2, .block-registration section h3",
+    ".block-registration section .kicker, .block-registration section .copy",
+    ".block-registration section img, .block-registration section .registration-steps",
+    ".block-registration section .ticket-card, .block-registration section .order-summary",
+    ".block-registration section .notice, .block-registration section .registration-actions",
+    ".block-registration section .reg-benefits-showcase, .block-registration section .check-order-panel",
+    ".block-info section h1, .block-info section h2, .block-info section h3",
+    ".block-info section .kicker, .block-info section .copy",
+    ".block-info section img, .block-info section .jersey-description",
+    ".block-info section .jersey-frame, .block-info section .jersey-note",
+    ".block-info section .route-frame, .block-info section .racepack-card",
+    ".block-info section .rules-info, .block-info section .rules-list",
+    ".block-info section .btn"
   ];
   const targets=[...new Set(revealSelectors.flatMap(selector=>Array.from(document.querySelectorAll(selector))))];
   targets.forEach((el,index)=>{
     if(el.closest('[hidden]') || el.hidden) return;
+    if(el.closest('.registration-panel') && el.closest('.registration-panel').hidden) return;
     // Tombol tetap bisa diklik: efek hanya sekali saat masuk viewport.
     gsap.fromTo(el,
       {autoAlpha:0,y:mobile?22:38},
