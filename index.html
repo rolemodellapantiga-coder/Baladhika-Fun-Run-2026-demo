@@ -1354,6 +1354,36 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-hero .hero-six-inner,.block-hero .hero-medal-backdrop{animation:none!important}
 }
 
+
+/* HERO ACUAN POSTER — MEDALI BESAR DI BELAKANG PELARI */
+.block-hero .hero-shell{isolation:isolate}
+.block-hero .hero-six{top:34%!important;left:-3%!important;color:rgba(220,230,218,.065)!important;z-index:1!important}
+.block-hero .hero-event-date{top:45%!important;left:7%!important;z-index:11!important}
+.block-hero .hero-medal-backdrop{
+  top:34%!important;bottom:auto!important;right:-6%!important;
+  width:88%!important;height:56%!important;
+  object-fit:contain!important;object-position:center!important;
+  opacity:.20!important;z-index:4!important;pointer-events:none!important;
+  filter:none!important;
+}
+.block-hero .hero-people{z-index:9!important}
+.block-hero .hero-spark{z-index:6!important}
+.block-hero .hero-venue{z-index:12!important}
+/* Animasi masuk pada elemen di dalam lapisan yang bergerak parallax */
+.block-hero .hero-medal-backdrop{animation:heroMedalFadeIn 1.3s .5s both!important}
+@keyframes heroMedalFadeIn{from{opacity:0;filter:blur(8px)}to{opacity:.20;filter:blur(0)}}
+@media(max-width:768px){
+ .block-hero .hero-six{top:34%!important;left:-5%!important}
+ .block-hero .hero-event-date{top:44%!important;left:7%!important}
+ .block-hero .hero-medal-backdrop{top:33%!important;right:-13%!important;width:108%!important;height:56%!important}
+}
+@media(max-width:430px){
+ .block-hero .hero-six{top:34%!important}
+ .block-hero .hero-event-date{top:44%!important;left:7%!important}
+ .block-hero .hero-medal-backdrop{top:33%!important;right:-17%!important;width:113%!important;height:56%!important}
+}
+@media(prefers-reduced-motion:reduce){.block-hero .hero-medal-backdrop{animation:none!important}}
+
 </style>
 </head>
 <body>
