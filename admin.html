@@ -2,378 +2,351 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Dashboard Admin | Baladhika Fun Run 2026</title>
-
-<style>
-:root {
-  --army:#263d2b;
-  --dark:#17271c;
-  --orange:#f08b35;
-  --bg:#f3f5f1;
-  --border:#dfe6dd;
-  --muted:#647166;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  background:var(--bg);
-  color:#223026;
-  font-family:Arial,Helvetica,sans-serif;
-}
-button,input,select { font:inherit; }
-button { cursor:pointer; }
-button:disabled { opacity:.5;cursor:not-allowed; }
-.hidden { display:none!important; }
-.login {
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:20px;
-  background:var(--dark);
-}
-.login-card {
-  background:#fff;
-  width:100%;
-  max-width:430px;
-  padding:32px;
-  border-radius:18px;
-}
-h1,h2,h3 { margin-top:0; }
-.brand {
-  font-size:24px;
-  font-weight:900;
-  color:var(--army);
-}
-.info {
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.6;
-}
-label {
-  display:block;
-  margin:14px 0 7px;
-  font-weight:bold;
-  font-size:13px;
-}
-input,select {
-  padding:12px;
-  border:1px solid #ccd6ca;
-  border-radius:8px;
-  background:#fff;
-  max-width:100%;
-}
-.login input { width:100%; }
-.btn {
-  border:0;
-  border-radius:8px;
-  padding:11px 15px;
-  background:var(--army);
-  color:#fff;
-  font-weight:bold;
-}
-.btn-orange {
-  background:var(--orange);
-  color:var(--dark);
-}
-.btn-green { background:#287845; }
-.btn-red { background:#b73333; }
-.btn-small {
-  font-size:11px;
-  padding:8px 10px;
-}
-.full { width:100%;margin-top:20px; }
-header {
-  background:var(--dark);
-  color:#fff;
-  padding:22px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:15px;
-}
-header h1 { font-size:22px;margin:0; }
-header p { margin:7px 0 0;color:#cbd8cc; }
-main {
-  max-width:1400px;
-  margin:auto;
-  padding:25px 18px 65px;
-}
-.section { margin-top:28px; }
-.cards {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px;
-}
-.quota-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-.card {
-  background:#fff;
-  padding:21px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  min-width:0;
-}
-.value {
-  font-size:28px;
-  font-weight:900;
-  color:var(--army);
-  margin:12px 0;
-  overflow-wrap:anywhere;
-}
-.track {
-  height:12px;
-  border-radius:20px;
-  background:#e5ede4;
-  overflow:hidden;
-  margin:12px 0;
-}
-.fill {
-  height:100%;
-  width:0;
-  background:var(--orange);
-}
-.toolbar {
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:9px;
-  margin:15px 0;
-}
-.toolbar input { flex:1;min-width:180px; }
-.table-wrap {
-  overflow-x:auto;
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:12px;
-}
-table {
-  border-collapse:collapse;
-  width:100%;
-  white-space:nowrap;
-  font-size:12px;
-}
-th,td {
-  padding:12px;
-  text-align:left;
-  border-bottom:1px solid #e7ece6;
-}
-th {
-  background:#edf2eb;
-  color:var(--army);
-}
-tr.review-needed { background:#fff3c4; }
-tr.review-needed:hover { background:#ffe8a0; }
-.status {
-  display:inline-block;
-  padding:6px 9px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:bold;
-  background:#fff0d9;
-  color:#88591b;
-}
-.status.waiting {
-  background:#ffdc72;
-  color:#634400;
-}
-.status.paid {
-  background:#ddf3e3;
-  color:#196a32;
-}
-.status.rejected {
-  background:#ffe0e0;
-  color:#9a2525;
-}
-.actions {
-  display:flex;
-  gap:6px;
-  align-items:center;
-}
-.pagination {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:15px;
-}
-.notice {
-  background:#fff4df;
-  border:1px solid #f1d4a5;
-  padding:15px;
-  border-radius:9px;
-  line-height:1.6;
-  font-size:13px;
-}
-.error {
-  color:#ae3030;
-  font-size:13px;
-  line-height:1.5;
-}
-.result {
-  margin-top:15px;
-  padding:15px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:#f7faf6;
-  overflow-wrap:anywhere;
-}
-@media(max-width:850px) {
-  .cards { grid-template-columns:repeat(2,1fr); }
-  .quota-grid { grid-template-columns:1fr; }
-}
-@media(max-width:480px) {
-  .cards { grid-template-columns:1fr; }
-  header h1 { font-size:18px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard Admin | Baladhika Fun Run 2026</title>
+  <style>
+    :root {
+      --army: #263d2b;
+      --army-dark: #17271c;
+      --orange: #f08b35;
+      --bg: #f3f5f1;
+      --white: #ffffff;
+      --muted: #66736a;
+      --border: #e0e6df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: #202b22;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
+    .login-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #17271c, #3a553b);
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 35px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 20px 60px #0003;
+    }
+    .brand {
+      font-weight: 900;
+      font-size: 23px;
+      color: var(--army);
+      letter-spacing: .4px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 10px 0 25px;
+      line-height: 1.6;
+    }
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cdd6cd;
+      border-radius: 9px;
+      outline-color: var(--army);
+    }
+    .btn {
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--army);
+      color: white;
+      font-weight: bold;
+    }
+    .btn:hover { background: #3b5940; }
+    .btn-orange { background: var(--orange); color: #202b22; }
+    .btn-orange:hover { background: #e7a15f; }
+    .btn-full { width: 100%; margin-top: 22px; }
+    .error {
+      color: #ae3030;
+      font-size: 13px;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .header {
+      background: var(--army-dark);
+      color: white;
+      padding: 22px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .header h1 { margin: 0; font-size: 21px; }
+    .header p { margin: 6px 0 0; color: #cbd8cc; font-size: 13px; }
+    .container {
+      max-width: 1350px;
+      margin: auto;
+      padding: 30px 20px 70px;
+    }
+    .section-title {
+      margin: 25px 0 15px;
+      font-size: 19px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: white;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .card .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .card .value {
+      font-size: 29px;
+      font-weight: 900;
+      margin-top: 12px;
+      color: var(--army);
+      overflow-wrap: anywhere;
+    }
+    .card .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+    .quota-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .quota-track {
+      background: #e8eee7;
+      height: 12px;
+      border-radius: 30px;
+      overflow: hidden;
+      margin: 15px 0 9px;
+    }
+    .quota-fill {
+      background: var(--orange);
+      height: 100%;
+      width: 0;
+      transition: width .3s;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .toolbar input { flex: 1; min-width: 200px; }
+    .table-wrap {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    th, td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e9ede8;
+    }
+    th { background: #edf1eb; color: var(--army); }
+    tr:last-child td { border-bottom: 0; }
+    .status {
+      display: inline-block;
+      border-radius: 30px;
+      padding: 5px 9px;
+      background: #fff0d9;
+      color: #865113;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .paid { background: #e0f3e4; color: #1e7234; }
+    .waiting { background: #fff1b8; color: #785500; border: 1px solid #d8a800; }
+    .rejected { background: #ffe0e0; color: #9a2020; }
+    tr.review-needed { background: #fff9df; }
+    .review-actions { display:flex; gap:6px; }
+    .review-actions button { padding:7px 10px; font-size:12px; }
+    .btn-approve { background:#216c37; }
+    .btn-reject { background:#a32f2f; }
+    .btn-proof { background:#294c64; }
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .pagination button:disabled { opacity: .4; cursor: default; }
+    .info {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .notice {
+      padding: 13px 15px;
+      background: #fff5e6;
+      border: 1px solid #f1d6ab;
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+    @media (max-width: 850px) {
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quota-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .cards { grid-template-columns: 1fr; }
+      .login-card { padding: 25px; }
+      .header h1 { font-size: 18px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<section id="loginScreen" class="login">
-  <div class="login-card">
-    <div class="brand">BALADHIKA FUN RUN 2026</div>
-    <p class="info">
-      Dashboard Admin Panitia<br>
-      Akses khusus akun OWNER
-    </p>
+  <section id="loginScreen" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">BALADHIKA FUN RUN 2026</div>
+      <p class="subtitle">
+        Dashboard Admin Panitia<br>
+        Akses khusus akun OWNER
+      </p>
+      <form id="loginForm">
+        <label for="email">Email OWNER</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          required
+          placeholder="Email OWNER"
+        >
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          placeholder="Password akun Supabase"
+        >
+        <button class="btn btn-full" id="loginButton" type="submit">
+          MASUK DASHBOARD
+        </button>
+        <p id="loginError" class="error" role="alert"></p>
+      </form>
+    </div>
+  </section>
 
-    <form id="loginForm">
-      <label>Email OWNER</label>
-      <input id="email" type="email" required
-             autocomplete="username">
-
-      <label>Password</label>
-      <input id="password" type="password" required
-             autocomplete="current-password">
-
-      <button id="loginButton" class="btn full">
-        MASUK DASHBOARD
+  <section id="dashboardScreen" class="hidden">
+    <header class="header">
+      <div>
+        <h1>BALADHIKA FUN RUN 2026</h1>
+        <p>Dashboard Admin Panitia — OWNER</p>
+      </div>
+      <button class="btn btn-orange" id="logoutButton">
+        Logout
       </button>
-      <p id="loginError" class="error"></p>
-    </form>
-  </div>
-</section>
+    </header>
 
-<section id="dashboardScreen" class="hidden">
-<header>
-  <div>
-    <h1>BALADHIKA FUN RUN 2026</h1>
-    <p>Dashboard Admin Panitia — OWNER</p>
-  </div>
-  <button id="logoutButton" class="btn btn-orange">
-    Logout
-  </button>
-</header>
+    <main class="container">
+      <p class="info" id="ownerInfo"></p>
 
-<main>
-  <p id="ownerInfo" class="info"></p>
-
-  <div class="notice">
-    <strong>MODE DEMO / TEST</strong><br>
-    PENDING_DEMO bukan bukti pembayaran.
-    Bukti yang diunggah peserta harus diperiksa OWNER.
-    Status PAID_DEMO hanya untuk simulasi, bukan
-    bukti transaksi keuangan nyata.
-  </div>
-
-  <section class="section">
-    <h2>Ringkasan Pendaftaran</h2>
-    <div class="cards">
-      <div class="card">
-        <div class="info">Total Peserta</div>
-        <div id="totalParticipants" class="value">—</div>
+      <div class="notice">
+        Mode DEMO: status PENDING_DEMO bukan bukti pembayaran.
+        Verifikasi pembayaran dan penyerahan racepack hanya dapat dilakukan oleh OWNER.
+        Semua pembayaran yang ditampilkan merupakan simulasi, bukan transaksi riil.
       </div>
-      <div class="card">
-        <div class="info">Total Pesanan</div>
-        <div id="totalOrders" class="value">—</div>
-      </div>
-      <div class="card">
-        <div class="info">Pending DEMO</div>
-        <div id="pendingOrders" class="value">—</div>
-      </div>
-      <div class="card">
-        <div class="info">Nilai Pesanan</div>
-        <div id="totalValue" class="value">—</div>
-        <div class="info">Bukan pendapatan riil</div>
-      </div>
-    </div>
-  </section>
 
-  <section class="section">
-    <h2>Monitoring Kuota</h2>
-    <div class="quota-grid">
-      <div class="card">
-        <strong>EARLY BIRD</strong>
-        <div id="earlyValue" class="value">—</div>
-        <div class="track">
-          <div id="earlyBar" class="fill"></div>
+      <h2 class="section-title">Ringkasan Pendaftaran</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="label">Total Peserta</div>
+          <div class="value" id="totalParticipants">—</div>
+          <div class="note">Peserta terdaftar</div>
         </div>
-        <div id="earlyNote" class="info">—</div>
-      </div>
-      <div class="card">
-        <strong>NORMAL</strong>
-        <div id="normalValue" class="value">—</div>
-        <div class="track">
-          <div id="normalBar" class="fill"></div>
+        <div class="card">
+          <div class="label">Total Pesanan</div>
+          <div class="value" id="totalOrders">—</div>
+          <div class="note">Pesanan individu dan rombongan</div>
         </div>
-        <div id="normalNote" class="info">—</div>
+        <div class="card">
+          <div class="label">Pesanan Pending DEMO</div>
+          <div class="value" id="pendingOrders">—</div>
+          <div class="note">Belum merupakan pembayaran lunas</div>
+        </div>
+        <div class="card">
+          <div class="label">Nilai Pesanan</div>
+          <div class="value" id="totalValue">—</div>
+          <div class="note">Bukan pendapatan yang sudah diterima</div>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <section class="section">
-    <h2>Rekap Kebutuhan Jersey</h2>
-    <div class="card">
-      <p class="info">
-        Rekap seluruh peserta terdaftar,
-        termasuk yang belum lunas DEMO.
-      </p>
-      <div id="jerseyGrid" class="cards"></div>
-      <p>
-        <strong>Total Kebutuhan:</strong>
-        <span id="jerseyTotal">—</span>
-      </p>
-      <p id="jerseyOther" class="info"></p>
-      <button id="exportJersey" class="btn btn-orange">
-        Export Rekap Jersey (CSV)
-      </button>
-      <p id="jerseyError" class="error"></p>
-    </div>
-  </section>
+      <h2 class="section-title">Monitoring Kuota</h2>
+      <div class="quota-grid">
+        <div class="card">
+          <strong>EARLY BIRD</strong>
+          <div class="value" id="earlyValue">—</div>
+          <div class="quota-track">
+            <div class="quota-fill" id="earlyBar"></div>
+          </div>
+          <div class="info" id="earlyNote">—</div>
+        </div>
+        <div class="card">
+          <strong>NORMAL</strong>
+          <div class="value" id="normalValue">—</div>
+          <div class="quota-track">
+            <div class="quota-fill" id="normalBar"></div>
+          </div>
+          <div class="info" id="normalNote">—</div>
+        </div>
+      </div>
 
-  <section class="section">
-    <h2>Rekap Pesanan dan Verifikasi Pembayaran</h2>
-    <div class="card">
-      <p class="info">
-        Semua pesanan ditampilkan dalam satu tabel.
-        Baris kuning menandakan bukti yang
-        menunggu keputusan panitia.
-      </p>
+      <section id="invoiceReprintSection">
+        <h2 class="section-title">Cetak Ulang Invoice DEMO</h2>
+        <div class="card">
+          <p class="info">Untuk pesanan yang sudah PAID_DEMO. Masukkan nomor pesanan dari daftar pesanan di bawah. Tidak perlu mendaftar ulang.</p>
+          <div class="toolbar" style="margin-top:15px">
+            <input id="invoiceOrderInput" type="text" placeholder="Contoh: A7K9B2 atau BFR-ORDER-..." autocomplete="off" aria-label="Nomor pesanan untuk cetak invoice">
+            <button class="btn btn-orange" id="invoiceLoadButton" type="button">Cari & Cetak Invoice</button>
+          </div>
+          <p id="invoiceReprintMessage" class="info" role="status"></p>
+        </div>
+      </section>
 
+      <h2 class="section-title">Daftar Peserta</h2>
       <div class="toolbar">
-        <input id="orderSearch" type="search"
-               placeholder="Cari nomor pesanan / nama pemesan">
-
-        <button id="orderSearchButton" class="btn">
-          Cari
-        </button>
-
-        <button id="orderRefresh" class="btn">
-          Refresh
-        </button>
-
-        <button id="exportOrders" class="btn btn-orange">
-          Export Pesanan CSV
-        </button>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Cari nama, nomor registrasi, atau nomor pesanan"
+        >
+        <button class="btn" id="searchButton">Cari</button>
+        <button class="btn" id="refreshButton">Refresh</button>
       </div>
 
       <div class="table-wrap">
@@ -381,1400 +354,1562 @@ tr.review-needed:hover { background:#ffe8a0; }
           <thead>
             <tr>
               <th>No.</th>
+              <th>Nomor Registrasi</th>
+              <th>Nama Peserta</th>
               <th>Nomor Pesanan</th>
-              <th>Nama Pemesan</th>
-              <th>Early Bird</th>
-              <th>Normal</th>
-              <th>Peserta</th>
-              <th>Total Tagihan</th>
-              <th>Metode</th>
+              <th>Kategori</th>
+              <th>Jersey</th>
+              <th>Gender</th>
+              <th>Kota</th>
               <th>Pembayaran</th>
-              <th>Status Bukti</th>
-              <th>Bukti</th>
-              <th>Keputusan Admin</th>
-              <th>Tanggal Pesanan</th>
+              <th>Tanggal Daftar</th>
             </tr>
           </thead>
-          <tbody id="orderRows">
-            <tr>
-              <td colspan="13">Menunggu login...</td>
-            </tr>
+          <tbody id="participantRows">
+            <tr><td colspan="10">Memuat data...</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="pagination">
-        <span id="orderPageInfo" class="info">—</span>
-        <div class="actions">
-          <button id="orderPrev" class="btn">
-            Sebelumnya
+        <span class="info" id="pageInfo">—</span>
+        <div>
+          <button class="btn" id="prevButton">Sebelumnya</button>
+          <button class="btn" id="nextButton">Berikutnya</button>
+        </div>
+      </div>
+      <p id="dashboardError" class="error" role="alert"></p>
+    </main>
+  </section>
+
+  <script>
+    "use strict";
+
+    // KONFIGURASI SUPABASE
+    // Ganti hanya teks GANTI_DENGAN_PUBLISHABLE_KEY_ANDA
+    // dengan Publishable Key dari Supabase.
+    const SUPABASE_URL =
+      "https://vsxrtafxtbzeknjcywhw.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_E-2ltwCC-X3TwS8Bpi7hvw__WDknaUG";
+
+    const PAGE_SIZE = 50;
+
+    let accessToken = "";
+    let refreshToken = "";
+    let currentPage = 0;
+    let currentSearch = "";
+    let totalResults = 0;
+
+    const el = id => document.getElementById(id);
+
+    const numberFormat = value =>
+      Number(value || 0).toLocaleString("id-ID");
+
+    const rupiah = value =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(Number(value || 0));
+
+    function showLogin(message = "") {
+      accessToken = "";
+      refreshToken = "";
+      el("dashboardScreen").classList.add("hidden");
+      el("loginScreen").classList.remove("hidden");
+      el("loginError").textContent = message;
+      el("password").value = "";
+      if (typeof resetRacepackView === "function") resetRacepackView();
+    }
+
+    function showDashboard(email) {
+      el("loginScreen").classList.add("hidden");
+      el("dashboardScreen").classList.remove("hidden");
+      el("ownerInfo").textContent = "Login sebagai: " + email;
+      el("dashboardError").textContent = "";
+    }
+
+    async function supabaseRequest(path, options = {}, token = "") {
+      const headers = {
+        "apikey": SUPABASE_KEY,
+        "Content-Type": "application/json",
+        ...(token ? { "Authorization": "Bearer " + token } : {})
+      };
+
+      const response = await fetch(SUPABASE_URL + path, {
+        ...options,
+        headers: { ...headers, ...(options.headers || {}) },
+        cache: "no-store"
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
+      if (!response.ok) {
+        const error = new Error(
+          data.msg ||
+          data.message ||
+          data.error_description ||
+          data.error ||
+          "Permintaan gagal (" + response.status + ")"
+        );
+        error.status = response.status;
+        throw error;
+      }
+
+      return data;
+    }
+
+    async function checkOwner(token) {
+      const data = await supabaseRequest(
+        "/rest/v1/admin_users?select=role&role=eq.OWNER&limit=1",
+        { method: "GET" },
+        token
+      );
+
+      return Array.isArray(data) &&
+        data.length === 1 &&
+        data[0].role === "OWNER";
+    }
+
+    async function signIn(email, password) {
+      return await supabaseRequest(
+        "/auth/v1/token?grant_type=password",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        }
+      );
+    }
+
+    async function rpc(name, payload) {
+      if (!accessToken) {
+        throw new Error("Sesi login tidak tersedia. Silakan login kembali.");
+      }
+
+      return await supabaseRequest(
+        "/rest/v1/rpc/" + name,
+        {
+          method: "POST",
+          body: JSON.stringify(payload)
+        },
+        accessToken
+      );
+    }
+
+    async function loadSummary() {
+      const data = await rpc(
+        "get_owner_dashboard_summary",
+        {}
+      );
+
+      el("totalParticipants").textContent =
+        numberFormat(data.total_participants);
+
+      el("totalOrders").textContent =
+        numberFormat(data.total_orders);
+
+      el("pendingOrders").textContent =
+        numberFormat(data.pending_demo_orders);
+
+      el("totalValue").textContent =
+        rupiah(data.total_order_value);
+
+      const early = Number(data.early_bird_registered || 0);
+      const normal = Number(data.normal_registered || 0);
+      const earlyQuota = Number(data.early_bird_quota ?? 1500);
+      const normalQuota = Number(data.normal_quota ?? 500);
+
+      el("earlyValue").textContent =
+        numberFormat(early) + " / " + numberFormat(earlyQuota);
+
+      el("normalValue").textContent =
+        numberFormat(normal) + " / " + numberFormat(normalQuota);
+
+      el("earlyBar").style.width =
+        Math.min(100, earlyQuota ? early / earlyQuota * 100 : 0) + "%";
+
+      el("normalBar").style.width =
+        Math.min(100, normalQuota ? normal / normalQuota * 100 : 0) + "%";
+
+      el("earlyNote").textContent =
+        "Sisa berdasarkan jumlah pesanan: " +
+        numberFormat(Math.max(0, earlyQuota - early));
+
+      el("normalNote").textContent =
+        "Sisa berdasarkan jumlah pesanan: " +
+        numberFormat(Math.max(0, normalQuota - normal));
+    }
+
+    function addCell(row, value) {
+      const td = document.createElement("td");
+      td.textContent = value == null ? "-" : String(value);
+      row.appendChild(td);
+      return td;
+    }
+
+    function displayDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    }
+
+    function renderParticipants(items) {
+      const tbody = el("participantRows");
+      tbody.replaceChildren();
+
+      if (!items.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 10;
+        td.textContent = "Tidak ada peserta yang ditemukan.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      items.forEach((p, index) => {
+        const tr = document.createElement("tr");
+
+        addCell(tr, currentPage * PAGE_SIZE + index + 1);
+        addCell(tr, p.registration_number);
+        addCell(tr, p.full_name);
+        addCell(tr, p.order_number);
+        addCell(tr, p.ticket_category);
+        addCell(tr, p.jersey_size);
+        addCell(tr, p.gender);
+        addCell(tr, p.city);
+
+        const statusCell = addCell(tr, "");
+        const badge = document.createElement("span");
+        badge.className = "status" +
+          (p.payment_status === "PAID_DEMO" ? " paid" : "");
+        badge.textContent = p.payment_status || "-";
+        statusCell.appendChild(badge);
+
+        addCell(tr, displayDate(p.registered_at));
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function loadParticipants() {
+      const data = await rpc("get_owner_participants", {
+        p_search: currentSearch,
+        p_limit: PAGE_SIZE,
+        p_offset: currentPage * PAGE_SIZE
+      });
+
+      const items = Array.isArray(data.participants)
+        ? data.participants : [];
+
+      totalResults = Number(data.total || 0);
+      renderParticipants(items);
+
+      const start = totalResults
+        ? currentPage * PAGE_SIZE + 1 : 0;
+
+      const end = Math.min(
+        (currentPage + 1) * PAGE_SIZE,
+        totalResults
+      );
+
+      el("pageInfo").textContent =
+        "Menampilkan " + numberFormat(start) +
+        "–" + numberFormat(end) +
+        " dari " + numberFormat(totalResults) + " peserta";
+
+      el("prevButton").disabled = currentPage === 0;
+      el("nextButton").disabled =
+        (currentPage + 1) * PAGE_SIZE >= totalResults;
+    }
+
+    async function refreshDashboard() {
+      el("dashboardError").textContent = "";
+      try {
+        await Promise.all([
+          loadSummary(),
+          loadParticipants()
+        ]);
+      } catch (error) {
+        if (error.status === 401 || error.status === 403) {
+          showLogin("Sesi berakhir atau akses ditolak. Silakan login kembali.");
+          return;
+        }
+        el("dashboardError").textContent =
+          "Gagal memuat dashboard: " + error.message;
+      }
+    }
+
+    el("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const button = el("loginButton");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+
+      if (SUPABASE_KEY === "GANTI_DENGAN_PUBLISHABLE_KEY_ANDA") {
+        el("loginError").textContent =
+          "Publishable Key belum dimasukkan ke admin.html.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "MEMERIKSA LOGIN...";
+      el("loginError").textContent = "";
+
+      try {
+        const session = await signIn(email, password);
+
+        if (!session.access_token) {
+          throw new Error("Token login tidak diterima.");
+        }
+
+        const allowed = await checkOwner(session.access_token);
+
+        if (!allowed) {
+          throw new Error("Akun ini tidak memiliki akses OWNER.");
+        }
+
+        accessToken = session.access_token;
+        refreshToken = session.refresh_token || "";
+
+        showDashboard(email);
+        await refreshDashboard();
+
+      } catch (error) {
+        showLogin("Login gagal: " + error.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = "MASUK DASHBOARD";
+      }
+    });
+
+    el("logoutButton").addEventListener("click", async () => {
+      const token = accessToken;
+      showLogin();
+
+      if (token) {
+        try {
+          await supabaseRequest(
+            "/auth/v1/logout",
+            { method: "POST" },
+            token
+          );
+        } catch {
+          // Sesi lokal tetap ditutup.
+        }
+      }
+    });
+
+    el("searchButton").addEventListener("click", () => {
+      currentSearch = el("searchInput").value.trim();
+      currentPage = 0;
+      refreshDashboard();
+    });
+
+    el("searchInput").addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        currentSearch = el("searchInput").value.trim();
+        currentPage = 0;
+        refreshDashboard();
+      }
+    });
+
+    el("refreshButton").addEventListener("click", refreshDashboard);
+
+    el("prevButton").addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        refreshDashboard();
+      }
+    });
+
+    el("nextButton").addEventListener("click", () => {
+      if ((currentPage + 1) * PAGE_SIZE < totalResults) {
+        currentPage++;
+        refreshDashboard();
+      }
+    });
+
+    
+    
+
+    // FITUR EXPORT CSV KHUSUS OWNER
+    // Mengambil seluruh peserta secara bertahap.
+    // Tidak mengubah database.
+
+    const exportButton = document.createElement("button");
+    exportButton.type = "button";
+    exportButton.className = "btn";
+    exportButton.textContent = "Export CSV (Excel)";
+    exportButton.style.background = "#e88932";
+    exportButton.style.color = "#17271c";
+
+    document.querySelector(".toolbar").appendChild(exportButton);
+
+    function csvCell(value) {
+      let text = String(value ?? "");
+
+      // Mencegah spreadsheet menjalankan formula
+      // dari data yang berasal dari input peserta.
+      if (/^[\s]*[=+\-@\t\r]/.test(text)) {
+        text = "'" + text;
+      }
+
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+
+    exportButton.addEventListener("click", async () => {
+      exportButton.disabled = true;
+      exportButton.textContent = "Menyiapkan CSV...";
+
+      try {
+        const allParticipants = [];
+        const batchSize = 100;
+        let offset = 0;
+        let expectedTotal = null;
+
+        while (true) {
+          const result = await rpc("get_owner_participants", {
+            p_search: "",
+            p_limit: batchSize,
+            p_offset: offset
+          });
+
+          const batch = Array.isArray(result.participants)
+            ? result.participants
+            : [];
+
+          const total = Number(result.total);
+
+          if (!Number.isSafeInteger(total) || total < 0) {
+            throw new Error("Jumlah peserta tidak valid.");
+          }
+
+          if (expectedTotal === null) {
+            expectedTotal = total;
+          } else if (expectedTotal !== total) {
+            throw new Error(
+              "Jumlah peserta berubah saat ekspor. Silakan ulangi."
+            );
+          }
+
+          allParticipants.push(...batch);
+          offset += batch.length;
+
+          if (allParticipants.length >= expectedTotal) break;
+
+          if (batch.length === 0) {
+            throw new Error("Pengambilan data peserta terhenti.");
+          }
+        }
+
+        const headers = [
+          "No",
+          "Nomor Registrasi",
+          "Nama Peserta",
+          "Nomor Pesanan",
+          "Kategori Tiket",
+          "Ukuran Jersey",
+          "Jenis Kelamin",
+          "Kota",
+          "Status Pembayaran",
+          "Metode Pembayaran",
+          "Tanggal Pendaftaran"
+        ];
+
+        const rows = allParticipants.map((p, index) => [
+          index + 1,
+          p.registration_number,
+          p.full_name,
+          p.order_number,
+          p.ticket_category,
+          p.jersey_size,
+          p.gender,
+          p.city,
+          p.payment_status,
+          p.payment_method,
+          displayDate(p.registered_at)
+        ]);
+
+        const csv = "\uFEFF" +
+          [headers, ...rows]
+            .map(row => row.map(csvCell).join(","))
+            .join("\r\n");
+
+        const blob = new Blob([csv], {
+          type: "text/csv;charset=utf-8"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download =
+          "Baladhika_Fun_Run_2026_Data_Peserta_" +
+          new Date().toISOString().slice(0, 10) +
+          ".csv";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        alert(
+          "Export berhasil. " +
+          allParticipants.length +
+          " peserta dimasukkan ke file CSV."
+        );
+
+      } catch (error) {
+        alert("Export gagal: " + error.message);
+      } finally {
+        exportButton.disabled = false;
+        exportButton.textContent = "Export CSV (Excel)";
+      }
+    });
+
+    
+    // ==========================================
+    // BALADHIKA FUN RUN 2026
+    // REKAP JERSEY OTOMATIS KHUSUS OWNER
+    // ==========================================
+
+    const jerseySection = document.createElement("section");
+
+    jerseySection.innerHTML = `
+      <h2 class="section-title">Rekap Kebutuhan Jersey</h2>
+      <div class="card">
+        <p class="info">
+          Rekap otomatis berdasarkan seluruh peserta terdaftar.
+          Termasuk peserta dengan status PENDING_DEMO.
+        </p>
+
+        <div id="jerseySummaryGrid" class="cards"
+             style="margin-top:18px"></div>
+
+        <div style="margin-top:20px">
+          <strong>Total Kebutuhan Jersey:</strong>
+          <span id="jerseyGrandTotal">—</span>
+        </div>
+
+        <p id="jerseyOtherInfo" class="info"></p>
+
+        <button
+          type="button"
+          id="exportJerseyButton"
+          class="btn btn-orange"
+          style="margin-top:15px">
+          Export Rekap Jersey (CSV)
+        </button>
+
+        <p id="jerseyError" class="error" role="alert"></p>
+      </div>
+    `;
+
+    const participantSectionTitle =
+      Array.from(document.querySelectorAll(".section-title"))
+        .find(element =>
+          element.textContent.trim() === "Daftar Peserta"
+        );
+
+    if (participantSectionTitle) {
+      participantSectionTitle.before(jerseySection);
+    } else {
+      document.querySelector(".container").appendChild(jerseySection);
+    }
+
+    let jerseyExportData = null;
+
+    async function loadJerseySummary() {
+      const data = await rpc("get_owner_jersey_summary", {});
+
+      const sizes = Array.isArray(data.jersey_sizes)
+        ? data.jersey_sizes
+        : [];
+
+      const grid = document.getElementById("jerseySummaryGrid");
+      grid.replaceChildren();
+
+      sizes.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.background = "#f3f5f1";
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = "Ukuran " + item.size;
+
+        const value = document.createElement("div");
+        value.className = "value";
+        value.textContent = numberFormat(item.quantity);
+
+        card.appendChild(label);
+        card.appendChild(value);
+        grid.appendChild(card);
+      });
+
+      const total = Number(data.total_participants || 0);
+      const other = Number(data.other_or_missing || 0);
+
+      document.getElementById("jerseyGrandTotal").textContent =
+        numberFormat(total) + " pcs";
+
+      document.getElementById("jerseyOtherInfo").textContent =
+        other > 0
+          ? "Perhatian: " + numberFormat(other) +
+            " peserta memiliki ukuran jersey lain atau belum terisi."
+          : "Seluruh peserta memiliki ukuran jersey yang dikenali.";
+
+      jerseyExportData = {
+        sizes: sizes,
+        total: total,
+        other: other
+      };
+
+      document.getElementById("jerseyError").textContent = "";
+    }
+
+    const originalRefreshDashboard = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await originalRefreshDashboard();
+
+      if (!accessToken) return;
+
+      try {
+        await loadJerseySummary();
+      } catch (error) {
+        document.getElementById("jerseyError").textContent =
+          "Gagal memuat rekap jersey: " + error.message;
+      }
+    };
+
+    document.getElementById("exportJerseyButton")
+      .addEventListener("click", async () => {
+
+        const button = document.getElementById("exportJerseyButton");
+        button.disabled = true;
+
+        try {
+          await loadJerseySummary();
+
+          if (!jerseyExportData) {
+            throw new Error("Data jersey belum tersedia.");
+          }
+
+          const rows = [
+            ["Ukuran Jersey", "Jumlah"]
+          ];
+
+          jerseyExportData.sizes.forEach(item => {
+            rows.push([item.size, Number(item.quantity || 0)]);
+          });
+
+          rows.push([
+            "Lainnya / Belum Terisi",
+            jerseyExportData.other
+          ]);
+
+          rows.push([
+            "TOTAL",
+            jerseyExportData.total
+          ]);
+
+          const csv = "\uFEFF" +
+            rows.map(row =>
+              row.map(value =>
+                '"' + String(value).replace(/"/g, '""') + '"'
+              ).join(",")
+            ).join("\r\n");
+
+          const blob = new Blob([csv], {
+            type: "text/csv;charset=utf-8"
+          });
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+
+          link.href = url;
+          link.download =
+            "Baladhika_Fun_Run_2026_Rekap_Jersey.csv";
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        } catch (error) {
+          alert("Export rekap jersey gagal: " + error.message);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+    
+    // CETAK ULANG INVOICE: data diverifikasi di Supabase oleh RPC khusus OWNER.
+    // Tidak menggunakan library PDF eksternal: browser dapat Save as PDF.
+    async function reprintDemoInvoice(orderNumber) {
+      const btn = el("invoiceLoadButton");
+      const status = el("invoiceReprintMessage");
+      if (!(/^[A-Z0-9]{6}$/.test(orderNumber) || /^BFR-ORDER-[A-F0-9]{20}$/.test(orderNumber))) {
+        status.textContent = "Masukkan nomor pesanan 6 karakter atau nomor BFR-ORDER lama yang lengkap.";
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = "Mengambil invoice dari Supabase...";
+      // Buka tab saat klik (sebelum await) agar tidak diblokir pop-up browser.
+      const popup = window.open("", "_blank");
+      if (!popup) {
+        status.textContent = "Izinkan pop-up untuk website ini, kemudian coba lagi.";
+        btn.disabled = false;
+        return;
+      }
+      popup.document.write('<!doctype html><html><head><title>Memuat invoice</title></head><body><p>Menyiapkan invoice...</p></body></html>');
+      popup.document.close();
+      try {
+        const data = await rpc("owner_get_demo_invoice", { p_order_number: orderNumber });
+        if (!data || data.payment_status !== "PAID_DEMO") {
+          throw new Error("Pesanan belum berstatus PAID_DEMO.");
+        }
+        const people = Array.isArray(data.participants) ? data.participants : [];
+        const esc = value => String(value ?? "-").replace(/[&<>"']/g, c => ({
+          "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+        }[c]));
+        const formattedAmount = rupiah(data.total_amount);
+        const rows = people.map((p, i) => `<tr><td>${i + 1}</td><td>${esc(p.name)}</td><td>${esc(p.ticket_category)}</td><td>${esc(p.booking_code)}</td><td>${esc(p.registration_number)}</td></tr>`).join("");
+        const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(data.order_number)}</title>
+          <style>body{font-family:Arial,sans-serif;color:#1d3326;margin:0;background:#e9eee9}.paper{max-width:790px;margin:24px auto;padding:36px;background:white;border-radius:12px}.logo{display:block;max-width:100%;width:auto;max-height:130px;object-fit:contain;margin:auto}.invoice-header{background:#263D2B;width:100%;padding:22px 24px;border-radius:10px;margin-bottom:24px;display:flex;align-items:center;justify-content:center;box-sizing:border-box}@media print{.invoice-header{background:#263D2B!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}.tag{color:#bd3c24;font-weight:800;font-size:22px}.alert{padding:12px;background:#fff1d7;font-weight:bold;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left;overflow-wrap:anywhere}.actions{margin:18px 0}.actions button{padding:13px 20px;border:0;border-radius:8px;background:#f08b35;font-weight:bold;cursor:pointer}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.actions{display:none}@page{size:A4;margin:16mm}}</style></head>
+          <body><div class="paper">
+<div class="invoice-header">
+  <img class="logo" src="/logo-baladhika.png"
+       alt="Logo Baladhika Fun Run 2026"
+       onerror="this.style.display='none'">
+</div>
+<h1 class="tag">INVOICE LUNAS — DEMO / TEST</h1><div class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</div>
+          <p><b>Nomor pesanan:</b> ${esc(data.order_number)}</p><p><b>Pemesan:</b> ${esc(data.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(data.total_participants)}</p><p><b>Total simulasi:</b> ${esc(formattedAmount)}</p><p><b>Status:</b> PAID_DEMO</p><p><b>Waktu konfirmasi:</b> ${esc(displayDate(data.paid_at))} WIB</p>
+          <h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>Nomor Registrasi</th></tr></thead><tbody>${rows}</tbody></table>
+          <p>Petugas OWNER memeriksa kode booking sebelum menyerahkan racepack.</p><div class="actions"><button onclick="window.print()">SIMPAN SEBAGAI PDF / CETAK</button></div><small>Baladhika Fun Run 2026 — Invoice simulasi internal.</small></div></body></html>`;
+        popup.document.open();
+        popup.document.write(html);
+        popup.document.close();
+        status.textContent = "Invoice terbuka di tab baru. Klik SIMPAN SEBAGAI PDF / CETAK, lalu pilih Save as PDF.";
+      } catch (error) {
+        popup.close();
+        status.textContent = "Gagal: " + error.message + ". Pastikan SQL owner_get_demo_invoice sudah dipasang.";
+      } finally {
+        btn.disabled = false;
+      }
+    }
+    el("invoiceLoadButton").addEventListener("click", () => {
+      reprintDemoInvoice(el("invoiceOrderInput").value.trim().toUpperCase());
+    });
+    el("invoiceOrderInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); el("invoiceLoadButton").click(); }
+    });
+
+    // ==============================================
+    // VERIFIKASI PEMBAYARAN DAN RACEPACK — DEMO
+    // ==============================================
+    const verificationSection = document.createElement("section");
+    verificationSection.innerHTML = `
+      <h2 class="section-title">Verifikasi Pembayaran DEMO & Racepack</h2>
+      <div class="quota-grid">
+        <div class="card hidden">
+          <strong>Verifikasi Pembayaran DEMO</strong>
+          <p class="info">Masukkan nomor pesanan lengkap. Verifikasi hanya mengubah status simulasi menjadi PAID_DEMO.</p>
+          <label for="verifyOrderNumber">Nomor Pesanan</label>
+          <input id="verifyOrderNumber" type="text" placeholder="Contoh: A7K9B2 atau BFR-ORDER-..." autocomplete="off">
+          <button class="btn btn-orange" id="verifyPaymentButton" type="button" style="margin-top:12px">Verifikasi Pembayaran DEMO</button>
+          <p id="verifyPaymentMessage" class="info" role="status"></p>
+        </div>
+        <div class="card">
+          <strong>Pencarian & Pengambilan Racepack</strong>
+          <p class="info">Cari kode booking 5 karakter. Racepack hanya bisa diserahkan jika pembayaran berstatus PAID_DEMO.</p>
+          <label for="racepackCode">Kode Booking</label>
+          <input id="racepackCode" type="text" maxlength="5" placeholder="Contoh: 9Y59K" autocomplete="off" style="text-transform:uppercase">
+          <button class="btn" id="findRacepackButton" type="button" style="margin-top:12px">Cari Booking</button>
+          <div id="racepackResult" class="notice hidden" style="overflow-wrap:anywhere" aria-live="polite"></div>
+          <button class="btn btn-orange hidden" id="collectRacepackButton" type="button" style="margin-top:12px">Serahkan Racepack (DEMO)</button>
+          <p id="racepackMessage" class="info" role="status"></p>
+        </div>
+      </div>
+    `;
+    const participantHeading = Array.from(document.querySelectorAll(".section-title"))
+      .find(item => item.textContent.trim() === "Daftar Peserta");
+    if (participantHeading) participantHeading.before(verificationSection);
+    else document.querySelector(".container").appendChild(verificationSection);
+
+    let currentRacepack = null;
+    let paymentBusy = false;
+    let racepackBusy = false;
+
+    function setVerificationMessage(id, message, isError = false) {
+      const node = el(id);
+      node.textContent = message;
+      node.style.color = isError ? "#ae3030" : "#24623a";
+    }
+
+    function resetRacepackView() {
+      currentRacepack = null;
+      el("racepackResult").replaceChildren();
+      el("racepackResult").classList.add("hidden");
+      el("collectRacepackButton").classList.add("hidden");
+    }
+
+    function addDetail(container, label, value) {
+      const p = document.createElement("p");
+      p.style.margin = "6px 0";
+      const strong = document.createElement("strong");
+      strong.textContent = label + ": ";
+      p.append(strong, document.createTextNode(value == null ? "-" : String(value)));
+      container.appendChild(p);
+    }
+
+    async function findRacepack() {
+      const code = el("racepackCode").value.trim().toUpperCase();
+      resetRacepackView();
+      setVerificationMessage("racepackMessage", "");
+      if (!/^[A-HJ-NP-Z2-9]{5}$/.test(code)) {
+        setVerificationMessage("racepackMessage", "Kode booking harus 5 karakter yang valid.", true);
+        return;
+      }
+      const button = el("findRacepackButton");
+      button.disabled = true;
+      try {
+        const data = await rpc("owner_find_racepack_booking", { p_booking_code: code });
+        const found = Array.isArray(data) ? data[0] : data;
+        if (!found) throw new Error("Kode booking tidak ditemukan.");
+        currentRacepack = found;
+        const result = el("racepackResult");
+        addDetail(result, "Kode Booking", found.booking_code);
+        addDetail(result, "Nomor Registrasi", found.registration_number);
+        addDetail(result, "Nama Peserta", found.participant_name);
+        addDetail(result, "Nama BIB", found.bib_name);
+        addDetail(result, "Kategori", found.ticket_category);
+        addDetail(result, "Jersey", found.jersey_size);
+        addDetail(result, "Nomor Pesanan", found.order_number);
+        addDetail(result, "Pembayaran", found.payment_status);
+        addDetail(result, "Status Racepack", found.racepack_status);
+        addDetail(result, "Waktu Pengambilan", displayDate(found.racepack_collected_at));
+        result.classList.remove("hidden");
+        if (found.payment_status === "PAID_DEMO" && found.racepack_status === "NOT_COLLECTED") {
+          el("collectRacepackButton").classList.remove("hidden");
+        } else if (found.racepack_status === "COLLECTED") {
+          setVerificationMessage("racepackMessage", "Racepack sudah pernah diserahkan.", true);
+        } else {
+          setVerificationMessage("racepackMessage", "Pembayaran DEMO belum diverifikasi; racepack tidak boleh diserahkan.", true);
+        }
+      } catch (error) {
+        setVerificationMessage("racepackMessage", "Gagal mencari booking: " + error.message, true);
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    el("findRacepackButton").addEventListener("click", findRacepack);
+    el("racepackCode").addEventListener("input", () => {
+      resetRacepackView();
+      setVerificationMessage("racepackMessage", "");
+    });
+    el("racepackCode").addEventListener("keydown", event => {
+      if (event.key === "Enter") { event.preventDefault(); findRacepack(); }
+    });
+
+    el("verifyPaymentButton").addEventListener("click", async () => {
+      alert("Verifikasi manual lama dinonaktifkan. Gunakan SETUJUI/TOLAK pada tabel pesanan setelah memeriksa bukti.");
+      return;
+      if (paymentBusy) return;
+      const order = el("verifyOrderNumber").value.trim().toUpperCase();
+      if (!(/^[A-Z0-9]{6}$/.test(order) || /^BFR-ORDER-[A-F0-9]{20}$/.test(order))) {
+        setVerificationMessage("verifyPaymentMessage", "Masukkan nomor pesanan 6 karakter atau nomor lama yang valid.", true);
+        return;
+      }
+      if (!confirm("Verifikasi pembayaran SIMULASI untuk pesanan " + order + "?\nPastikan bukti pembayaran DEMO telah diperiksa.")) return;
+      paymentBusy = true;
+      const button = el("verifyPaymentButton");
+      button.disabled = true;
+      setVerificationMessage("verifyPaymentMessage", "Memproses...");
+      try {
+        const message = await rpc("owner_verify_demo_payment", { p_order_number: order });
+        setVerificationMessage("verifyPaymentMessage", String(message || "Pembayaran DEMO berhasil diverifikasi."));
+        await refreshDashboard();
+        if (el("racepackCode").value.trim()) await findRacepack();
+      } catch (error) {
+        setVerificationMessage("verifyPaymentMessage", "Verifikasi gagal: " + error.message, true);
+      } finally {
+        paymentBusy = false;
+        button.disabled = false;
+      }
+    });
+
+    el("collectRacepackButton").addEventListener("click", async () => {
+      if (racepackBusy || !currentRacepack) return;
+      const code = currentRacepack.booking_code;
+      if (!confirm("Serahkan racepack kepada " + currentRacepack.participant_name + " (" + code + ")?\nTindakan ini dicatat sebagai pengambilan DEMO.")) return;
+      racepackBusy = true;
+      const button = el("collectRacepackButton");
+      button.disabled = true;
+      try {
+        const message = await rpc("owner_collect_racepack", { p_booking_code: code });
+        setVerificationMessage("racepackMessage", String(message || "Racepack berhasil diserahkan (DEMO)."));
+        await findRacepack();
+        setVerificationMessage("racepackMessage", "Racepack berhasil diserahkan (DEMO).");
+      } catch (error) {
+        setVerificationMessage("racepackMessage", "Penyerahan gagal: " + error.message, true);
+      } finally {
+        racepackBusy = false;
+        button.disabled = false;
+      }
+    });
+
+    // ==============================================
+    // BALADHIKA FUN RUN 2026
+    // REKAP PESANAN DAN PEMBAYARAN KHUSUS OWNER
+    // ==============================================
+
+    const ordersSection = document.createElement("section");
+
+    ordersSection.innerHTML = `
+      <h2 class="section-title">Rekap Pesanan dan Pembayaran</h2>
+
+      <div class="card">
+        <p class="info">
+          Data pesanan diambil langsung dari Supabase.
+          Status PENDING_DEMO bukan bukti pembayaran lunas.
+        </p>
+
+        <div class="toolbar" style="margin-top:18px">
+          <input
+            type="search"
+            id="orderSearchInput"
+            placeholder="Cari nomor pesanan atau nama pemesan"
+          >
+          <button class="btn" id="orderSearchButton" type="button">
+            Cari Pesanan
           </button>
-          <button id="orderNext" class="btn">
-            Berikutnya
+          <button class="btn" id="orderRefreshButton" type="button">
+            Refresh Pesanan
           </button>
+          <select id="orderStatusFilter" aria-label="Filter status pembayaran" style="padding:12px;border:1px solid #cdd6cd;border-radius:9px">
+            <option value="ALL">Semua status</option>
+            <option value="WAITING">Kuning — Menunggu verifikasi</option>
+            <option value="PENDING_DEMO">Belum upload</option>
+            <option value="PAID_DEMO">Lunas DEMO</option>
+            <option value="REJECTED">Ditolak</option>
+          </select>
+          <button class="btn btn-orange" id="orderExportButton" type="button">
+            Export Pesanan (CSV)
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Nomor Pesanan</th>
+                <th>Nama Pemesan</th>
+                <th>Early Bird</th>
+                <th>Normal</th>
+                <th>Jumlah Peserta</th>
+                <th>Total Tagihan</th>
+                <th>Metode Pembayaran</th>
+                <th>Status Pembayaran</th>
+                <th>Bukti Upload</th>
+                <th>Keputusan Admin</th>
+                <th>Tanggal Pesanan</th>
+              </tr>
+            </thead>
+            <tbody id="orderRows">
+              <tr>
+                <td colspan="12">Memuat data pesanan...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span id="orderPageInfo" class="info">—</span>
+          <div>
+            <button class="btn" id="orderPrevButton" type="button">
+              Sebelumnya
+            </button>
+            <button class="btn" id="orderNextButton" type="button">
+              Berikutnya
+            </button>
+          </div>
+        </div>
+
+        <p id="orderError" class="error" role="alert"></p>
+      </div>
+    `;
+
+    // Tempatkan rekap pesanan setelah daftar peserta.
+    document.querySelector(".container").appendChild(ordersSection);
+
+    const ORDER_PAGE_SIZE = 50;
+    let orderPage = 0;
+    let orderSearch = "";
+    let orderTotal = 0;
+
+    // Bukti pembayaran hanya dapat dibaca oleh OWNER yang login.
+    let reviewBusy = false;
+    async function openOwnerProof(orderNumber) {
+      try {
+        const path = await rpc("owner_get_demo_proof_path", {
+          p_order_number: orderNumber
+        });
+        if (typeof path !== "string" || !path.trim()) {
+          throw new Error("Lokasi bukti tidak ditemukan.");
+        }
+        const objectPath = path.split("/").map(encodeURIComponent).join("/");
+        const signed = await supabaseRequest(
+          "/storage/v1/object/sign/demo-payment-proofs/" + objectPath,
+          { method: "POST", body: JSON.stringify({ expiresIn: 60 }) },
+          accessToken
+        );
+        const signedPath = signed.signedURL || signed.signedUrl;
+        if (typeof signedPath !== "string" || !signedPath) {
+          throw new Error("Gagal mendapatkan tautan bukti.");
+        }
+        const url = new URL(signedPath, SUPABASE_URL + "/storage/v1/");
+        if (url.origin !== new URL(SUPABASE_URL).origin) {
+          throw new Error("Alamat bukti tidak valid.");
+        }
+        const link = document.createElement("a");
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        alert("Bukti belum dapat dibuka: " + error.message);
+      }
+    }
+
+    async function reviewOwnerProof(orderNumber, decision) {
+      if (reviewBusy) return;
+      const approving = decision === "APPROVE";
+      if (!confirm((approving ? "SETUJUI" : "TOLAK") +
+        " bukti untuk " + orderNumber + "?\nPastikan bukti sudah diperiksa.")) return;
+      let reason = null;
+      if (!approving) {
+        reason = prompt("Alasan penolakan (wajib):");
+        if (reason === null) return;
+        reason = reason.trim();
+        if (reason.length < 5 || reason.length > 300) {
+          alert("Alasan penolakan harus 5–300 karakter."); return;
+        }
+      }
+      reviewBusy = true;
+      try {
+        const result = approving
+          ? await rpc("owner_verify_demo_payment", { p_order_number: orderNumber })
+          : await rpc("owner_reject_demo_proof", {
+              p_order_number: orderNumber, p_reason: reason
+            });
+        alert(typeof result === "string" ? result :
+          "Keputusan tersimpan. Periksa status terbaru.");
+        await refreshDashboard();
+      } catch (error) {
+        alert("Gagal memproses: " + error.message +
+          "\nJangan menganggap pembayaran sudah lunas.");
+      } finally {
+        reviewBusy = false;
+      }
+    }
+
+    function renderOrders(items) {
+      const tbody = document.getElementById("orderRows");
+      tbody.replaceChildren();
+
+      if (!items.length) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 12;
+        cell.textContent = "Tidak ada pesanan yang ditemukan.";
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+      }
+
+      items.forEach((order, index) => {
+        const row = document.createElement("tr");
+
+        addCell(row, orderPage * ORDER_PAGE_SIZE + index + 1);
+        addCell(row, order.order_number);
+        addCell(row, order.buyer_name);
+        addCell(row, order.early_bird_qty);
+        addCell(row, order.normal_qty);
+        addCell(row, order.total_participants);
+        addCell(row, rupiah(order.total_amount));
+        addCell(row, order.payment_method);
+
+        const statusCell = addCell(row, "");
+        const statusBadge = document.createElement("span");
+
+        const state = String(order.payment_status || "");
+        const proofState = String(order.demo_proof_review_status || "NOT_UPLOADED");
+        const waiting = proofState === "WAITING";
+        const approved = proofState === "APPROVED" || state === "PAID_DEMO";
+        const rejected = proofState === "REJECTED";
+        statusBadge.className = "status" +
+          (approved ? " paid" : waiting ? " waiting" : rejected ? " rejected" : "");
+        statusBadge.textContent = waiting ? "KUNING — PERIKSA" :
+          approved ? "LUNAS DEMO" : rejected ? "DITOLAK" : state || "-";
+        statusCell.appendChild(statusBadge);
+        if (waiting) row.classList.add("review-needed");
+
+        const proofCell = addCell(row, "");
+        const actionCell = addCell(row, "");
+        if (waiting) {
+          const proof = document.createElement("button");
+          proof.type = "button";
+          proof.className = "btn btn-proof";
+          proof.textContent = "LIHAT BUKTI";
+          proof.addEventListener("click", () => openOwnerProof(order.order_number));
+          proofCell.appendChild(proof);
+          const actions = document.createElement("div");
+          actions.className = "review-actions";
+          const approve = document.createElement("button");
+          approve.className = "btn btn-approve";
+          approve.textContent = "SETUJUI";
+          approve.addEventListener("click", () => reviewOwnerProof(order.order_number, "APPROVE"));
+          const reject = document.createElement("button");
+          reject.className = "btn btn-reject";
+          reject.textContent = "TOLAK";
+          reject.addEventListener("click", () => reviewOwnerProof(order.order_number, "REJECT"));
+          actions.append(approve, reject);
+          actionCell.appendChild(actions);
+        } else {
+          proofCell.textContent = approved ? "Terverifikasi" : "—";
+          actionCell.textContent = "—";
+        }
+        addCell(row, displayDate(order.created_at));
+        tbody.appendChild(row);
+      });
+    }
+
+    async function loadOrders() {
+      const result = await rpc("get_owner_orders", {
+        p_search: orderSearch,
+        p_limit: ORDER_PAGE_SIZE,
+        p_offset: orderPage * ORDER_PAGE_SIZE
+      });
+
+      const items = Array.isArray(result.orders)
+        ? result.orders
+        : [];
+
+      orderTotal = Number(result.total || 0);
+      const chosenStatus = document.getElementById("orderStatusFilter").value;
+      renderOrders(chosenStatus === "ALL" ? items :
+        items.filter(item => item.payment_status === chosenStatus));
+
+      const start = orderTotal
+        ? orderPage * ORDER_PAGE_SIZE + 1
+        : 0;
+
+      const end = Math.min(
+        (orderPage + 1) * ORDER_PAGE_SIZE,
+        orderTotal
+      );
+
+      document.getElementById("orderPageInfo").textContent =
+        "Menampilkan " + numberFormat(start) +
+        "–" + numberFormat(end) +
+        " dari " + numberFormat(orderTotal) + " pesanan";
+
+      document.getElementById("orderPrevButton").disabled =
+        orderPage === 0;
+
+      document.getElementById("orderNextButton").disabled =
+        (orderPage + 1) * ORDER_PAGE_SIZE >= orderTotal;
+
+      document.getElementById("orderError").textContent = "";
+    }
+
+    async function refreshOrders() {
+      if (!accessToken) return;
+
+      try {
+        await loadOrders();
+      } catch (error) {
+        document.getElementById("orderError").textContent =
+          "Gagal memuat pesanan: " + error.message;
+      }
+    }
+
+    // Muat pesanan setiap kali dashboard diperbarui.
+    const refreshDashboardBeforeOrders = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await refreshDashboardBeforeOrders();
+
+      if (!accessToken) return;
+
+      await refreshOrders();
+    };
+
+    document.getElementById("orderStatusFilter")
+      .addEventListener("change", refreshOrders);
+
+    document.getElementById("orderSearchButton")
+      .addEventListener("click", () => {
+        orderSearch =
+          document.getElementById("orderSearchInput").value.trim();
+        orderPage = 0;
+        refreshOrders();
+      });
+
+    document.getElementById("orderSearchInput")
+      .addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          orderSearch = event.target.value.trim();
+          orderPage = 0;
+          refreshOrders();
+        }
+      });
+
+    document.getElementById("orderRefreshButton")
+      .addEventListener("click", refreshOrders);
+
+    document.getElementById("orderPrevButton")
+      .addEventListener("click", () => {
+        if (orderPage > 0) {
+          orderPage--;
+          refreshOrders();
+        }
+      });
+
+    document.getElementById("orderNextButton")
+      .addEventListener("click", () => {
+        if ((orderPage + 1) * ORDER_PAGE_SIZE < orderTotal) {
+          orderPage++;
+          refreshOrders();
+        }
+      });
+
+    // EXPORT SELURUH PESANAN KE CSV
+    document.getElementById("orderExportButton")
+      .addEventListener("click", async () => {
+        const button = document.getElementById("orderExportButton");
+
+        button.disabled = true;
+        button.textContent = "Menyiapkan CSV...";
+
+        try {
+          const allOrders = [];
+          const batchSize = 100;
+          let offset = 0;
+          let expectedTotal = null;
+
+          while (true) {
+            const result = await rpc("get_owner_orders", {
+              p_search: "",
+              p_limit: batchSize,
+              p_offset: offset
+            });
+
+            const batch = Array.isArray(result.orders)
+              ? result.orders
+              : [];
+
+            const total = Number(result.total);
+
+            if (!Number.isSafeInteger(total) || total < 0) {
+              throw new Error("Jumlah pesanan tidak valid.");
+            }
+
+            if (expectedTotal === null) {
+              expectedTotal = total;
+            } else if (expectedTotal !== total) {
+              throw new Error(
+                "Jumlah pesanan berubah saat ekspor. Ulangi ekspor."
+              );
+            }
+
+            allOrders.push(...batch);
+            offset += batch.length;
+
+            if (allOrders.length >= expectedTotal) break;
+
+            if (batch.length === 0) {
+              throw new Error("Pengambilan pesanan terhenti.");
+            }
+          }
+
+          const headers = [
+            "No",
+            "Nomor Pesanan",
+            "Nama Pemesan",
+            "Early Bird",
+            "Normal",
+            "Jumlah Peserta",
+            "Total Tagihan",
+            "Mata Uang",
+            "Metode Pembayaran",
+            "Status Pembayaran",
+            "Tanggal Pesanan",
+            "Tanggal Lunas"
+          ];
+
+          const rows = allOrders.map((o, index) => [
+            index + 1,
+            o.order_number,
+            o.buyer_name,
+            o.early_bird_qty,
+            o.normal_qty,
+            o.total_participants,
+            o.total_amount,
+            o.currency,
+            o.payment_method,
+            o.payment_status,
+            displayDate(o.created_at),
+            displayDate(o.paid_at)
+          ]);
+
+          const csv = "\uFEFF" +
+            [headers, ...rows]
+              .map(row => row.map(csvCell).join(","))
+              .join("\r\n");
+
+          const blob = new Blob([csv], {
+            type: "text/csv;charset=utf-8"
+          });
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+
+          link.href = url;
+          link.download =
+            "Baladhika_Fun_Run_2026_Rekap_Pesanan_" +
+            new Date().toISOString().slice(0, 10) +
+            ".csv";
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+          alert(
+            "Export berhasil. " +
+            allOrders.length +
+            " pesanan dimasukkan ke file CSV."
+          );
+
+        } catch (error) {
+          alert("Export pesanan gagal: " + error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Export Pesanan (CSV)";
+        }
+      });
+
+    // ==========================================
+    // MONITORING RACEPACK - OWNER
+    // ==========================================
+
+    const racepackSummarySection = document.createElement("section");
+
+    racepackSummarySection.innerHTML = `
+      <h2 class="section-title">Monitoring Pengambilan Racepack</h2>
+
+      <div class="cards">
+        <div class="card">
+          <div class="label">Total Peserta</div>
+          <div class="value" id="rpTotal">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Sudah Diambil</div>
+          <div class="value" id="rpCollected">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Belum Diambil</div>
+          <div class="value" id="rpNotCollected">—</div>
+        </div>
+
+        <div class="card">
+          <div class="label">Persentase Pengambilan</div>
+          <div class="value" id="rpPercentage">—</div>
         </div>
       </div>
 
-      <p id="orderError" class="error"></p>
-    </div>
-  </section>
+      <div class="card" style="margin-top:15px">
+        <strong>Progres Distribusi Racepack</strong>
 
-  <section class="section">
-    <h2>Daftar Peserta</h2>
+        <div class="quota-track">
+          <div class="quota-fill" id="rpProgress"></div>
+        </div>
 
-    <div class="toolbar">
-      <input id="participantSearch" type="search"
-             placeholder="Cari nama, registrasi, pesanan">
+        <p class="info" id="rpInfo">
+          Memuat data dari Supabase...
+        </p>
 
-      <button id="participantSearchButton" class="btn">
-        Cari
-      </button>
-      <button id="participantRefresh" class="btn">
-        Refresh
-      </button>
-      <button id="exportParticipants" class="btn btn-orange">
-        Export Peserta CSV
-      </button>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Registrasi</th>
-            <th>Nama</th>
-            <th>Pesanan</th>
-            <th>Kategori</th>
-            <th>Jersey</th>
-            <th>Gender</th>
-            <th>Kota</th>
-            <th>Pembayaran</th>
-            <th>Tanggal Daftar</th>
-          </tr>
-        </thead>
-        <tbody id="participantRows">
-          <tr><td colspan="10">Menunggu login...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="pagination">
-      <span id="participantPageInfo" class="info">—</span>
-      <div class="actions">
-        <button id="participantPrev" class="btn">
-          Sebelumnya
+        <button type="button"
+                class="btn btn-orange"
+                id="rpRefreshButton">
+          Refresh Monitoring
         </button>
-        <button id="participantNext" class="btn">
-          Berikutnya
+
+        <button type="button"
+                class="btn"
+                id="rpExportButton">
+          Export Rekap CSV
         </button>
+
+        <p class="error" id="rpError" role="alert"></p>
       </div>
-    </div>
+    `;
 
-    <p id="participantError" class="error"></p>
-  </section>
-
-  <section class="section">
-    <h2>Cetak Ulang Invoice DEMO</h2>
-    <div class="card">
-      <p class="info">
-        Hanya untuk pesanan berstatus PAID_DEMO.
-        Invoice merupakan dokumen simulasi.
-      </p>
-      <div class="toolbar">
-        <input id="invoiceOrder" type="text"
-               placeholder="Nomor pesanan">
-        <button id="invoiceButton" class="btn btn-orange">
-          Cari & Cetak Invoice
-        </button>
-      </div>
-      <p id="invoiceMessage" class="info"></p>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Verifikasi Pengambilan Racepack</h2>
-    <div class="card">
-      <p class="info">
-        Racepack hanya boleh diserahkan untuk
-        pesanan yang sudah PAID_DEMO.
-      </p>
-
-      <label>Kode Booking</label>
-      <div class="toolbar">
-        <input id="racepackCode" type="text"
-               maxlength="5"
-               placeholder="Contoh: 9Y59K">
-        <button id="findRacepack" class="btn">
-          Cari Booking
-        </button>
-      </div>
-
-      <div id="racepackResult" class="result hidden"></div>
-
-      <button id="collectRacepack"
-              class="btn btn-orange hidden">
-        Serahkan Racepack (DEMO)
-      </button>
-
-      <p id="racepackMessage" class="info"></p>
-    </div>
-  </section>
-
-  <p id="dashboardError" class="error"></p>
-</main>
-</section>
-
-<script>
-"use strict";
-
-// ==============================================
-// KONFIGURASI SUPABASE
-// ==============================================
-
-const SUPABASE_URL =
-  "https://vsxrtafxtbzeknjcywhw.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_E-2ltwCC-X3TwS8Bpi7hvw__WDknaUG";
-
-const PAGE_SIZE = 50;
-
-let accessToken = "";
-let currentEmail = "";
-
-let orderPage = 0;
-let orderSearch = "";
-let orderTotal = 0;
-
-let participantPage = 0;
-let participantSearch = "";
-let participantTotal = 0;
-
-let currentRacepack = null;
-let reviewBusy = false;
-let jerseyData = null;
-
-const el = id => document.getElementById(id);
-
-const num = value =>
-  Number(value || 0).toLocaleString("id-ID");
-
-const money = value =>
-  new Intl.NumberFormat("id-ID", {
-    style:"currency",
-    currency:"IDR",
-    maximumFractionDigits:0
-  }).format(Number(value || 0));
-
-function dateText(value) {
-  if (!value) return "-";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-
-  return date.toLocaleString("id-ID", {
-    timeZone:"Asia/Jakarta",
-    dateStyle:"medium",
-    timeStyle:"short"
-  });
-}
-
-function addCell(row, value) {
-  const td = document.createElement("td");
-  td.textContent = value == null ? "-" : String(value);
-  row.appendChild(td);
-  return td;
-}
-
-function makeButton(text, className, handler) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = className;
-  button.textContent = text;
-  button.addEventListener("click", handler);
-  return button;
-}
-
-function message(id, text, error = false) {
-  const node = el(id);
-  node.textContent = text;
-  node.style.color = error ? "#ae3030" : "#287845";
-}
-
-// ==============================================
-// REQUEST SUPABASE DAN LOGIN
-// ==============================================
-
-async function supabaseRequest(path, options = {}, token = "") {
-  const response = await fetch(SUPABASE_URL + path, {
-    ...options,
-    headers: {
-      apikey:SUPABASE_KEY,
-      "Content-Type":"application/json",
-      ...(token ? {
-        Authorization:"Bearer " + token
-      } : {}),
-      ...(options.headers || {})
-    },
-    cache:"no-store"
-  });
-
-  let data;
-  try {
-    data = await response.json();
-  } catch {
-    data = {};
-  }
-
-  if (!response.ok) {
-    const error = new Error(
-      data.message ||
-      data.error_description ||
-      data.msg ||
-      data.error ||
-      "Permintaan gagal: " + response.status
-    );
-    error.status = response.status;
-    throw error;
-  }
-
-  return data;
-}
-
-async function rpc(name, payload = {}) {
-  if (!accessToken) {
-    throw new Error("Sesi tidak tersedia. Login kembali.");
-  }
-
-  return supabaseRequest(
-    "/rest/v1/rpc/" + name,
-    {
-      method:"POST",
-      body:JSON.stringify(payload)
-    },
-    accessToken
-  );
-}
-
-async function checkOwner(token) {
-  const data = await supabaseRequest(
-    "/rest/v1/admin_users?select=role&role=eq.OWNER&limit=1",
-    {method:"GET"},
-    token
-  );
-
-  return Array.isArray(data) &&
-    data.length === 1 &&
-    data[0].role === "OWNER";
-}
-
-function showLogin(text = "") {
-  accessToken = "";
-  currentEmail = "";
-  currentRacepack = null;
-
-  el("dashboardScreen").classList.add("hidden");
-  el("loginScreen").classList.remove("hidden");
-  el("loginError").textContent = text;
-  el("password").value = "";
-}
-
-function showDashboard(email) {
-  el("loginScreen").classList.add("hidden");
-  el("dashboardScreen").classList.remove("hidden");
-  el("ownerInfo").textContent = "Login sebagai: " + email;
-}
-
-el("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const button = el("loginButton");
-  button.disabled = true;
-  button.textContent = "MEMERIKSA LOGIN...";
-
-  try {
-    const email = el("email").value.trim();
-    const password = el("password").value;
-
-    const session = await supabaseRequest(
-      "/auth/v1/token?grant_type=password",
-      {
-        method:"POST",
-        body:JSON.stringify({email,password})
-      }
+    const racepackHeading = Array.from(
+      document.querySelectorAll(".section-title")
+    ).find(item =>
+      item.textContent.trim() ===
+      "Verifikasi Pembayaran DEMO & Racepack"
     );
 
-    if (!session.access_token) {
-      throw new Error("Token login tidak diterima.");
-    }
-
-    if (!(await checkOwner(session.access_token))) {
-      throw new Error("Akun bukan OWNER.");
-    }
-
-    accessToken = session.access_token;
-    currentEmail = email;
-
-    showDashboard(email);
-    await refreshDashboard();
-
-  } catch (error) {
-    showLogin("Login gagal: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = "MASUK DASHBOARD";
-  }
-});
-
-el("logoutButton").addEventListener("click", async () => {
-  const token = accessToken;
-  showLogin();
-
-  if (token) {
-    try {
-      await supabaseRequest(
-        "/auth/v1/logout",
-        {method:"POST"},
-        token
-      );
-    } catch {
-      // Sesi lokal tetap ditutup.
-    }
-  }
-});
-
-// ==============================================
-// RINGKASAN DAN KUOTA
-// ==============================================
-
-async function loadSummary() {
-  const data = await rpc(
-    "get_owner_dashboard_summary", {}
-  );
-
-  el("totalParticipants").textContent =
-    num(data.total_participants);
-
-  el("totalOrders").textContent =
-    num(data.total_orders);
-
-  el("pendingOrders").textContent =
-    num(data.pending_demo_orders);
-
-  el("totalValue").textContent =
-    money(data.total_order_value);
-
-  const early = Number(data.early_bird_registered || 0);
-  const normal = Number(data.normal_registered || 0);
-
-  const earlyQuota = Number(data.early_bird_quota ?? 1800);
-  const normalQuota = Number(data.normal_quota ?? 200);
-
-  el("earlyValue").textContent =
-    num(early) + " / " + num(earlyQuota);
-
-  el("normalValue").textContent =
-    num(normal) + " / " + num(normalQuota);
-
-  el("earlyBar").style.width =
-    Math.min(100, earlyQuota ? early / earlyQuota * 100 : 0) + "%";
-
-  el("normalBar").style.width =
-    Math.min(100, normalQuota ? normal / normalQuota * 100 : 0) + "%";
-
-  el("earlyNote").textContent =
-    "Sisa: " + num(Math.max(0, earlyQuota - early));
-
-  el("normalNote").textContent =
-    "Sisa: " + num(Math.max(0, normalQuota - normal));
-}
-
-// ==============================================
-// REKAP JERSEY
-// ==============================================
-
-async function loadJersey() {
-  const data = await rpc(
-    "get_owner_jersey_summary", {}
-  );
-
-  jerseyData = data;
-
-  const grid = el("jerseyGrid");
-  grid.replaceChildren();
-
-  const sizes = Array.isArray(data.jersey_sizes)
-    ? data.jersey_sizes : [];
-
-  sizes.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.background = "#f3f5f1";
-
-    const label = document.createElement("div");
-    label.className = "info";
-    label.textContent = "Ukuran " + item.size;
-
-    const value = document.createElement("div");
-    value.className = "value";
-    value.textContent = num(item.quantity);
-
-    card.append(label,value);
-    grid.appendChild(card);
-  });
-
-  el("jerseyTotal").textContent =
-    num(data.total_participants) + " pcs";
-
-  el("jerseyOther").textContent =
-    "Ukuran lain / belum terisi: " +
-    num(data.other_or_missing);
-}
-
-// ==============================================
-// STATUS BUKTI PEMBAYARAN
-// ==============================================
-
-// Status pembayaran dan status bukti adalah
-// dua informasi berbeda.
-//
-// payment_status:
-// PENDING_DEMO / PAID_DEMO
-//
-// demo_proof_review_status:
-// NOT_UPLOADED / WAITING / APPROVED / REJECTED
-
-function proofStatus(order) {
-  if (order.payment_status === "PAID_DEMO") {
-    return "APPROVED";
-  }
-
-  return String(
-    order.demo_proof_review_status || "NOT_UPLOADED"
-  ).toUpperCase();
-}
-
-// ==============================================
-// TABEL PESANAN
-// ==============================================
-
-function renderOrders(items) {
-  const tbody = el("orderRows");
-  tbody.replaceChildren();
-
-  if (!items.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-
-    td.colSpan = 13;
-    td.textContent = "Tidak ada pesanan ditemukan.";
-
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  items.forEach((order,index) => {
-    const tr = document.createElement("tr");
-
-    const state = proofStatus(order);
-    const paid = order.payment_status === "PAID_DEMO";
-
-    if (state === "WAITING") {
-      tr.classList.add("review-needed");
-    }
-
-    addCell(tr,orderPage * PAGE_SIZE + index + 1);
-    addCell(tr,order.order_number);
-    addCell(tr,order.buyer_name);
-    addCell(tr,order.early_bird_qty);
-    addCell(tr,order.normal_qty);
-    addCell(tr,order.total_participants);
-    addCell(tr,money(order.total_amount));
-    addCell(tr,order.payment_method);
-
-    const paymentCell = addCell(tr,"");
-    const paymentBadge = document.createElement("span");
-
-    paymentBadge.className = paid
-      ? "status paid" : "status";
-
-    paymentBadge.textContent =
-      paid ? "LUNAS DEMO" :
-      order.payment_status || "PENDING_DEMO";
-
-    paymentCell.appendChild(paymentBadge);
-
-    const proofCell = addCell(tr,"");
-    const proofBadge = document.createElement("span");
-
-    proofBadge.className = "status";
-
-    if (state === "WAITING") {
-      proofBadge.classList.add("waiting");
-      proofBadge.textContent = "KUNING — PERIKSA";
-
-    } else if (state === "APPROVED") {
-      proofBadge.classList.add("paid");
-      proofBadge.textContent = "DISETUJUI";
-
-    } else if (state === "REJECTED") {
-      proofBadge.classList.add("rejected");
-      proofBadge.textContent = "DITOLAK";
-
+    if (racepackHeading) {
+      racepackHeading.before(racepackSummarySection);
     } else {
-      proofBadge.textContent = "BELUM UPLOAD";
+      document.querySelector(".container")
+        .appendChild(racepackSummarySection);
     }
 
-    proofCell.appendChild(proofBadge);
+    let racepackSummaryData = null;
 
-    const viewCell = addCell(tr,"");
-    const actionCell = addCell(tr,"");
+    async function loadRacepackSummary() {
+      const data = await rpc("owner_get_racepack_summary", {});
 
-    if (state === "WAITING") {
-      const view = makeButton(
-        "LIHAT BUKTI",
-        "btn btn-orange btn-small",
-        () => openProof(order.order_number)
-      );
+      racepackSummaryData = data;
 
-      viewCell.appendChild(view);
+      const total = Number(data.total_participants || 0);
+      const collected = Number(data.collected || 0);
+      const remaining = Number(data.not_collected || 0);
+      const percentage = Number(data.percentage || 0);
 
-      const actions = document.createElement("div");
-      actions.className = "actions";
+      el("rpTotal").textContent = numberFormat(total);
+      el("rpCollected").textContent = numberFormat(collected);
+      el("rpNotCollected").textContent = numberFormat(remaining);
+      el("rpPercentage").textContent =
+        percentage.toLocaleString("id-ID") + "%";
 
-      actions.appendChild(makeButton(
-        "SETUJUI",
-        "btn btn-green btn-small",
-        () => reviewProof(order.order_number,"APPROVE")
-      ));
+      el("rpProgress").style.width =
+        Math.min(100, Math.max(0, percentage)) + "%";
 
-      actions.appendChild(makeButton(
-        "TOLAK",
-        "btn btn-red btn-small",
-        () => reviewProof(order.order_number,"REJECT")
-      ));
+      el("rpInfo").textContent =
+        numberFormat(collected) +
+        " dari " +
+        numberFormat(total) +
+        " peserta telah mengambil racepack.";
 
-      actionCell.appendChild(actions);
+      el("rpError").textContent = "";
     }
 
-    addCell(tr,dateText(order.created_at));
-    tbody.appendChild(tr);
-  });
-}
+    async function refreshRacepackSummary() {
+      if (!accessToken) return;
 
-async function loadOrders() {
-  const result = await rpc("get_owner_orders", {
-    p_search:orderSearch,
-    p_limit:PAGE_SIZE,
-    p_offset:orderPage * PAGE_SIZE
-  });
+      const button = el("rpRefreshButton");
+      button.disabled = true;
 
-  const items = Array.isArray(result.orders)
-    ? result.orders : [];
+      try {
+        await loadRacepackSummary();
+      } catch (error) {
+        el("rpError").textContent =
+          "Gagal memuat monitoring: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    }
 
-  orderTotal = Number(result.total || 0);
-
-  // get_owner_orders harus mengembalikan
-  // demo_proof_review_status untuk setiap pesanan.
-  renderOrders(items);
-
-  const start = orderTotal
-    ? orderPage * PAGE_SIZE + 1 : 0;
-
-  const end = Math.min(
-    (orderPage + 1) * PAGE_SIZE,
-    orderTotal
-  );
-
-  el("orderPageInfo").textContent =
-    "Menampilkan " + num(start) + "–" +
-    num(end) + " dari " + num(orderTotal) +
-    " pesanan";
-
-  el("orderPrev").disabled = orderPage === 0;
-  el("orderNext").disabled =
-    (orderPage + 1) * PAGE_SIZE >= orderTotal;
-}
-
-// ==============================================
-// LIHAT BUKTI — OWNER
-// ==============================================
-
-async function openProof(orderNumber) {
-  // Fungsi ini harus dibuat di Supabase
-  // dan mengembalikan signed URL dari storage privat.
-  try {
-    const result = await rpc(
-      "owner_get_demo_proof_url",
-      {p_order_number:orderNumber}
+    el("rpRefreshButton").addEventListener(
+      "click",
+      refreshRacepackSummary
     );
 
-    const url = typeof result === "string"
-      ? result : result?.url;
+    el("rpExportButton").addEventListener("click", async () => {
+      const button = el("rpExportButton");
+      button.disabled = true;
 
-    if (
-      typeof url !== "string" ||
-      !url.startsWith("https://")
-    ) {
-      throw new Error("URL bukti tidak tersedia.");
-    }
+      try {
+        await loadRacepackSummary();
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+        const d = racepackSummaryData;
 
-  } catch (error) {
-    alert(
-      "Belum dapat membuka bukti: " +
-      error.message
-    );
-  }
-}
+        const rows = [
+          ["Keterangan", "Jumlah"],
+          ["Total Peserta", d.total_participants],
+          ["Sudah Diambil", d.collected],
+          ["Belum Diambil", d.not_collected],
+          ["Persentase", d.percentage + "%"]
+        ];
 
-// ==============================================
-// SETUJUI / TOLAK BUKTI
-// ==============================================
+        const csv = "\uFEFF" +
+          rows.map(row =>
+            row.map(csvCell).join(",")
+          ).join("\r\n");
 
-async function reviewProof(orderNumber,decision) {
-  if (reviewBusy) return;
-
-  const approve = decision === "APPROVE";
-
-  if (!confirm(
-    (approve ? "SETUJUI" : "TOLAK") +
-    " bukti pembayaran DEMO " + orderNumber + "?"
-  )) return;
-
-  let reason = "";
-
-  if (!approve) {
-    const answer = prompt(
-      "Masukkan alasan penolakan:",
-      "Bukti pembayaran tidak sesuai"
-    );
-
-    if (answer === null) return;
-
-    reason = answer.trim();
-
-    if (reason.length < 5 || reason.length > 300) {
-      alert("Alasan penolakan harus 5–300 karakter.");
-      return;
-    }
-  }
-
-  reviewBusy = true;
-
-  try {
-    // Memakai fungsi yang dibuat oleh SQL
-    // verifikasi sebelumnya.
-    const result = approve
-      ? await rpc("owner_verify_demo_payment", {
-          p_order_number:orderNumber
-        })
-      : await rpc("owner_reject_demo_proof", {
-          p_order_number:orderNumber,
-          p_reason:reason
+        const blob = new Blob([csv], {
+          type: "text/csv;charset=utf-8"
         });
 
-    alert(
-      typeof result === "string"
-        ? result
-        : "Keputusan berhasil disimpan."
-    );
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
 
-    await refreshDashboard();
+        link.href = url;
+        link.download =
+          "Baladhika_Rekap_Racepack_2026.csv";
 
-  } catch (error) {
-    alert(
-      "Keputusan gagal: " + error.message
-    );
-  } finally {
-    reviewBusy = false;
-  }
-}
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
 
-// ==============================================
-// TABEL PESERTA
-// ==============================================
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-function renderParticipants(items) {
-  const tbody = el("participantRows");
-  tbody.replaceChildren();
-
-  if (!items.length) {
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.colSpan = 10;
-    td.textContent = "Tidak ada peserta ditemukan.";
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  items.forEach((p,index) => {
-    const tr = document.createElement("tr");
-
-    addCell(tr,participantPage * PAGE_SIZE + index + 1);
-    addCell(tr,p.registration_number);
-    addCell(tr,p.full_name);
-    addCell(tr,p.order_number);
-    addCell(tr,p.ticket_category);
-    addCell(tr,p.jersey_size);
-    addCell(tr,p.gender);
-    addCell(tr,p.city);
-
-    const td = addCell(tr,"");
-    const badge = document.createElement("span");
-
-    badge.className = p.payment_status === "PAID_DEMO"
-      ? "status paid" : "status";
-
-    badge.textContent = p.payment_status || "-";
-    td.appendChild(badge);
-
-    addCell(tr,dateText(p.registered_at));
-    tbody.appendChild(tr);
-  });
-}
-
-async function loadParticipants() {
-  const result = await rpc(
-    "get_owner_participants", {
-      p_search:participantSearch,
-      p_limit:PAGE_SIZE,
-      p_offset:participantPage * PAGE_SIZE
-    }
-  );
-
-  const items = Array.isArray(result.participants)
-    ? result.participants : [];
-
-  participantTotal = Number(result.total || 0);
-  renderParticipants(items);
-
-  const start = participantTotal
-    ? participantPage * PAGE_SIZE + 1 : 0;
-
-  const end = Math.min(
-    (participantPage + 1) * PAGE_SIZE,
-    participantTotal
-  );
-
-  el("participantPageInfo").textContent =
-    "Menampilkan " + num(start) + "–" +
-    num(end) + " dari " + num(participantTotal) +
-    " peserta";
-
-  el("participantPrev").disabled = participantPage === 0;
-  el("participantNext").disabled =
-    (participantPage + 1) * PAGE_SIZE >= participantTotal;
-}
-
-// ==============================================
-// EXPORT CSV
-// ==============================================
-
-function csvCell(value) {
-  let text = String(value ?? "");
-
-  if (/^\s*[=+\-@\t\r]/.test(text)) {
-    text = "'" + text;
-  }
-
-  return '"' + text.replace(/"/g,'""') + '"';
-}
-
-function saveCSV(filename,rows) {
-  const csv = "\uFEFF" +
-    rows.map(row => row.map(csvCell).join(","))
-      .join("\r\n");
-
-  const blob = new Blob([csv],{
-    type:"text/csv;charset=utf-8"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = filename;
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url),1000);
-}
-
-async function getAllRecords(rpcName,key) {
-  const all = [];
-  let offset = 0;
-  let total = null;
-
-  while (true) {
-    const result = await rpc(rpcName,{
-      p_search:"",
-      p_limit:100,
-      p_offset:offset
+      } catch (error) {
+        el("rpError").textContent =
+          "Export gagal: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
     });
 
-    const batch = Array.isArray(result[key])
-      ? result[key] : [];
-
-    const currentTotal = Number(result.total);
-
-    if (
-      !Number.isSafeInteger(currentTotal) ||
-      currentTotal < 0
-    ) {
-      throw new Error("Jumlah data tidak valid.");
-    }
-
-    if (total === null) total = currentTotal;
-
-    if (total !== currentTotal) {
-      throw new Error(
-        "Jumlah data berubah. Ulangi ekspor."
-      );
-    }
-
-    all.push(...batch);
-    offset += batch.length;
-
-    if (all.length >= total) return all;
-
-    if (batch.length === 0) {
-      throw new Error("Pengambilan data terhenti.");
-    }
-  }
-}
-
-async function runExport(button,callback) {
-  button.disabled = true;
-  const oldText = button.textContent;
-  button.textContent = "Menyiapkan CSV...";
-
-  try {
-    await callback();
-  } catch (error) {
-    alert("Export gagal: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = oldText;
-  }
-}
-
-el("exportParticipants").addEventListener("click", () =>
-  runExport(el("exportParticipants"),async () => {
-    const items = await getAllRecords(
-      "get_owner_participants","participants"
-    );
-
-    const rows = [[
-      "No","Nomor Registrasi","Nama Peserta",
-      "Nomor Pesanan","Kategori","Jersey",
-      "Gender","Kota","Status Pembayaran",
-      "Metode Pembayaran","Tanggal Daftar"
-    ]];
-
-    items.forEach((p,i) => rows.push([
-      i+1,p.registration_number,p.full_name,
-      p.order_number,p.ticket_category,
-      p.jersey_size,p.gender,p.city,
-      p.payment_status,p.payment_method,
-      dateText(p.registered_at)
-    ]));
-
-    saveCSV(
-      "Baladhika_2026_Peserta.csv",rows
-    );
-  })
-);
-
-el("exportOrders").addEventListener("click", () =>
-  runExport(el("exportOrders"),async () => {
-    const items = await getAllRecords(
-      "get_owner_orders","orders"
-    );
-
-    const rows = [[
-      "No","Nomor Pesanan","Nama Pemesan",
-      "Early Bird","Normal","Jumlah Peserta",
-      "Total Tagihan","Metode Pembayaran",
-      "Status Pembayaran","Status Bukti",
-      "Tanggal Pesanan","Tanggal Lunas"
-    ]];
-
-    items.forEach((o,i) => rows.push([
-      i+1,o.order_number,o.buyer_name,
-      o.early_bird_qty,o.normal_qty,
-      o.total_participants,o.total_amount,
-      o.payment_method,o.payment_status,
-      proofStatus(o),dateText(o.created_at),
-      dateText(o.paid_at)
-    ]));
-
-    saveCSV(
-      "Baladhika_2026_Pesanan.csv",rows
-    );
-  })
-);
-
-el("exportJersey").addEventListener("click", () =>
-  runExport(el("exportJersey"),async () => {
-    await loadJersey();
-
-    const rows = [["Ukuran Jersey","Jumlah"]];
-
-    (jerseyData.jersey_sizes || []).forEach(item => {
-      rows.push([item.size,item.quantity]);
-    });
-
-    rows.push([
-      "Lainnya / Belum Terisi",
-      jerseyData.other_or_missing || 0
-    ]);
-
-    rows.push([
-      "TOTAL",
-      jerseyData.total_participants || 0
-    ]);
-
-    saveCSV(
-      "Baladhika_2026_Rekap_Jersey.csv",rows
-    );
-  })
-);
-
-// ==============================================
-// CETAK ULANG INVOICE DEMO
-// ==============================================
-
-function escapeHTML(value) {
-  return String(value ?? "-").replace(
-    /[&<>"']/g,
-    character => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[character])
-  );
-}
-
-async function printInvoice(orderNumber) {
-  const popup = window.open("","_blank");
-
-  if (!popup) {
-    message(
-      "invoiceMessage",
-      "Izinkan pop-up pada browser.",
-      true
-    );
-    return;
-  }
-
-  popup.document.write(
-    "<p>Menyiapkan invoice DEMO...</p>"
-  );
-
-  try {
-    const data = await rpc(
-      "owner_get_demo_invoice",
-      {p_order_number:orderNumber}
-    );
-
-    if (data.payment_status !== "PAID_DEMO") {
-      throw new Error(
-        "Pesanan belum berstatus PAID_DEMO."
-      );
-    }
-
-    const participants = Array.isArray(data.participants)
-      ? data.participants : [];
-
-    const rows = participants.map((p,i) => `
-      <tr>
-        <td>${i+1}</td>
-        <td>${escapeHTML(p.name)}</td>
-        <td>${escapeHTML(p.ticket_category)}</td>
-        <td>${escapeHTML(p.booking_code)}</td>
-        <td>${escapeHTML(p.registration_number)}</td>
-      </tr>
-    `).join("");
-
-    const html = `<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Invoice DEMO ${escapeHTML(data.order_number)}</title>
-<style>
-body {
-  font-family:Arial,sans-serif;
-  color:#213827;
-  padding:30px;
-}
-h1 { color:#263d2b; }
-.warning {
-  background:#fff1d7;
-  padding:15px;
-  font-weight:bold;
-}
-table {
-  border-collapse:collapse;
-  width:100%;
-  margin-top:20px;
-}
-th,td {
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:left;
-}
-button {
-  background:#f08b35;
-  padding:13px 20px;
-  border:0;
-  cursor:pointer;
-}
-@media print {
-  button { display:none; }
-}
-</style>
-</head>
-<body>
-<h1>BALADHIKA FUN RUN 2026</h1>
-<h2>INVOICE LUNAS — DEMO / TEST</h2>
-<p class="warning">
-BUKAN BUKTI PEMBAYARAN NYATA
-</p>
-<p><b>Nomor Pesanan:</b>
-${escapeHTML(data.order_number)}</p>
-<p><b>Nama Pemesan:</b>
-${escapeHTML(data.buyer_name)}</p>
-<p><b>Jumlah Peserta:</b>
-${escapeHTML(data.total_participants)}</p>
-<p><b>Total DEMO:</b>
-${escapeHTML(money(data.total_amount))}</p>
-<p><b>Status:</b> PAID_DEMO</p>
-<p><b>Waktu Verifikasi:</b>
-${escapeHTML(dateText(data.paid_at))} WIB</p>
-<h3>Peserta dan Kode Booking Racepack</h3>
-<table>
-<thead>
-<tr>
-<th>No.</th><th>Nama</th><th>Kategori</th>
-<th>Kode Booking</th><th>Registrasi</th>
-</tr>
-</thead>
-<tbody>${rows}</tbody>
-</table>
-<p>Petugas memeriksa kode booking sebelum
-menyerahkan racepack.</p>
-<button onclick="window.print()">
-SIMPAN PDF / CETAK
-</button>
-</body>
-</html>`;
-
-    popup.document.open();
-    popup.document.write(html);
-    popup.document.close();
-
-    message(
-      "invoiceMessage",
-      "Invoice terbuka di tab baru."
-    );
-
-  } catch (error) {
-    popup.close();
-    message(
-      "invoiceMessage",
-      "Gagal: " + error.message,
-      true
-    );
-  }
-}
-
-el("invoiceButton").addEventListener("click", () => {
-  const order = el("invoiceOrder").value
-    .trim().toUpperCase();
-
-  if (!order) {
-    message(
-      "invoiceMessage",
-      "Masukkan nomor pesanan.",
-      true
-    );
-    return;
-  }
-
-  printInvoice(order);
-});
-
-// ==============================================
-// PENCARIAN RACEPACK
-// ==============================================
-
-function addDetail(container,label,value) {
-  const p = document.createElement("p");
-  const strong = document.createElement("strong");
-
-  strong.textContent = label + ": ";
-  p.appendChild(strong);
-  p.appendChild(document.createTextNode(
-    value == null ? "-" : String(value)
-  ));
-
-  container.appendChild(p);
-}
-
-async function findRacepack() {
-  const code = el("racepackCode").value
-    .trim().toUpperCase();
-
-  el("racepackResult").replaceChildren();
-  el("racepackResult").classList.add("hidden");
-  el("collectRacepack").classList.add("hidden");
-  currentRacepack = null;
-
-  if (!/^[A-HJ-NP-Z2-9]{5}$/.test(code)) {
-    message(
-      "racepackMessage",
-      "Kode booking harus 5 karakter.",
-      true
-    );
-    return;
-  }
-
-  try {
-    const data = await rpc(
-      "owner_find_racepack_booking",
-      {p_booking_code:code}
-    );
-
-    const found = Array.isArray(data)
-      ? data[0] : data;
-
-    if (!found) {
-      throw new Error("Booking tidak ditemukan.");
-    }
-
-    currentRacepack = found;
-
-    const result = el("racepackResult");
-
-    [
-      ["Kode Booking",found.booking_code],
-      ["Registrasi",found.registration_number],
-      ["Nama Peserta",found.participant_name],
-      ["Nama BIB",found.bib_name],
-      ["Kategori",found.ticket_category],
-      ["Jersey",found.jersey_size],
-      ["Nomor Pesanan",found.order_number],
-      ["Pembayaran",found.payment_status],
-      ["Racepack",found.racepack_status],
-      ["Waktu Pengambilan",
-       dateText(found.racepack_collected_at)]
-    ].forEach(([label,value]) => {
-      addDetail(result,label,value);
-    });
-
-    result.classList.remove("hidden");
-
-    if (
-      found.payment_status === "PAID_DEMO" &&
-      found.racepack_status === "NOT_COLLECTED"
-    ) {
-      el("collectRacepack").classList.remove("hidden");
-    } else if (found.racepack_status === "COLLECTED") {
-      message(
-        "racepackMessage",
-        "Racepack sudah diserahkan.",
-        true
-      );
-    } else {
-      message(
-        "racepackMessage",
-        "Pembayaran belum diverifikasi.",
-        true
-      );
-    }
-
-  } catch (error) {
-    message(
-      "racepackMessage",
-      "Gagal: " + error.message,
-      true
-    );
-  }
-}
-
-el("findRacepack").addEventListener(
-  "click",findRacepack
-);
-
-el("collectRacepack").addEventListener(
-  "click",async () => {
-    if (!currentRacepack) return;
-
-    if (!confirm(
-      "Serahkan racepack kepada " +
-      currentRacepack.participant_name + "?"
-    )) return;
-
-    try {
-      await rpc("owner_collect_racepack",{
-        p_booking_code:currentRacepack.booking_code
-      });
-
-      await findRacepack();
-
-      message(
-        "racepackMessage",
-        "Racepack berhasil diserahkan (DEMO)."
-      );
-
-    } catch (error) {
-      message(
-        "racepackMessage",
-        "Gagal: " + error.message,
-        true
-      );
-    }
-  }
-);
-
-// ==============================================
-// PAGINASI, PENCARIAN, REFRESH
-// ==============================================
-
-async function refreshOrders() {
-  try {
-    el("orderError").textContent = "";
-    await loadOrders();
-  } catch (error) {
-    el("orderError").textContent =
-      "Gagal memuat pesanan: " + error.message;
-  }
-}
-
-async function refreshParticipants() {
-  try {
-    el("participantError").textContent = "";
-    await loadParticipants();
-  } catch (error) {
-    el("participantError").textContent =
-      "Gagal memuat peserta: " + error.message;
-  }
-}
-
-async function refreshDashboard() {
-  if (!accessToken) return;
-
-  const tasks = [
-    loadSummary(),
-    refreshOrders(),
-    refreshParticipants(),
-    loadJersey().catch(error => {
-      el("jerseyError").textContent =
-        "Gagal memuat jersey: " + error.message;
-    })
-  ];
-
-  try {
-    await Promise.all(tasks);
-  } catch (error) {
-    if (error.status === 401 || error.status === 403) {
-      showLogin(
-        "Sesi berakhir. Silakan login kembali."
-      );
-      return;
-    }
-
-    el("dashboardError").textContent =
-      "Gagal memuat dashboard: " + error.message;
-  }
-}
-
-el("orderSearchButton").addEventListener("click",() => {
-  orderSearch = el("orderSearch").value.trim();
-  orderPage = 0;
-  refreshOrders();
-});
-
-el("orderRefresh").addEventListener(
-  "click",refreshOrders
-);
-
-el("orderSearch").addEventListener("keydown",e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    el("orderSearchButton").click();
-  }
-});
-
-el("orderPrev").addEventListener("click",() => {
-  if (orderPage > 0) {
-    orderPage--;
-    refreshOrders();
-  }
-});
-
-el("orderNext").addEventListener("click",() => {
-  if ((orderPage+1)*PAGE_SIZE < orderTotal) {
-    orderPage++;
-    refreshOrders();
-  }
-});
-
-el("participantSearchButton").addEventListener(
-  "click",() => {
-    participantSearch =
-      el("participantSearch").value.trim();
-
-    participantPage = 0;
-    refreshParticipants();
-  }
-);
-
-el("participantRefresh").addEventListener(
-  "click",refreshParticipants
-);
-
-el("participantSearch").addEventListener(
-  "keydown",e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      el("participantSearchButton").click();
-    }
-  }
-);
-
-el("participantPrev").addEventListener("click",() => {
-  if (participantPage > 0) {
-    participantPage--;
-    refreshParticipants();
-  }
-});
-
-el("participantNext").addEventListener("click",() => {
-  if ((participantPage+1)*PAGE_SIZE < participantTotal) {
-    participantPage++;
-    refreshParticipants();
-  }
-});
-
-// Awal halaman selalu menampilkan login.
-showLogin();
-
-</script>
+    // Ikut diperbarui saat dashboard di-refresh
+    const refreshDashboardBeforeRacepack = refreshDashboard;
+
+    refreshDashboard = async function() {
+      await refreshDashboardBeforeRacepack();
+
+      if (!accessToken) return;
+
+      try {
+        await loadRacepackSummary();
+      } catch (error) {
+        el("rpError").textContent =
+          "Gagal memuat monitoring: " + error.message;
+      }
+    };
+
+    showLogin();
+  </script>
 </body>
 </html>
