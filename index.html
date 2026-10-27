@@ -1096,6 +1096,67 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-last,.block-last .racepack-section,.block-last .rules-section{background-color:#f1e6d2 !important;}
 }
 
+
+/* HERO SESUAI GAMBAR ACUAN — DESKTOP DAN HP */
+.navbar{display:none!important}
+.block-hero,.block-hero .hero-reference{background:#203629!important}
+.block-hero .hero-reference{min-height:0!important;display:block;overflow:hidden}
+.block-hero .hero-shell{position:relative;width:min(100%,1120px);height:clamp(720px,90vw,1000px);margin:auto;overflow:hidden;background:#203629}
+.block-hero .hero-emblem{position:absolute;top:2.5%;left:6%;width:clamp(75px,11%,130px);z-index:12}
+.block-hero .hero-emblem img{width:100%;height:auto;display:block}
+.block-hero .hero-countdown{position:absolute;top:2%;right:5%;width:29%;max-width:320px;z-index:20;text-align:center}
+.block-hero .hero-countdown .kicker{font:800 clamp(10px,1.45vw,16px)/1.2 Montserrat,sans-serif;color:#ff691f;margin:0 0 9px}
+.block-hero .hero-countdown .time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#14291d;padding:8px}
+.block-hero .hero-countdown .time-box{padding:10px 3px;background:#2c4433;border-radius:4px}
+.block-hero .hero-countdown .time-value{display:block;font:400 clamp(18px,2.5vw,34px)/1 Anton,sans-serif;color:white}
+.block-hero .hero-countdown .time-label{display:block;font:800 clamp(6px,.65vw,9px)/1.3 Montserrat,sans-serif;color:white;margin-top:5px}
+.block-hero .hero-countdown .hero-register{display:block;background:#ff691f;color:#14291d;border-radius:50px;margin-top:15px;padding:16px 6px;font:900 clamp(10px,1.3vw,15px)/1.2 Montserrat,sans-serif}
+.block-hero .hero-brand{position:absolute;top:24%;left:5%;width:90%;z-index:9;text-align:center}
+.block-hero .hero-brand-main{font:400 clamp(68px,10vw,140px)/.85 Anton,Impact,sans-serif;letter-spacing:-2px;color:#fff;white-space:nowrap}
+.block-hero .hero-wordmark{display:block;width:75%;height:clamp(55px,8vw,95px);object-fit:contain;margin:-6px auto 0;filter:drop-shadow(0 3px 1px rgba(0,0,0,.2))}
+.block-hero .hero-brand-tagline{font:800 clamp(17px,3.2vw,37px)/1.2 Montserrat,sans-serif;color:#ff691f;margin-top:5px;white-space:nowrap}
+.block-hero .hero-six{position:absolute;top:42%;left:-2%;font:400 clamp(340px,47vw,600px)/.85 Anton,Impact,sans-serif;color:rgba(220,230,218,.39);z-index:1}
+.block-hero .hero-event-date{position:absolute;top:53%;left:29%;display:flex;flex-direction:column;z-index:6}
+.block-hero .hero-weekday{font:800 clamp(22px,3vw,39px)/1 Montserrat,sans-serif;color:#ff691f}
+.block-hero .hero-date-main{font:400 clamp(47px,7.4vw,96px)/1 Anton,sans-serif;color:#fff;white-space:nowrap}
+.block-hero .hero-year{font:400 clamp(55px,8vw,104px)/1 Anton,sans-serif;color:#ff691f}
+.block-hero .hero-spark{position:absolute;right:-4%;top:46%;width:30%;aspect-ratio:1;background:#ff691f;clip-path:polygon(50% 0%,61% 34%,100% 50%,61% 66%,50% 100%,39% 66%,0 50%,39% 34%);z-index:2}
+.block-hero .hero-venue{position:absolute;left:5%;bottom:8%;z-index:9;display:flex;flex-direction:column;color:#fff;font:400 clamp(25px,3.7vw,47px)/.98 Anton,sans-serif}
+.block-hero .hero-venue strong{font:400 clamp(51px,7.4vw,92px)/.98 Anton,sans-serif;color:#ff691f}
+.block-hero .hero-people{position:absolute;right:0;bottom:-1%;width:63%;height:49%;object-fit:contain;object-position:bottom right;z-index:8}
+@media(max-width:768px){
+ .block-hero .hero-shell{height:clamp(680px,132vw,950px);min-height:0}
+ .block-hero .hero-emblem{top:3%;left:5%;width:19%}
+ .block-hero .hero-countdown{top:2%;right:4%;width:43%;max-width:none}
+ .block-hero .hero-countdown .kicker{font-size:clamp(9px,2.1vw,13px)}
+ .block-hero .hero-countdown .time-grid{gap:3px;padding:5px}
+ .block-hero .hero-countdown .time-box{padding:8px 2px}
+ .block-hero .hero-countdown .time-value{font-size:clamp(17px,3.8vw,26px)}
+ .block-hero .hero-countdown .time-label{font-size:clamp(6px,1.2vw,8px)}
+ .block-hero .hero-countdown .hero-register{padding:13px 5px;font-size:clamp(9px,2.2vw,13px);margin-top:9px}
+ .block-hero .hero-brand{top:25%;left:4%;width:92%}
+ .block-hero .hero-brand-main{font-size:clamp(48px,12vw,91px);letter-spacing:-1px}
+ .block-hero .hero-wordmark{width:87%;height:clamp(48px,12vw,80px);margin-top:-4px}
+ .block-hero .hero-brand-tagline{font-size:clamp(14px,3.8vw,25px)}
+ .block-hero .hero-six{top:44%;left:-4%;font-size:clamp(270px,65vw,450px)}
+ .block-hero .hero-event-date{top:53%;left:30%}
+ .block-hero .hero-weekday{font-size:clamp(18px,4.1vw,28px)}
+ .block-hero .hero-date-main{font-size:clamp(37px,9vw,62px)}
+ .block-hero .hero-year{font-size:clamp(48px,11vw,76px)}
+ .block-hero .hero-spark{top:48%;right:-7%;width:33%}
+ .block-hero .hero-venue{left:5%;bottom:9%;font-size:clamp(21px,5.3vw,36px)}
+ .block-hero .hero-venue strong{font-size:clamp(43px,10vw,70px)}
+ .block-hero .hero-people{width:71%;height:42%;right:-2%;bottom:-1%}
+}
+@media(max-width:430px){
+ .block-hero .hero-shell{height:780px}
+ .block-hero .hero-brand{top:24%}
+ .block-hero .hero-six{top:42%}
+ .block-hero .hero-event-date{top:53%}
+ .block-hero .hero-people{height:42%;width:80%;right:-6%}
+ .block-hero .hero-venue{bottom:8%}
+}
+
 </style>
 </head>
 <body>
@@ -1117,47 +1178,39 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </nav>
 
 <main>
-<div class="event-block block-hero" id="bagian-1"><section class="hero" id="home">
-  <div class="hero-deco"></div>
-<div class="hero-countdown"><p class="kicker orange">THE COUNTDOWN IS ON</p><div class="time-grid">
-      <div class="time-box">
-        <span class="time-value" id="days">--</span>
-        <span class="time-label">HARI</span>
+<div class="event-block block-hero" id="bagian-1">
+<section class="hero hero-reference" id="home">
+  <div class="hero-shell">
+    <a class="hero-emblem" href="#home"><img src="logo-63.png" alt="Logo HUT ke-63"></a>
+    <div class="hero-countdown">
+      <p class="kicker orange">THE COUNTDOWN IS ON</p>
+      <div class="time-grid">
+        <div class="time-box"><span class="time-value" id="days">--</span><span class="time-label">HARI</span></div>
+        <div class="time-box"><span class="time-value" id="hours">--</span><span class="time-label">JAM</span></div>
+        <div class="time-box"><span class="time-value" id="minutes">--</span><span class="time-label">MENIT</span></div>
+        <div class="time-box"><span class="time-value" id="seconds">--</span><span class="time-label">DETIK</span></div>
       </div>
-      <div class="time-box">
-        <span class="time-value" id="hours">--</span>
-        <span class="time-label">JAM</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="minutes">--</span>
-        <span class="time-label">MENIT</span>
-      </div>
-      <div class="time-box">
-        <span class="time-value" id="seconds">--</span>
-        <span class="time-label">DETIK</span>
-      </div>
-    </div><a class="btn" href="#registration">DAFTAR SEKARANG ↗</a></div>
-  <div class="inner">
-    <div class="hero-content">
-      <p class="kicker">EXPERIENCE FUN RUN 5K</p>
-      <img class="hero-logo" src="logo-baladhika.png" alt="BALADHIKA FUN RUN 2026">
-      <h1 class="hero-category">KATEGORI 5K</h1>
-      <p class="hero-info">
-        ONE RUN • ONE SPIRIT • ONE EXPERIENCE<br>
-       
-       MINGGU, 6 DESEMBER 2026 • 05.30 WIB<br>
-
-        LAPANGAN RAMPAL, KOTA MALANG
-      </p>
-      <div class="hero-actions">
-        <a class="btn" href="#registration">REGISTER NOW ↗</a>
-        <a class="btn btn-outline" href="#rules">EVENT RULES</a>
-      </div>
+      <a class="btn hero-register" href="#registration">DAFTAR SEKARANG ↗</a>
     </div>
+    <div class="hero-brand">
+      <div class="hero-brand-main">BALADHIKA</div>
+      <img class="hero-wordmark" src="logo-baladhika.png" alt="Baladhika Fun Run 2026">
+      <div class="hero-brand-tagline">EXPERIENCE FUN RUN 5K</div>
+    </div>
+    <div class="hero-six" aria-hidden="true">6</div>
+    <div class="hero-event-date">
+      <span class="hero-weekday">Minggu</span>
+      <span class="hero-date-main">6 DESEMBER</span>
+      <span class="hero-year">2026</span>
+    </div>
+    <div class="hero-spark" aria-hidden="true"></div>
+    <div class="hero-venue">
+      <span>LAPANGAN</span><strong>RAMPAL</strong><span>KOTA MALANG</span>
+    </div>
+    <img class="hero-people" src="pelari-hero.png" alt="Dua pelari Baladhika Fun Run">
   </div>
-  <img class="hero-runner parallax-image" src="pelari-hero.png" alt="Pelari Fun Run">
-  <div class="scroll-hint">↓ SCROLL TO EXPLORE</div>
-</section></div>
+</section>
+</div>
 <div class="event-block block-registration" id="bagian-2"><section class="registration-section" id="registration">
   <div class="inner">
     <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
