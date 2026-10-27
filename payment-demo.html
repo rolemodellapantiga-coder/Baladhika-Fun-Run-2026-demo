@@ -21,7 +21,7 @@
 <section class="panel"><h3>2. DOWNLOAD BUKTI SIMULASI</h3><p>Terbitkan dan unduh bukti simulasi untuk pesanan Anda.</p><button id="downloadProof" disabled>DOWNLOAD BUKTI PEMBAYARAN DEMO</button></section>
 <section class="panel"><h3>3. UPLOAD BUKTI SIMULASI</h3><p>Pilih file bukti yang baru diunduh. PNG, JPG, atau WEBP, maksimal 1 MB.</p><input id="proofFile" type="file" accept="image/png,image/jpeg,image/webp" disabled><button id="uploadProof" disabled>UPLOAD &amp; VERIFIKASI DEMO</button></section>
 <div id="status" role="status" aria-live="polite"></div>
-<section id="successPanel" class="panel" hidden><h3 class="success">STATUS: PAID_DEMO</h3><p>Simulasi berhasil dicatat. Ini bukan bukti pembayaran uang sungguhan.</p><button id="downloadInvoice" type="button">DOWNLOAD INVOICE DEMO ↓</button><a style="color:#ff914f" href="/">Kembali ke website utama</a></section>
+<section id="successPanel" class="panel" hidden><h3 class="success">STATUS: MENUNGGU VERIFIKASI OWNER</h3><p>Bukti DEMO berhasil diunggah. Pembayaran belum disetujui. Ini bukan bukti pembayaran uang sungguhan.</p><a style="color:#ff914f" href="/">Kembali ke website utama</a></section>
 <p><small>DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH. Nomor pesanan saja tidak dapat digunakan untuk mengakses pembayaran; diperlukan token dari proses pendaftaran.</small></p>
 </main>
 <script>
@@ -49,7 +49,7 @@ function downloadDemoInvoice(){
  g.fillStyle='#263d2d';g.font='20px Arial';g.fillText('Invoice ini hanya untuk pengujian sistem, bukan transaksi nyata.',42,605);
  const a=document.createElement('a');a.download='INVOICE-DEMO-'+order+'.png';a.href=c.toDataURL('image/png');a.click();
 }
-el('downloadInvoice').addEventListener('click',()=>{if(completed)downloadDemoInvoice()});
+
 el('orderLabel').textContent=valid?'NOMOR PESANAN: '+order:'Nomor pesanan atau token tidak valid.';
 el('qrOrder').textContent=valid?order:'—';
 el('downloadProof').disabled=!valid;
@@ -95,9 +95,9 @@ el('uploadProof').addEventListener('click',async()=>{
  try{
   const encoded=await toBase64(chosen);
   const data=await jsonPost('/api/upload-demo-proof',{order_number:order,payment_token:token,mime_type:chosen.type,file_base64:encoded,proof_payload:proof.payload,proof_signature:proof.signature});
-  if(data.payment_status!=='PAID_DEMO')throw new Error('Status pembayaran belum berubah.');
+  if(data.review_status!=='WAITING')throw new Error('Bukti belum masuk antrean verifikasi.');
   completed=true;proof=null;chosen=null;el('proofFile').disabled=true;el('downloadProof').disabled=true;el('successPanel').hidden=false;
-  setStatus('BERHASIL: Status pesanan '+order+' menjadi PAID_DEMO.');
+  setStatus('BERHASIL: Bukti pesanan '+order+' telah diunggah. Status WAITING — menunggu persetujuan OWNER.');
  }catch(e){setStatus('GAGAL: '+e.message);el('uploadProof').disabled=false}finally{busy=false}
 });
 </script>
