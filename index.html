@@ -1571,6 +1571,53 @@ section{position:relative;overflow:hidden;isolation:isolate}
     width: 88% !important; height: 40% !important;
   }
 }
+
+/* FINAL: MEDALI ASLI DI DALAM BATAS LAYAR, TANPA PERUBAHAN GAMBAR */
+.block-hero img.hero-medal-backdrop {
+  top: 34% !important;
+  right: 13% !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 73% !important;
+  height: 43% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: .20 !important;
+  transform: none !important;
+  animation: none !important;
+  clip-path: none !important;
+  filter: none !important;
+  z-index: 6 !important;
+}
+@media(max-width:768px) {
+  .block-hero img.hero-medal-backdrop {
+    top: 35% !important;
+    right: 10% !important;
+    width: 80% !important;
+    height: 43% !important;
+  }
+  .block-hero img.hero-people { right: 0% !important; left: auto !important; }
+}
+@media(max-width:430px) {
+  .block-hero img.hero-medal-backdrop {
+    top: 36% !important;
+    right: 10% !important;
+    width: 80% !important;
+    height: 42% !important;
+  }
+  .block-hero img.hero-people { right: 0% !important; left: auto !important; }
+}
+
+/* KHUSUS MEDALI — POSISI PELARI TETAP PERSIS SAMA */
+.block-hero .hero-shell img.hero-medal-backdrop {
+ top:34%!important;right:10%!important;left:auto!important;bottom:auto!important;
+ width:78%!important;height:40%!important;max-width:none!important;max-height:none!important;
+ object-fit:contain!important;object-position:center!important;opacity:.20!important;
+ transform:none!important;animation:none!important;clip-path:none!important;
+ z-index:6!important;pointer-events:none!important;
+}
+@media(max-width:768px){.block-hero .hero-shell img.hero-medal-backdrop{top:35%!important;right:9%!important;width:82%!important;height:41%!important}}
+@media(max-width:430px){.block-hero .hero-shell img.hero-medal-backdrop{top:35%!important;right:8%!important;width:84%!important;height:41%!important}}
 </style>
 </head>
 <body>
