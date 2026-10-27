@@ -1223,6 +1223,23 @@ section{position:relative;overflow:hidden;isolation:isolate}
   opacity: 1 !important;
 }
 
+
+/* HERO TAHAP 3 — rapatkan tagline, angka 6 lebih transparan */
+.block-hero .hero-brand-tagline{
+  margin-top:-17px!important;
+  position:relative;
+  z-index:2;
+}
+.block-hero .hero-six{
+  color:rgba(220,230,218,.10)!important;
+}
+@media(max-width:768px){
+  .block-hero .hero-brand-tagline{margin-top:-14px!important}
+}
+@media(max-width:430px){
+  .block-hero .hero-brand-tagline{margin-top:-18px!important}
+}
+
 </style>
 </head>
 <body>
@@ -2465,6 +2482,26 @@ function initializeParallax(){
     return;
   }
   gsap.registerPlugin(ScrollTrigger);
+
+  // Parallax khusus hero 4-bagian: elemen mengikuti scroll dengan
+  // kecepatan berbeda. Aman untuk desktop/HP dan reduced-motion.
+  const newHero = document.querySelector(".block-hero .hero-shell");
+  if(newHero){
+    const mobileHero = window.matchMedia("(max-width: 768px)").matches;
+    [
+      [".block-hero .hero-people", mobileHero ? 35 : 65],
+      [".block-hero .hero-six", mobileHero ? -22 : -50],
+      [".block-hero .hero-spark", mobileHero ? -14 : -35],
+      [".block-hero .hero-brand", mobileHero ? -12 : -24]
+    ].forEach(([selector, distance])=>{
+      const el=document.querySelector(selector);
+      if(!el)return;
+      gsap.fromTo(el,{y:0},{y:distance,ease:"none",
+        scrollTrigger:{trigger:newHero,start:"top top",
+          end:"bottom top",scrub:0.7,invalidateOnRefresh:true}
+      });
+    });
+  }
 
   const heroTimeline=gsap.timeline({defaults:{ease:"power3.out"}});
   heroTimeline
