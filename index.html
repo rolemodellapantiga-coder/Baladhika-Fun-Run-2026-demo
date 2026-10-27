@@ -1294,30 +1294,26 @@ section{position:relative;overflow:hidden;isolation:isolate}
 }
 
 
-/* HERO REVISI 5: angka enam lebih samar, tanggal naik, pelari bergeser kiri */
-.block-hero .hero-six{color:rgba(220,230,218,.055)!important;opacity:1!important}
-.block-hero .hero-event-date{top:45%!important}
+/* HERO FINAL: pergeseran nyata, bukan koreksi beberapa persen */
+.block-hero .hero-six{
+  top:22%!important;
+  color:rgba(220,230,218,.055)!important;
+  opacity:1!important;
+}
+.block-hero .hero-event-date{
+  top:32%!important;
+  z-index:13!important;
+}
 .block-hero .hero-people{right:4%!important}
 @media(max-width:768px){
- .block-hero .hero-event-date{top:46%!important}
- .block-hero .hero-people{right:-1%!important}
+  .block-hero .hero-six{top:23%!important}
+  .block-hero .hero-event-date{top:34%!important}
+  .block-hero .hero-people{right:-1%!important}
 }
 @media(max-width:430px){
- .block-hero .hero-event-date{top:46%!important}
- .block-hero .hero-people{right:0%!important}
-}
-
-
-/* REVISI HERO 6 — naikkan angka 6 dan tanggal, rapatkan ruang kosong */
-.block-hero .hero-six{top:34%!important}
-.block-hero .hero-event-date{top:39%!important}
-@media(max-width:768px){
- .block-hero .hero-six{top:35%!important}
- .block-hero .hero-event-date{top:40%!important}
-}
-@media(max-width:430px){
- .block-hero .hero-six{top:34%!important}
- .block-hero .hero-event-date{top:39%!important}
+  .block-hero .hero-six{top:23%!important}
+  .block-hero .hero-event-date{top:34%!important}
+  .block-hero .hero-people{right:0%!important}
 }
 
 </style>
