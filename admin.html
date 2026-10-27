@@ -1369,35 +1369,55 @@
     // Bukti pembayaran hanya dapat dibaca oleh OWNER yang login.
     let reviewBusy = false;
     async function openOwnerProof(orderNumber) {
+      // Buka tab segera saat tombol diklik agar tidak diblokir browser.
+      const popup = window.open("", "_blank");
+      if (!popup) {
+        alert("Izinkan pop-up untuk membuka bukti pembayaran.");
+        return;
+      }
+      popup.document.title = "Memuat bukti pembayaran DEMO";
+      popup.document.body.textContent = "Memuat bukti pembayaran...";
+
       try {
+        if (!accessToken) throw new Error("Silakan login OWNER kembali.");
         const path = await rpc("owner_get_demo_proof_path", {
           p_order_number: orderNumber
         });
         if (typeof path !== "string" || !path.trim()) {
           throw new Error("Lokasi bukti tidak ditemukan.");
         }
+
+        // Akses objek privat langsung menggunakan JWT OWNER.
+        // Tidak memakai URL tanda tangan yang sebelumnya salah path.
         const objectPath = path.split("/").map(encodeURIComponent).join("/");
-        const signed = await supabaseRequest(
-          "/storage/v1/object/sign/demo-payment-proofs/" + objectPath,
-          { method: "POST", body: JSON.stringify({ expiresIn: 60 }) },
-          accessToken
-        );
-        const signedPath = signed.signedURL || signed.signedUrl;
-        if (typeof signedPath !== "string" || !signedPath) {
-          throw new Error("Gagal mendapatkan tautan bukti.");
+        const url = SUPABASE_URL +
+          "/storage/v1/object/authenticated/demo-payment-proofs/" + objectPath;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + accessToken
+          },
+          cache: "no-store"
+        });
+        if (!response.ok) {
+          let detail = "HTTP " + response.status;
+          try {
+            const info = await response.json();
+            detail = info.message || info.error || detail;
+          } catch (_) {}
+          throw new Error("Gagal membaca Storage: " + detail);
         }
-        const url = new URL(signedPath, SUPABASE_URL + "/storage/v1/");
-        if (url.origin !== new URL(SUPABASE_URL).origin) {
-          throw new Error("Alamat bukti tidak valid.");
+        const blob = await response.blob();
+        if (!blob.type.startsWith("image/")) {
+          throw new Error("File bukti bukan gambar.");
         }
-        const link = document.createElement("a");
-        link.href = url.href;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        const blobUrl = URL.createObjectURL(blob);
+        popup.location.replace(blobUrl);
+        // Beri waktu browser memuat gambar sebelum URL dibersihkan.
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 120000);
       } catch (error) {
+        popup.close();
         alert("Bukti belum dapat dibuka: " + error.message);
       }
     }
