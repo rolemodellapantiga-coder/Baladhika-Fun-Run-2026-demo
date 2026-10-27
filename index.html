@@ -1919,59 +1919,65 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .block-registration .reg-after-ticket{
  max-width:1100px!important;margin:40px auto 0!important;
 }
-.block-registration .reg-medal-showcase{
- display:grid;grid-template-columns:minmax(220px,.72fr) minmax(320px,1.28fr);
- gap:16px;align-items:center;margin:36px 0 40px;
- position:relative;min-height:330px;
+/* TAMPILAN PRODUK MEDALI/JERSEY DAN BENEFIT — VERSI FINAL */
+.block-registration .reg-medal-showcase {
+  display:block!important;
+  width:100%!important;
+  min-height:0!important;
+  margin:30px auto 24px!important;
+  padding:0!important;
+  position:relative!important;
+  text-align:center!important;
+  background:transparent!important;
 }
-.block-registration .reg-medal-showcase::before{
- content:"";position:absolute;inset:15% -3% 0 20%;pointer-events:none;opacity:.8;
- background:url("baladhika-brush-transisi.png") center / cover no-repeat;
+.block-registration .reg-medal-showcase::before {display:none!important;content:none!important;}
+.block-registration .reg-medal-product {
+  display:block!important;
+  width:min(100%,900px)!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:0 auto!important;
+  object-fit:contain!important;
 }
-.block-registration .reg-medal-heading,.block-registration .reg-medal-visual{position:relative;z-index:1}
-.block-registration .reg-medal-heading h3,
-.block-registration .reg-benefits-showcase h3{
- font:900 clamp(38px,6vw,86px)/1.04 Anton,Impact,"Arial Narrow",sans-serif!important;
- letter-spacing:-.02em;margin:0!important;color:#103522!important;
- font-style:normal!important;transform:none!important;
+.block-registration .reg-benefits-showcase {
+  border-top:1px solid rgba(16,53,34,.22)!important;
+  margin:22px auto 36px!important;
+  padding:24px 0 10px!important;
 }
-.block-registration .reg-medal-heading h3 span,
-.block-registration .reg-medal-heading h3 em{display:block;font-style:normal!important}
-.block-registration .reg-medal-heading h3 em,
-.block-registration .reg-benefits-showcase h3 span{color:#ff641b!important}
-.block-registration .reg-medal-heading p{
- font:900 clamp(13px,1.6vw,22px)/1.3 Montserrat,Arial,sans-serif!important;
- color:#103522!important;margin:14px 0!important;
+.block-registration .reg-benefits-showcase h3 {
+  font-family:Anton,Impact,"Arial Narrow",sans-serif!important;
+  font-weight:900!important;
+  font-style:normal!important;
+  transform:none!important;
+  font-size:clamp(38px,7vw,76px)!important;
+  line-height:1.05!important;
+  text-align:center!important;
+  color:#103522!important;
+  margin:0 0 22px!important;
 }
-.block-registration .reg-medal-visual{text-align:center}
-.block-registration .reg-medal-visual img{
- width:min(100%,610px);height:auto;max-height:520px;object-fit:contain;
- filter:drop-shadow(0 20px 16px rgba(27,38,22,.15));
+.block-registration .reg-benefits-showcase h3 span {color:#ff641b!important;}
+.block-registration .reg-benefits-banner {
+  display:block!important;
+  width:100%!important;
+  padding:clamp(12px,3vw,30px)!important;
+  border-radius:clamp(18px,4vw,32px)!important;
+  background:#073522!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
 }
-.block-registration .reg-benefits-showcase{
- padding:32px 0 30px;border-top:1px solid rgba(16,53,34,.16);
+.block-registration .reg-benefits-banner img {
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+  border-radius:8px!important;
 }
-.block-registration .reg-benefits-showcase h3{text-align:center;margin-bottom:25px!important}
-.block-registration .reg-benefits-banner>img{display:block;width:100%;height:auto;object-fit:contain}
-.block-registration .reg-benefits-fallback{
- display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;
-}
-.block-registration .reg-benefits-fallback[hidden]{display:none!important}
-.block-registration .reg-benefits-fallback>div{
- border:1px solid #d5d0bb;border-radius:14px;padding:22px 7px;
- min-height:100px;text-align:center;background:rgba(255,255,255,.35);
- display:flex;flex-direction:column;justify-content:center;gap:5px;
- font-family:Montserrat,Arial,sans-serif!important;color:#103522;
-}
-.block-registration .reg-benefits-fallback strong{font-size:clamp(10px,1.6vw,16px);font-weight:900}
-.block-registration .reg-benefits-fallback small{font-size:clamp(9px,1.3vw,12px);font-weight:800}
-@media(max-width:768px){
- .block-registration .reg-medal-showcase{grid-template-columns:1fr;gap:0;margin:30px 0}
- .block-registration .reg-medal-heading h3{font-size:clamp(48px,11vw,72px)!important}
- .block-registration .reg-medal-visual img{max-height:400px}
- .block-registration .reg-benefits-showcase h3{font-size:clamp(39px,9vw,60px)!important}
- .block-registration .reg-benefits-fallback{grid-template-columns:repeat(2,minmax(0,1fr))}
- .block-registration .reg-benefits-fallback>div:last-child{grid-column:1/-1}
+@media(max-width:768px) {
+  .block-registration .reg-medal-showcase{margin:22px auto 18px!important;}
+  .block-registration .reg-benefits-showcase{margin:12px auto 26px!important;padding-top:22px!important;}
+  .block-registration .reg-benefits-showcase h3{font-size:clamp(36px,9vw,60px)!important;}
+  .block-registration .reg-benefits-banner{padding:12px!important;border-radius:22px!important;}
 }
 
 </style>
@@ -2115,27 +2121,14 @@ section{position:relative;overflow:hidden;isolation:isolate}
       Setiap peserta tetap mengisi identitas, alamat lengkap,
       ukuran jersey, dan kontak darurat.
     </p>
-    <section class="reg-medal-showcase" aria-label="Medali finisher">
-      <div class="reg-medal-heading">
-        <h3><span>MEDALI</span> <em>FINISHER</em></h3>
-        <p>BALADHIKA FUN RUN 2026</p>
-      </div>
-      <div class="reg-medal-visual">
-        <img src="medali.png" alt="Medali Baladhika Fun Run 2026" loading="lazy">
-      </div>
+    <!-- Gambar produk diambil dari repository GitHub yang sama. -->
+    <section class="reg-medal-showcase" aria-label="Medali dan jersey Baladhika Fun Run 2026">
+      <img class="reg-medal-product" src="medali-jersey.png" alt="Medali dan jersey Baladhika Fun Run 2026" loading="lazy">
     </section>
     <section class="reg-benefits-showcase" aria-label="Benefit peserta">
       <h3>BENEFIT <span>PESERTA</span></h3>
       <div class="reg-benefits-banner">
-        <img src="banner-fasilitas.png.png" alt="Gambar fasilitas dan benefit peserta Baladhika Fun Run 2026" loading="lazy"
-          onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
-        <div class="reg-benefits-fallback" hidden>
-          <div><strong>JERSEY</strong><small>EKSKLUSIF</small></div>
-          <div><strong>GOODIE BAG</strong><small>PESERTA</small></div>
-          <div><strong>MEDALI</strong><small>FINISHER</small></div>
-          <div><strong>BIB</strong><small>NON CHIP</small></div>
-          <div><strong>REFRESHMENT</strong><small>& MEDIC</small></div>
-        </div>
+        <img src="banner-benefit.png" alt="Benefit peserta Baladhika Fun Run 2026" loading="lazy">
       </div>
     </section>
     </div>
