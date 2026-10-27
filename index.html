@@ -2066,6 +2066,9 @@ section{position:relative;overflow:hidden;isolation:isolate}
 #chooseYourTicketHeading::after,
 #chooseYourTicketHeading .orange::before,
 #chooseYourTicketHeading .orange::after { content: none !important; display: none !important; }
+
+/* Parallax entrance: performa HP dan aksesibilitas. */
+@media(prefers-reduced-motion:reduce){.event-block *{scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -3310,152 +3313,103 @@ async function previewPayment(){
   }
 }
 
-/* GSAP PARALLAX */
+/* PARALLAX & SCROLL REVEAL — SEMUA SLIDE, RESPONSIF */
 function initializeParallax(){
-  if(typeof gsap==="undefined"||
-     typeof ScrollTrigger==="undefined"||
-     window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-    return;
-  }
+  if(typeof gsap==="undefined" || typeof ScrollTrigger==="undefined") return;
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   gsap.registerPlugin(ScrollTrigger);
+  const mobile=window.matchMedia("(max-width:768px)").matches;
+  const hero=document.querySelector(".block-hero .hero-shell");
 
-  // Parallax khusus hero 4-bagian: elemen mengikuti scroll dengan
-  // kecepatan berbeda. Aman untuk desktop/HP dan reduced-motion.
-  const newHero = document.querySelector(".block-hero .hero-shell");
-  if(newHero){
-    const mobileHero = window.matchMedia("(max-width: 768px)").matches;
+  // Hero: posisi asli dikunci. Hanya opacity masuk dan parallax scroll.
+  if(hero){
     [
-      [".block-hero .hero-people", mobileHero ? 105 : 160],
-      [".block-hero .hero-six", mobileHero ? -110 : -180],
-      [".block-hero .hero-medal-backdrop", mobileHero ? 65 : 110],
-      [".block-hero .hero-spark", mobileHero ? -50 : -80],
-      [".block-hero .hero-brand", mobileHero ? -38 : -70]
-    ].forEach(([selector, distance])=>{
+      [".block-hero .hero-people",mobile?70:110],
+      [".block-hero .hero-six",mobile?-65:-105],
+      [".block-hero .hero-medal-backdrop",mobile?45:75],
+      [".block-hero .hero-spark",mobile?-30:-50],
+      [".block-hero .hero-brand",mobile?-25:-45]
+    ].forEach(([selector,distance])=>{
       const el=document.querySelector(selector);
       if(!el)return;
-      gsap.fromTo(el,{y:0},{y:distance,ease:"none",
-        scrollTrigger:{trigger:newHero,start:"top top",
-          end:"bottom top",scrub:0.7,invalidateOnRefresh:true}
+      gsap.fromTo(el,{y:0},{y:distance,ease:"none",immediateRender:false,
+        scrollTrigger:{trigger:hero,start:"top top",end:"bottom top",
+          scrub:.85,invalidateOnRefresh:true}
+      });
+    });
+    const heroEntries=[
+      [".hero-emblem",-.12],[ ".hero-countdown",.10],
+      [".hero-brand",.22],[".hero-event-date",.35],
+      [".hero-venue",.5],[".hero-people",.65],
+      [".hero-medal-backdrop",.15]
+    ];
+    heroEntries.forEach(([selector,delay])=>{
+      const el=hero.querySelector(selector);
+      if(el)gsap.fromTo(el,{autoAlpha:0},{
+        autoAlpha:1,duration:1.05,delay:Math.max(0,delay),
+        ease:"power2.out",overwrite:false,clearProps:"opacity,visibility"
       });
     });
   }
 
-  const heroTimeline=gsap.timeline({defaults:{ease:"power3.out"}});
-  heroTimeline
-    .from(".hero-content .kicker",{y:25,opacity:0,duration:.6})
-    .from(".hero-logo",{y:55,opacity:0,duration:.9},"-=.2")
-    .from(".hero-category",{y:45,opacity:0,duration:.8},"-=.4")
-    .from(".hero-info",{y:25,opacity:0,duration:.6},"-=.3")
-    .from(".hero-actions",{y:25,opacity:0,duration:.6},"-=.3")
-    .from(".hero-runner",{x:55,opacity:0,duration:1},"-=.8");
-
-  // Parallax Hero: gambar bergerak dengan kecepatan berbeda dari halaman.
-  // Di HP gerakan positif (turun relatif ke konten), sehingga tidak menabrak tombol.
-  // scrub kecil memberi respons halus tanpa terasa terlambat.
-  gsap.matchMedia().add({
-    isMobile: "(max-width: 768px)",
-    isDesktop: "(min-width: 769px)"
-  }, (context) => {
-    const distance = context.conditions.isMobile ? 135 : -125;
-    gsap.fromTo(".hero-runner", { y: 0 }, {
-      y: distance,
-      ease: "none",
-      immediateRender: false,
-      overwrite: "auto",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 0.45,
-        invalidateOnRefresh: true
-      }
-    });
+  // Semua judul, narasi, gambar, kartu dan tombol di slide 2 & 3.
+  // Transform reveal hanya untuk elemen yang tidak sedang digerakkan oleh parallax lain.
+  const revealSelectors=[
+    ".block-registration .registration-steps",
+    ".block-registration #ticketStep h3",
+    ".block-registration #cardNormal",
+    ".block-registration #cardEarly",
+    ".block-registration .order-summary",
+    ".block-registration #ticketStep > .notice",
+    ".block-registration #ticketStep .registration-actions",
+    ".block-registration .reg-medal-visual",
+    ".block-registration .reg-benefits-showcase h3",
+    ".block-registration .reg-benefits-banner",
+    ".block-registration .check-order-section h2",
+    ".block-registration .check-order-section .copy",
+    ".block-registration .check-order-panel",
+    ".block-info .jersey-section h2",
+    ".block-info .jersey-description",
+    ".block-info .jersey-frame",
+    ".block-info .jersey-note",
+    ".block-info .route-section h2",
+    ".block-info .route-frame",
+    ".block-info .racepack-section h2",
+    ".block-info .racepack-card",
+    ".block-info .rules-section h2",
+    ".block-info .rules-section .hero-actions",
+    ".block-info .rules-section .btn"
+  ];
+  const targets=[...new Set(revealSelectors.flatMap(selector=>Array.from(document.querySelectorAll(selector))))];
+  targets.forEach((el,index)=>{
+    if(el.closest('[hidden]') || el.hidden) return;
+    // Tombol tetap bisa diklik: efek hanya sekali saat masuk viewport.
+    gsap.fromTo(el,
+      {autoAlpha:0,y:mobile?22:38},
+      {autoAlpha:1,y:0,duration:mobile?.78:1.0,ease:"power2.out",
+       delay:(index%3)*.055,clearProps:"transform,opacity,visibility",
+       scrollTrigger:{trigger:el,start:"top 94%",once:true,
+         toggleActions:"play none none none"}}
+    );
   });
 
+  // Parallax lembut untuk gambar, dipasang pada pembungkus agar tidak
+  // berebut transform dengan animasi masuk elemen gambar.
   [
-    ".countdown-title",".date-title",".date-place",
-    ".date-description",".price-title",".price-number",
-    ".price-note",".benefit-section .kicker",
-    ".benefit-section .heading",".benefit-section .copy",
-    ".jersey-title",".jersey-description",
-    ".route-section .heading",".more-section .heading",
-    ".more-section .copy",".ready-content .heading",
-    ".ready-content .copy",".racepack-title",".rules-title"
-  ].forEach(selector=>{
-    gsap.utils.toArray(selector).forEach(el=>{
-      gsap.fromTo(el,{y:45},{
-        y:-12,ease:"none",
-        scrollTrigger:{
-          trigger:el.closest("section")||el,
-          start:"top bottom",end:"bottom top",
-          scrub:1.4,invalidateOnRefresh:true
-        }
-      });
-    });
+    [".block-registration .reg-medal-showcase",mobile?-12:-25],
+    [".block-registration .reg-benefits-showcase",mobile?-8:-16],
+    [".block-info .jersey-section .inner",mobile?-10:-18],
+    [".block-info .route-section .inner",mobile?-10:-20]
+  ].forEach(([selector,dist])=>{
+    const el=document.querySelector(selector);
+    if(!el)return;
+    gsap.fromTo(el,{y:0},{y:dist,ease:"none",immediateRender:false,
+      scrollTrigger:{trigger:el.closest("section")||el,
+        start:"top bottom",end:"bottom top",scrub:1.6,
+        invalidateOnRefresh:true}});
   });
 
-  [
-    [".date-runner",-65],
-    [".price-runner",-45],
-    [".benefit-art",-35],
-    [".jersey-frame",-28],
-    [".ready-runner",-55]
-  ].forEach(([selector,distance])=>{
-    gsap.utils.toArray(selector).forEach(el=>{
-      gsap.fromTo(el,{y:0},{
-        y:distance,ease:"none",
-        scrollTrigger:{
-          trigger:el.closest("section")||el,
-          start:"top bottom",end:"bottom top",scrub:1.8
-        }
-      });
-    });
-  });
-
-  gsap.to(".hero-deco",{
-    y:-90,ease:"none",
-    scrollTrigger:{
-      trigger:".hero",start:"top top",end:"bottom top",scrub:1.5
-    }
-  });
-
-  gsap.utils.toArray(".price-col").forEach((el,index)=>{
-    gsap.from(el,{
-      x:index===0?-55:55,opacity:0,duration:1,
-      ease:"power3.out",
-      scrollTrigger:{
-        trigger:".price-section",start:"top 78%",once:true
-      }
-    });
-  });
-
-  gsap.fromTo(".route-frame img",{scale:1.06},{
-    scale:1,ease:"none",
-    scrollTrigger:{
-      trigger:".route-section",
-      start:"top bottom",end:"bottom top",scrub:2
-    }
-  });
-
-  [
-    ".time-box",".jersey-note",".racepack-card",
-    ".rules-info-item",".rule"
-  ].forEach(selector=>{
-    gsap.utils.toArray(selector).forEach((el,index)=>{
-      gsap.from(el,{
-        y:35,opacity:0,duration:.8,
-        delay:Math.min(index*.07,.3),
-        ease:"power2.out",
-        scrollTrigger:{
-          trigger:el,start:"top 90%",once:true
-        }
-      });
-    });
-  });
-
-  window.addEventListener("load",()=>{
-    ScrollTrigger.refresh();
-  },{once:true});
+  window.addEventListener("load",()=>ScrollTrigger.refresh(),{once:true});
 }
 initializeParallax();
 </script>
