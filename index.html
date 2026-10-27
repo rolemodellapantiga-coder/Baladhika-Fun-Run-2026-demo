@@ -917,28 +917,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
 </section>
 
 
-<!-- CEK PESANAN DEMO -->
-<section class="check-order-section" id="cek-pesanan">
-  <div class="inner check-order-layout">
-    <div>
-      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
-      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
-      <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
-      <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
-    </div>
-    <div class="check-order-panel">
-      <form id="checkOrderForm">
-        <div class="field">
-          <label for="checkOrderNumber">NOMOR PESANAN *</label>
-          <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="5" minlength="5" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{5}" placeholder="A7K9B"></div>
-        </div>
-        <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
-      </form>
-      <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
-    </div>
-  </div>
-</section>
-
 <!-- COUNTDOWN -->
 <section class="countdown">
   <div class="inner countdown-grid">
@@ -1077,21 +1055,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
   </div>
 </section>
 
-<!-- EXPERIENCE -->
-<section class="more-section">
-  <div class="inner">
-    <p class="kicker orange">THE EXPERIENCE</p>
-    <h2 class="heading parallax-text">
-      <span>MORE THAN</span>
-      <span class="orange">JUST A RUN.</span>
-    </h2>
-    <p class="copy">
-      Baladhika Fun Run 2026 bukan hanya tentang garis finis,
-      tetapi juga semangat dan kebersamaan.
-    </p>
-  </div>
-</section>
-
 <!-- READY -->
 <section class="ready-section">
   <img class="ready-runner parallax-image"
@@ -1105,6 +1068,28 @@ section{position:relative;overflow:hidden;isolation:isolate}
         dengan satu email utama.
       </p>
       <a class="btn" href="#registration">REGISTER NOW ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- CEK PESANAN DEMO -->
+<section class="check-order-section" id="cek-pesanan">
+  <div class="inner check-order-layout">
+    <div>
+      <p class="kicker orange">BALADHIKA FUN RUN 2026</p>
+      <h2 class="check-order-title">CEK <span class="orange">PESANAN.</span></h2>
+      <p class="copy muted">Masukkan 5 karakter kode pesanan setelah BDJ- untuk memeriksa status pembayaran simulasi.</p>
+      <p class="copy muted">MODE DEMO / TEST — bukan bukti pembayaran nyata.</p>
+    </div>
+    <div class="check-order-panel">
+      <form id="checkOrderForm">
+        <div class="field">
+          <label for="checkOrderNumber">NOMOR PESANAN *</label>
+          <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="5" minlength="5" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{5}" placeholder="A7K9B"></div>
+        </div>
+        <button class="btn" id="checkOrderButton" type="submit">CEK STATUS PESANAN →</button>
+      </form>
+      <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
     </div>
   </div>
 </section>
