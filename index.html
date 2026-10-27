@@ -855,7 +855,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     margin: 12px -5% 0 0;
     object-fit: contain;
     object-position: right bottom;
-    transform: none !important;
+    /* GSAP mengatur transform agar efek parallax tetap aktif */
     pointer-events: none;
     z-index: 5;
   }
@@ -2265,6 +2265,29 @@ function initializeParallax(){
     .from(".hero-info",{y:25,opacity:0,duration:.6},"-=.3")
     .from(".hero-actions",{y:25,opacity:0,duration:.6},"-=.3")
     .from(".hero-runner",{x:55,opacity:0,duration:1},"-=.8");
+
+  // Parallax Hero: gambar bergerak dengan kecepatan berbeda dari halaman.
+  // Di HP gerakan positif (turun relatif ke konten), sehingga tidak menabrak tombol.
+  // scrub kecil memberi respons halus tanpa terasa terlambat.
+  gsap.matchMedia().add({
+    isMobile: "(max-width: 768px)",
+    isDesktop: "(min-width: 769px)"
+  }, (context) => {
+    const distance = context.conditions.isMobile ? 135 : -125;
+    gsap.fromTo(".hero-runner", { y: 0 }, {
+      y: distance,
+      ease: "none",
+      immediateRender: false,
+      overwrite: "auto",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.45,
+        invalidateOnRefresh: true
+      }
+    });
+  });
 
   [
     ".countdown-title",".date-title",".date-place",
