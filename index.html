@@ -2198,7 +2198,81 @@ section{position:relative;overflow:hidden;isolation:isolate}
             const esc=v=>String(v??"-").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
             const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
             const rows=(invoice.participants||[]).map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.name)}</td><td>${esc(p.ticket_category)}</td><td>${esc(p.booking_code)}</td><td>${esc(p.registration_number)}</td></tr>`).join("");
-            const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(invoice.order_number)}</title><style>body{font:14px Arial,sans-serif;background:#e9eee9;color:#1d3326;margin:0}.paper{max-width:790px;background:white;margin:25px auto;padding:32px;border-radius:12px}.header{background:#263d2b;text-align:center;padding:18px;border-radius:10px}.header img{max-height:115px;max-width:100%}h1{color:#bd3c24}.alert{padding:14px;background:#fff1d7;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left}.btnprint{background:#ff691f;border:0;border-radius:8px;padding:14px 20px;font-weight:bold;cursor:pointer;margin-top:18px}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.btnprint{display:none}@page{size:A4;margin:15mm}}</style></head><body><div class="paper"><div class="header"><img src="/logo-baladhika.png" alt="Baladhika Fun Run"></div><h1>INVOICE LUNAS — DEMO / TEST</h1><p class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</p><p><b>Nomor pesanan:</b> ${esc(invoice.order_number)}</p><p><b>Pemesan:</b> ${esc(invoice.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(invoice.total_participants)}</p><p><b>Total simulasi:</b> ${esc(rupiah(invoice.total_amount))}</p><p><b>Status:</b> PAID_DEMO</p><h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>No. Registrasi</th></tr></thead><tbody>${rows}</tbody></table><p>Gunakan kode booking untuk verifikasi pengambilan racepack.</p><button class="btnprint" onclick="window.print()">SIMPAN PDF / CETAK ↓</button><p><small>DEMO / TEST — bukan bukti pembayaran sah.</small></p></div></body></html>`;
+            const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(invoice.order_number)}</title><style>body{font:14px Arial,sans-serif;background:#e9eee9;color:#1d3326;margin:0}.paper{max-width:790px;background:white;margin:25px auto;padding:32px;border-radius:12px}.header{background:#263d2b;text-align:center;padding:18px;border-radius:10px}.header img{max-height:115px;max-width:100%}h1{color:#bd3c24}.alert{padding:14px;background:#fff1d7;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left}.btnprint{background:#ff691f;border:0;border-radius:8px;padding:14px 20px;font-weight:bold;cursor:pointer;margin-top:18px}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.btnprint{display:none}@page{size:A4;margin:15mm}}
+/* REVISI FINAL: transisi hijau army ke cream susu, hanya HALAMAN 2. */
+.block-registration,
+.block-registration .registration-section {
+  background-color:#faf5e9 !important;
+  color:#103522 !important;
+}
+.block-registration .registration-section {
+  position:relative !important;
+  padding-top:210px !important;
+  background-image:linear-gradient(to bottom,
+    #20392b 0px,
+    #34513a 34px,
+    #65755a 78px,
+    #a8ad90 125px,
+    #e5e1cd 173px,
+    #faf5e9 210px,
+    #faf5e9 100%) !important;
+  background-repeat:no-repeat !important;
+}
+/* Brush grunge di pertemuan dua halaman, tidak mengubah isi hero. */
+.block-registration .registration-section::before {
+  content:"";
+  position:absolute;
+  top:118px;left:0;right:0;
+  height:96px;
+  pointer-events:none;
+  z-index:0;
+  opacity:.34;
+  background:repeating-linear-gradient(-11deg,
+    transparent 0px,transparent 12px,
+    rgba(24,55,38,.22) 13px,rgba(24,55,38,.22) 16px,
+    transparent 18px,transparent 29px);
+  clip-path:polygon(0 21%,12% 48%,26% 32%,41% 66%,57% 44%,74% 75%,88% 34%,100% 58%,100% 100%,0 100%);
+}
+.block-registration .registration-section>.inner {position:relative;z-index:1;}
+/* Tipografi seragam: tegak, tebal, tanpa italic pada semua teks halaman 2. */
+.block-registration, .block-registration * {
+  font-style:normal !important;
+}
+.block-registration .registration-section,
+.block-registration .registration-section p,
+.block-registration .registration-section label,
+.block-registration .registration-section input,
+.block-registration .registration-section select,
+.block-registration .registration-section button,
+.block-registration .registration-section .registration-step {
+  font-family:Montserrat,Arial,sans-serif !important;
+  font-weight:800 !important;
+}
+.block-registration #ticketStep h3,
+.block-registration #ticketStep h3 span,
+.block-registration .ticket-name,
+.block-registration .ticket-price,
+.block-registration .order-summary .total strong {
+  font-family:Anton,Impact,sans-serif !important;
+  font-style:normal !important;
+  font-weight:900 !important;
+}
+.block-registration #ticketStep h3 {letter-spacing:0!important;}
+.block-registration .reg-after-ticket>.registration-intro {
+  color:#163d2a!important;
+  font-family:Montserrat,Arial,sans-serif!important;
+  font-weight:800!important;
+}
+@media(max-width:768px){
+  .block-registration .registration-section{
+    padding-top:164px!important;
+    background-image:linear-gradient(to bottom,
+      #20392b 0px,#3e5941 28px,#8c9979 85px,
+      #e6e2cf 136px,#faf5e9 164px,#faf5e9 100%)!important;
+  }
+  .block-registration .registration-section::before{top:90px;height:76px;}
+}
+</style></head><body><div class="paper"><div class="header"><img src="/logo-baladhika.png" alt="Baladhika Fun Run"></div><h1>INVOICE LUNAS — DEMO / TEST</h1><p class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</p><p><b>Nomor pesanan:</b> ${esc(invoice.order_number)}</p><p><b>Pemesan:</b> ${esc(invoice.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(invoice.total_participants)}</p><p><b>Total simulasi:</b> ${esc(rupiah(invoice.total_amount))}</p><p><b>Status:</b> PAID_DEMO</p><h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>No. Registrasi</th></tr></thead><tbody>${rows}</tbody></table><p>Gunakan kode booking untuk verifikasi pengambilan racepack.</p><button class="btnprint" onclick="window.print()">SIMPAN PDF / CETAK ↓</button><p><small>DEMO / TEST — bukan bukti pembayaran sah.</small></p></div></body></html>`;
             popup.document.open();popup.document.write(html);popup.document.close();
             msg.textContent="Invoice terbuka. Klik SIMPAN PDF / CETAK, lalu pilih Save as PDF.";
           }catch(err){popup.close();msg.textContent=err.message||"Gagal mengambil invoice.";}
