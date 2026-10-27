@@ -2060,6 +2060,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .block-info .jersey-section h2,.block-info .route-section h2,.block-info .racepack-section h2,.block-info .rules-section h2{margin-top:0!important;margin-bottom:14px!important;font-style:normal!important;transform:none!important}
 @media(max-width:768px){.block-registration .check-order-section{padding:20px 0 35px!important}.block-registration .check-order-section .inner{grid-template-columns:1fr!important;gap:14px!important}.block-registration .check-order-panel{margin-top:4px!important}.block-info .jersey-section{padding-top:135px!important;padding-bottom:28px!important}.block-info .route-section,.block-info .racepack-section,.block-info .rules-section{padding-top:28px!important;padding-bottom:28px!important}}
 
+
+/* PASTIKAN JUDUL CHOOSE YOUR TICKET TANPA TITIK */
+#chooseYourTicketHeading::before,
+#chooseYourTicketHeading::after,
+#chooseYourTicketHeading .orange::before,
+#chooseYourTicketHeading .orange::after { content: none !important; display: none !important; }
 </style>
 </head>
 <body>
@@ -2125,7 +2131,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     <!-- STEP 1 -->
     <div class="registration-panel" id="ticketStep">
       <p class="kicker orange">STEP 01</p>
-      <h3>CHOOSE YOUR <span class="orange">TICKET</span></h3>
+      <h3 id="chooseYourTicketHeading">CHOOSE YOUR <span class="orange">TICKET</span></h3>
       <p class="registration-intro copy">
         Pilih kategori yang tersedia sesuai status sistem.
       </p>
@@ -2516,7 +2522,17 @@ section{position:relative;overflow:hidden;isolation:isolate}
           // Buka jendela secara langsung agar tidak diblokir popup blocker.
           const popup=window.open("","_blank");
           if(!popup){msg.textContent="Izinkan pop-up untuk mengunduh invoice.";return;}
-          popup.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Menyiapkan invoice DEMO</title></head><body><p>Menyiapkan invoice DEMO...</p></body></html>");
+          popup.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Menyiapkan invoice DEMO</title></head><body><p>Menyiapkan invoice DEMO...</p>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const heading = document.getElementById('chooseYourTicketHeading');
+  if (heading) {
+    const ticket = heading.querySelector('.orange');
+    if (ticket) ticket.textContent = 'TICKET';
+  }
+});
+</script>
+</body></html>");
           popup.document.close();
           download.disabled=true;msg.textContent="Memverifikasi email dan menyiapkan invoice...";
           try{
