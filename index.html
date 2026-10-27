@@ -1513,6 +1513,16 @@ section{position:relative;overflow:hidden;isolation:isolate}
  display:block!important;visibility:visible!important;opacity:.20!important;
  z-index:6!important;mix-blend-mode:normal!important;
 }
+
+/* REVISI: posisi kedua pelari bergeser ke kiri 10 poin persentase, ukuran tidak berubah */
+.block-hero .hero-people{right:14%!important;left:auto!important}
+@media(max-width:768px){.block-hero .hero-people{right:9%!important;left:auto!important}}
+@media(max-width:430px){.block-hero .hero-people{right:10%!important;left:auto!important}}
+
+/* Revisi: geser hanya medali 10% ke kiri, pelari tetap */
+.block-hero .hero-medal-backdrop{right:-6%!important;}
+@media(max-width:768px){.block-hero .hero-medal-backdrop{right:-15%!important;}}
+@media(max-width:430px){.block-hero .hero-medal-backdrop{right:-18%!important;}}
 </style>
 </head>
 <body>
