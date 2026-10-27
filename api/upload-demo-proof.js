@@ -1,13 +1,13 @@
 
 "use strict";
 
-// BALADHIKA FUN RUN 2026 — DEMO / TEST
-// Upload bukti tidak otomatis melunasi pesanan.
-// Status PAID_DEMO hanya boleh diberikan oleh admin.
+// BALADHIKA FUN RUN 2026
+// Upload bukti pembayaran DEMO
+// Upload tidak otomatis membuat pesanan lunas.
 
 const crypto = require("node:crypto");
 
-const URL_BASE = process.env.SUPABASE_URL?.replace(/\/+$/, "");
+const BASE = process.env.SUPABASE_URL?.replace(/\/+$/, "");
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const SECRET = process.env.DEMO_PROOF_SECRET;
 
@@ -22,63 +22,68 @@ const TYPES = {
   "image/webp": "webp"
 };
 
-function reply(res, status, message, extra = {}) {
+function reply(res, code, message, extra = {}) {
   res.setHeader("Cache-Control", "no-store, private");
   res.setHeader("X-Content-Type-Options", "nosniff");
 
-  return res.status(status).json({
-    success: status >= 200 && status < 300,
+  return res.status(code).json({
+    success: code >= 200 && code < 300,
     message,
     ...extra
   });
 }
 
-async function database(path, options = {}) {
-  const response = await fetch(`${URL_BASE}/rest/v1/${path}`, {
+function headers(extra = {}) {
+  return {
+    apikey: KEY,
+    Authorization: `Bearer ${KEY}`,
+    ...extra
+  };
+}
+
+async function db(path, options = {}) {
+  const response = await fetch(`${BASE}/rest/v1/${path}`, {
     ...options,
-    headers: {
-      apikey: KEY,
-      Authorization: `Bearer ${KEY}`,
-      ...(options.headers || {})
-    },
+    headers: headers(options.headers || {}),
     cache: "no-store"
   });
 
   if (!response.ok) {
-    const details = await response.text();
-    console.error(
-      "Supabase error:",
-      response.status,
-      details.slice(0, 300)
-    );
+    console.error("Supabase REST:", response.status);
     throw new Error(`DATABASE_${response.status}`);
   }
 
-  if (response.status === 204) return null;
-
-  return response.json();
+  return response.status === 204
+    ? null
+    : response.json();
 }
 
-function validImage(bytes, mime) {
+function validImage(buffer, mime) {
   if (mime === "image/png") {
-    return bytes.length >= 8 &&
-      bytes.subarray(0, 8).equals(
+    return (
+      buffer.length >= 8 &&
+      buffer.subarray(0, 8).equals(
         Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])
-      );
+      )
+    );
   }
 
   if (mime === "image/jpeg") {
-    return bytes.length >= 4 &&
-      bytes[0] === 255 &&
-      bytes[1] === 216 &&
-      bytes[bytes.length - 2] === 255 &&
-      bytes[bytes.length - 1] === 217;
+    return (
+      buffer.length >= 4 &&
+      buffer[0] === 255 &&
+      buffer[1] === 216 &&
+      buffer[buffer.length - 2] === 255 &&
+      buffer[buffer.length - 1] === 217
+    );
   }
 
   if (mime === "image/webp") {
-    return bytes.length >= 12 &&
-      bytes.toString("ascii", 0, 4) === "RIFF" &&
-      bytes.toString("ascii", 8, 12) === "WEBP";
+    return (
+      buffer.length >= 12 &&
+      buffer.toString("ascii", 0, 4) === "RIFF" &&
+      buffer.toString("ascii", 8, 12) === "WEBP"
+    );
   }
 
   return false;
@@ -106,27 +111,18 @@ function validSignature(payload, signature) {
 async function removeObject(path) {
   try {
     const response = await fetch(
-      `${URL_BASE}/storage/v1/object/${BUCKET}/${path}`,
+      `${BASE}/storage/v1/object/${BUCKET}/${path}`,
       {
         method: "DELETE",
-        headers: {
-          apikey: KEY,
-          Authorization: `Bearer ${KEY}`
-        }
+        headers: headers()
       }
     );
 
     if (!response.ok) {
-      console.error(
-        "Cleanup storage failed:",
-        response.status
-      );
+      console.error("Storage cleanup:", response.status);
     }
   } catch (error) {
-    console.error(
-      "Cleanup storage failed:",
-      error.message
-    );
+    console.error("Storage cleanup failed:", error.message);
   }
 }
 
@@ -136,20 +132,17 @@ module.exports = async function handler(req, res) {
     return reply(res, 405, "Metode tidak diizinkan.");
   }
 
-  if (!URL_BASE || !KEY || !SECRET) {
-    return reply(
-      res,
-      503,
-      "Konfigurasi server belum lengkap."
-    );
+  if (!BASE || !KEY || !SECRET) {
+    return reply(res, 503, "Konfigurasi server belum lengkap.");
   }
 
   let body;
 
   try {
-    body = typeof req.body === "string"
-      ? JSON.parse(req.body)
-      : req.body;
+    body =
+      typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : req.body;
   } catch {
     return reply(res, 400, "Format JSON tidak valid.");
   }
@@ -170,10 +163,7 @@ module.exports = async function handler(req, res) {
   const payload = body?.proof_payload;
   const signature = body?.proof_signature;
 
-  if (
-    !ORDER_RE.test(orderNumber) ||
-    !TOKEN_RE.test(token)
-  ) {
+  if (!ORDER_RE.test(orderNumber) || !TOKEN_RE.test(token)) {
     return reply(
       res,
       400,
@@ -183,7 +173,6 @@ module.exports = async function handler(req, res) {
 
   if (
     typeof payload !== "string" ||
-    typeof signature !== "string" ||
     payload.length > 300 ||
     !validSignature(payload, signature)
   ) {
@@ -217,7 +206,7 @@ module.exports = async function handler(req, res) {
   const file = Buffer.from(encoded, "base64");
 
   if (
-    file.length === 0 ||
+    !file.length ||
     file.length > MAX_BYTES ||
     !validImage(file, mime)
   ) {
@@ -236,18 +225,17 @@ module.exports = async function handler(req, res) {
   try {
     const filters = new URLSearchParams({
       select:
-        "id,order_number,payment_status,demo_payment_proof_path",
+        "id,order_number,payment_status," +
+        "demo_proof_review_status," +
+        "demo_payment_proof_path",
       order_number: `eq.${orderNumber}`,
       demo_payment_token_hash: `eq.${tokenHash}`,
       limit: "1"
     });
 
-    const orders = await database(`orders?${filters}`);
+    const rows = await db(`orders?${filters}`);
 
-    if (
-      !Array.isArray(orders) ||
-      orders.length !== 1
-    ) {
+    if (!Array.isArray(rows) || rows.length !== 1) {
       return reply(
         res,
         404,
@@ -255,7 +243,7 @@ module.exports = async function handler(req, res) {
       );
     }
 
-    const order = orders[0];
+    const order = rows[0];
     const parts = payload.split("|");
 
     if (
@@ -272,35 +260,20 @@ module.exports = async function handler(req, res) {
       );
     }
 
-    // Pesanan sudah disetujui oleh admin.
     if (order.payment_status === "PAID_DEMO") {
       return reply(
         res,
         200,
-        "Pesanan sudah lunas dalam mode DEMO.",
+        "Pesanan sudah disetujui panitia.",
         {
           demo: true,
           order_number: orderNumber,
-          payment_status: "PAID_DEMO"
+          payment_status: "PAID_DEMO",
+          review_status: "APPROVED"
         }
       );
     }
 
-    // Bukti sudah masuk antrean verifikasi.
-    if (order.payment_status === "WAITING") {
-      return reply(
-        res,
-        200,
-        "Bukti sudah diterima dan menunggu verifikasi admin.",
-        {
-          demo: true,
-          order_number: orderNumber,
-          payment_status: "WAITING"
-        }
-      );
-    }
-
-    // Status lain tidak boleh langsung diproses.
     if (order.payment_status !== "PENDING_DEMO") {
       return reply(
         res,
@@ -309,30 +282,45 @@ module.exports = async function handler(req, res) {
       );
     }
 
+    if (order.demo_proof_review_status === "WAITING") {
+      return reply(
+        res,
+        409,
+        "Bukti sebelumnya masih menunggu pemeriksaan panitia.",
+        {
+          review_status: "WAITING"
+        }
+      );
+    }
+
+    if (
+      !["NOT_UPLOADED", "REJECTED"].includes(
+        order.demo_proof_review_status
+      )
+    ) {
+      return reply(
+        res,
+        409,
+        "Status pemeriksaan bukti tidak dapat diproses."
+      );
+    }
+
     const objectPath =
       `${order.id}/${crypto.randomUUID()}.${TYPES[mime]}`;
 
-    // Simpan bukti ke Supabase Storage.
-    const upload = await fetch(
-      `${URL_BASE}/storage/v1/object/${BUCKET}/${objectPath}`,
+    const uploaded = await fetch(
+      `${BASE}/storage/v1/object/${BUCKET}/${objectPath}`,
       {
         method: "POST",
-        headers: {
-          apikey: KEY,
-          Authorization: `Bearer ${KEY}`,
+        headers: headers({
           "Content-Type": mime,
           "x-upsert": "false"
-        },
+        }),
         body: file
       }
     );
 
-    if (!upload.ok) {
-      console.error(
-        "Storage upload failed:",
-        upload.status
-      );
-
+    if (!uploaded.ok) {
       return reply(
         res,
         502,
@@ -340,46 +328,39 @@ module.exports = async function handler(req, res) {
       );
     }
 
-    const now = new Date().toISOString();
-
-    // Perubahan penting:
-    // Status WAITING, bukan PAID_DEMO.
-    // paid_at dan verified_at tidak diisi.
     const updateFilters = new URLSearchParams({
       id: `eq.${order.id}`,
       demo_payment_token_hash: `eq.${tokenHash}`,
       payment_status: "eq.PENDING_DEMO",
-      demo_payment_proof_path: "is.null",
-      select: "id,payment_status"
+      demo_proof_review_status:
+        `eq.${order.demo_proof_review_status}`,
+      select: "id,payment_status,demo_proof_review_status"
     });
 
     let updated;
 
     try {
-      updated = await database(
-        `orders?${updateFilters}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Prefer: "return=representation"
-          },
-          body: JSON.stringify({
-            demo_payment_proof_path: objectPath,
-            demo_payment_proof_uploaded_at: now,
-            payment_status: "WAITING"
-          })
-        }
-      );
+      updated = await db(`orders?${updateFilters}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Prefer: "return=representation"
+        },
+        body: JSON.stringify({
+          demo_payment_proof_path: objectPath,
+          demo_payment_proof_uploaded_at:
+            new Date().toISOString(),
+          demo_proof_review_status: "WAITING",
+          demo_proof_reviewed_at: null,
+          demo_proof_rejection_reason: null
+        })
+      });
     } catch (error) {
       await removeObject(objectPath);
       throw error;
     }
 
-    if (
-      !Array.isArray(updated) ||
-      updated.length !== 1
-    ) {
+    if (!Array.isArray(updated) || updated.length !== 1) {
       await removeObject(objectPath);
 
       return reply(
@@ -392,11 +373,12 @@ module.exports = async function handler(req, res) {
     return reply(
       res,
       200,
-      "Bukti berhasil diunggah. Menunggu verifikasi panitia.",
+      "Bukti DEMO diterima dan MENUNGGU VERIFIKASI panitia.",
       {
         demo: true,
         order_number: orderNumber,
-        payment_status: "WAITING",
+        payment_status: "PENDING_DEMO",
+        review_status: "WAITING",
         notice:
           "DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH"
       }
