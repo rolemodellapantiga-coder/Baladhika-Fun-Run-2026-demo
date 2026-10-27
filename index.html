@@ -1240,6 +1240,59 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .block-hero .hero-brand-tagline{margin-top:-18px!important}
 }
 
+
+/* HERO REVISI 4 — logo lebih dekat countdown, pelari lebih dominan */
+.block-hero .hero-brand{top:15.5%!important}
+.block-hero .hero-wordmark{height:clamp(100px,15vw,180px)!important}
+.block-hero .hero-brand-tagline{margin-top:-15px!important}
+.block-hero .hero-people{
+  width:76%!important;
+  height:55%!important;
+  right:-3%!important;
+  bottom:-1%!important;
+}
+.block-hero .hero-event-date{z-index:13!important}
+.block-hero .hero-year{z-index:13!important}
+@media(max-width:768px){
+  .block-hero .hero-brand{top:16%!important}
+  .block-hero .hero-wordmark{height:clamp(90px,20vw,145px)!important}
+  .block-hero .hero-brand-tagline{margin-top:-13px!important}
+  .block-hero .hero-people{
+    width:91%!important;height:47%!important;
+    right:-8%!important;bottom:-1%!important;
+  }
+}
+@media(max-width:430px){
+  .block-hero .hero-brand{top:17%!important}
+  .block-hero .hero-wordmark{height:105px!important}
+  .block-hero .hero-brand-tagline{margin-top:-17px!important}
+  .block-hero .hero-people{
+    width:96%!important;height:47%!important;right:-9%!important;
+  }
+}
+/* Animasi masuk tidak mematikan animasi parallax pada wrapper */
+@keyframes heroTextEnter{
+ from{opacity:0;transform:translateY(32px);filter:blur(5px)}
+ to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+@keyframes heroPhotoEnter{
+ from{opacity:0;transform:translateX(45px) scale(.97)}
+ to{opacity:1;transform:translateX(0) scale(1)}
+}
+.block-hero .hero-wordmark{animation:heroTextEnter .9s .15s both}
+.block-hero .hero-brand-tagline{animation:heroTextEnter .85s .38s both}
+.block-hero .hero-weekday{animation:heroTextEnter .75s .60s both}
+.block-hero .hero-date-main{animation:heroTextEnter .8s .73s both}
+.block-hero .hero-year{animation:heroTextEnter .8s .86s both}
+.block-hero .hero-venue{animation:heroTextEnter .9s 1s both}
+.block-hero .hero-people{animation:heroPhotoEnter 1.1s .65s both}
+@media(prefers-reduced-motion:reduce){
+ .block-hero .hero-wordmark,.block-hero .hero-brand-tagline,
+ .block-hero .hero-weekday,.block-hero .hero-date-main,
+ .block-hero .hero-year,.block-hero .hero-venue,
+ .block-hero .hero-people{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -2489,10 +2542,10 @@ function initializeParallax(){
   if(newHero){
     const mobileHero = window.matchMedia("(max-width: 768px)").matches;
     [
-      [".block-hero .hero-people", mobileHero ? 35 : 65],
-      [".block-hero .hero-six", mobileHero ? -22 : -50],
-      [".block-hero .hero-spark", mobileHero ? -14 : -35],
-      [".block-hero .hero-brand", mobileHero ? -12 : -24]
+      [".block-hero .hero-people", mobileHero ? 105 : 160],
+      [".block-hero .hero-six", mobileHero ? -65 : -100],
+      [".block-hero .hero-spark", mobileHero ? -50 : -80],
+      [".block-hero .hero-brand", mobileHero ? -38 : -70]
     ].forEach(([selector, distance])=>{
       const el=document.querySelector(selector);
       if(!el)return;
