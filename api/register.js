@@ -683,10 +683,7 @@ module.exports = async function handler(req, res) {
 
     // Pesanan telah tersimpan. Kegagalan membaca expiry tidak boleh
     // membuat klien mengulang pendaftaran dan menghasilkan duplikasi.
-    const paymentExpiresAt = await getRegistrationExpiry(
-      result.data.order_number
-    );
-
+    
     // =====================================
     // HASIL REGISTRASI DEMO
     // =====================================
@@ -716,11 +713,11 @@ module.exports = async function handler(req, res) {
 
       payment_method: paymentMethod,
       payment_status: "PENDING_DEMO",
-      payment_expires_at: paymentExpiresAt,
-      payment_window_minutes: 60,
-      expiry_notice: "Selesaikan pembayaran dalam 1 jam sejak pendaftaran disimpan. Jika belum dibayar, data pendaftaran akan dihapus permanen dan Anda harus mendaftar ulang.",
+payment_expires_at: null,
+payment_window_minutes: null,
+expiry_notice: null,
 
-      payment_token: paymentToken,
+payment_token: paymentToken,
 
       notice:
         "DEMO - BUKAN BUKTI PEMBAYARAN SAH",
