@@ -869,6 +869,29 @@ section{position:relative;overflow:hidden;isolation:isolate}
   }
 }
 
+
+/* TAMPILAN TAHAP EARLY BIRD SAJA — SEMUA UKURAN LAYAR
+   Elemen Normal tetap berada di DOM agar JavaScript lama tetap kompatibel. */
+#priceNormal, #cardNormal { display: none !important; }
+#normalSubtotal { display: none; }
+.order-summary .summary-line:has(#normalSubtotal) { display: none !important; }
+.price-section .inner {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  max-width: 1020px;
+}
+.price-col#priceEarly { text-align: left; }
+.price-visual { min-width: 0; }
+.ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: 650px; }
+@media (max-width: 768px) {
+  .price-section .inner {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    gap: 18px;
+  }
+  #priceEarly { grid-column: 1; grid-row: 1; }
+  .price-visual { grid-column: 1 !important; grid-row: 2 !important; }
+  .ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: none; }
+}
 </style>
 </head>
 <body>
@@ -987,7 +1010,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
         EARLY<br>BIRD
         <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
       </h2>
-      <div class="price-number">125K</div>
+      <div class="price-number">150K</div>
       <span class="ticket-status" id="priceEarlyStatus">MEMERIKSA STATUS...</span>
       <p class="price-note">Pilih kategori Early Bird untuk pengalaman lari 5K.</p>
       <a class="btn disabled-link" href="#registration"
@@ -1127,7 +1150,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
             EARLY BIRD
             <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
           </div>
-          <div class="ticket-price">RP125.000</div>
+          <div class="ticket-price">RP150.000</div>
           <p>Per peserta • Fun Run 5K</p>
           <span class="ticket-status" id="cardEarlyStatus">MEMERIKSA STATUS...</span>
           <div class="ticket-counter">
@@ -1579,7 +1602,7 @@ updateCountdown();
 setInterval(updateCountdown,1000);
 
 /* TICKET STATUS */
-const prices={early:125000,normal:150000};
+const prices={early:150000,normal:150000};
 const qty={early:0,normal:0};
 const MAX_PER_ORDER=10;
 let ticketStatus=null;
@@ -1590,6 +1613,7 @@ function totalPeople(){return qty.early+qty.normal}
 function totalPrice(){return qty.early*prices.early+qty.normal*prices.normal}
 
 function isAvailable(category){
+  if(category==="normal")return false; // Tahap Early Bird saja; cegah memilih Normal
   if(!ticketStatus)return false;
   const key=category==="early"?"early_bird":"normal";
   return ticketStatus.registration_open===true &&
@@ -1657,6 +1681,7 @@ async function refreshTicketStatus(){
 }
 
 function changeQty(category,change){
+  if(category==="normal")return; // Normal tidak dapat dipilih pada tahap ini
   if(!["early","normal"].includes(category))return;
   if(!isAvailable(category)){
     alert("Kategori tiket belum tersedia.");
