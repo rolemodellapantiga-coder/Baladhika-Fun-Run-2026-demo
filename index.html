@@ -1729,6 +1729,251 @@ section{position:relative;overflow:hidden;isolation:isolate}
  .block-registration .reg-after-ticket>.registration-intro{font-size:clamp(13px,3.5vw,17px)!important;line-height:1.75!important;}
  .block-registration .reg-after-ticket .reg-art{width:112%!important;margin:8px -6% 0!important;}
 }
+
+/* ===========================================================
+   HALAMAN 2 SAJA — REVISI GRADASI HIJAU ARMY KE CREAM SUSU
+   Hero/halaman pertama dan fungsi JavaScript tidak disentuh.
+   =========================================================== */
+.block-registration {
+  background: #faf5e9 !important;
+  color: #173c2b !important;
+}
+.block-registration .registration-section {
+  position: relative !important;
+  padding-top: 196px !important;
+  background: linear-gradient(to bottom,
+    #203629 0px,
+    #2b4733 28px,
+    #62785c 76px,
+    #a4af91 118px,
+    #dfdfc9 160px,
+    #faf5e9 196px,
+    #faf5e9 100%) !important;
+  color: #173c2b !important;
+}
+/* Sapuan brush tepat di peralihan, tanpa menutupi kontrol */
+.block-registration .registration-section::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 60px !important;
+  left: -3% !important;
+  width: 106% !important;
+  height: 145px !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: .72 !important;
+  background:
+    repeating-linear-gradient(166deg,
+      transparent 0 11px,
+      rgba(24,54,35,.16) 12px 15px,
+      transparent 16px 28px),
+    linear-gradient(167deg,
+      transparent 0 19%,rgba(32,54,41,.42) 22% 28%,
+      transparent 33% 42%,rgba(250,245,233,.62) 46% 53%,
+      transparent 59%);
+  clip-path: polygon(0 18%,8% 27%,17% 16%,27% 36%,39% 22%,51% 46%,65% 26%,78% 53%,89% 33%,100% 43%,100% 91%,90% 81%,77% 100%,64% 77%,50% 96%,35% 74%,21% 94%,9% 73%,0 89%);
+}
+.block-registration .registration-section > .inner {
+  position: relative !important;
+  z-index: 2 !important;
+}
+/* Seluruh teks halaman 2 tegak dan konsisten. */
+.block-registration,
+.block-registration * {
+  font-style: normal !important;
+}
+.block-registration .registration-section p,
+.block-registration .registration-section label,
+.block-registration .registration-section button,
+.block-registration .registration-section input,
+.block-registration .registration-section select,
+.block-registration .registration-section textarea,
+.block-registration .registration-section .registration-step {
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+}
+.block-registration #ticketStep h3,
+.block-registration #ticketStep h3 span,
+.block-registration .ticket-name,
+.block-registration .ticket-price,
+.block-registration .order-summary .total strong {
+  font-family: Anton, Impact, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+  transform: none !important;
+}
+.block-registration .reg-after-ticket > .registration-intro {
+  color: #173c2b !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+}
+.block-registration .registration-steps {
+  position: relative;
+  z-index: 3;
+}
+.block-registration .registration-step {
+  color: #68786b !important;
+  border-color: #b8c2b5 !important;
+}
+.block-registration .registration-step.active {
+  color: #f7651b !important;
+  border-color: #f7651b !important;
+}
+/* Panel Reguler tetap hijau tua, urutan panel sebelum gambar tetap. */
+.block-registration #cardNormal,
+.block-registration #ticketStep > .order-summary,
+.block-registration #ticketStep > .notice {
+  background: #103522 !important;
+}
+@media (max-width: 768px) {
+  .block-registration .registration-section {
+    padding-top: 153px !important;
+    background: linear-gradient(to bottom,
+      #203629 0px,#3c5741 31px,#8d9e7b 77px,
+      #e2e2d0 125px,#faf5e9 153px,#faf5e9 100%) !important;
+  }
+  .block-registration .registration-section::before {
+    top: 42px !important;
+    height: 115px !important;
+  }
+}
+
+
+/* MASTER VISUAL — transisi menyatu, tanpa mengubah koordinat hero, medali, dan pelari. */
+:root { --bfr-cream:#faf8ec; --bfr-green:#203629; --bfr-orange:#ff641b; }
+.block-hero {position:relative!important;isolation:isolate!important;}
+/* Hanya alpha 16% terbawah dari gambar pelari yang memudar, posisi tetap. */
+.block-hero .hero-shell img.hero-people {
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 77%,rgba(0,0,0,.88) 85%,transparent 100%)!important;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 77%,rgba(0,0,0,.88) 85%,transparent 100%)!important;
+}
+/* Gradien menempel di bawah halaman 1, bukan blok kosong di halaman 2. */
+.block-hero::after{
+  content:""!important;position:absolute!important;left:0!important;right:0!important;bottom:-2px!important;
+  height:clamp(130px,22vw,310px)!important;z-index:11!important;pointer-events:none!important;
+  background:
+    url("baladhika-brush-transisi.png") center bottom / 100% 75% no-repeat,
+    linear-gradient(to bottom,transparent 0%,rgba(250,248,236,.12) 30%,rgba(250,248,236,.72) 73%,var(--bfr-cream) 100%)!important;
+}
+/* Keterangan lokasi tetap terlihat; sapuan hanya menutup bagian bawah pelari. */
+.block-hero .hero-event-date {z-index:14!important;}
+.block-registration,.block-registration .registration-section {
+  background:var(--bfr-cream)!important;color:#103522!important;
+}
+.block-registration .registration-section{
+  background:var(--bfr-cream)!important;
+  padding-top:45px!important;
+  overflow:hidden!important;
+}
+.block-registration .registration-section::before{display:none!important;}
+.block-registration .registration-section>.inner{position:relative!important;z-index:2!important;}
+.block-registration #ticketStep{background:transparent!important;}
+.block-registration #ticketStep h3,.block-registration #ticketStep h3 span,
+.block-registration #cardNormal .ticket-name,
+.block-registration #cardNormal .ticket-price {
+  font-style:normal!important;transform:none!important;
+  font-family:Anton,Impact,"Arial Narrow",sans-serif!important;
+  font-weight:900!important;
+}
+.block-registration .registration-section *{font-style:normal!important;}
+.block-registration .registration-section p,
+.block-registration .registration-section button,
+.block-registration .registration-section label,
+.block-registration .registration-section input,
+.block-registration .registration-section select,
+.block-registration .registration-section textarea{
+  font-family:Montserrat,Arial,sans-serif!important;
+  font-style:normal!important;
+}
+.block-registration .registration-steps{margin-top:0!important;}
+.block-registration #cardNormal,.block-registration #ticketStep>.order-summary,
+.block-registration #ticketStep>.notice{background:#103522!important;}
+/* Gambar pelari kedua menyatu dengan cream, brush nyata di belakangnya. */
+.block-registration .reg-after-ticket .reg-art{position:relative!important;}
+.block-registration .reg-after-ticket .reg-art::before{
+  content:"";position:absolute;inset:15% -8% 6%;pointer-events:none;z-index:-1;
+  background:url("baladhika-brush-transisi.png") center / contain no-repeat;
+  filter:sepia(1) saturate(7) hue-rotate(334deg);
+  opacity:.85;
+}
+@media(max-width:768px){
+ .block-hero::after{height:175px!important;background-size:160% 78%,100% 100%!important;}
+ .block-registration .registration-section{padding-top:32px!important;}
+ .block-registration .registration-steps{margin-bottom:26px!important;}
+ .block-registration .reg-after-ticket .reg-art::before{inset:10% -5% 5%;}
+}
+
+
+/* REVISI HALAMAN 2: WARNA CREAM PERSIS PALETTE REFERENSI (#FFF7E1). */
+:root{--bfr-cream:#fff7e1!important}
+.block-registration,.block-registration .registration-section{
+  background:#fff7e1!important;color:#103522!important;
+}
+.block-hero::after{
+ background:
+  url("baladhika-brush-transisi.png") center bottom / 100% 75% no-repeat,
+  linear-gradient(to bottom,transparent 0%,rgba(255,247,225,.12) 30%,rgba(255,247,225,.78) 73%,#fff7e1 100%)!important;
+}
+.block-registration .reg-after-ticket{
+ max-width:1100px!important;margin:40px auto 0!important;
+}
+.block-registration .reg-medal-showcase{
+ display:grid;grid-template-columns:minmax(220px,.72fr) minmax(320px,1.28fr);
+ gap:16px;align-items:center;margin:36px 0 40px;
+ position:relative;min-height:330px;
+}
+.block-registration .reg-medal-showcase::before{
+ content:"";position:absolute;inset:15% -3% 0 20%;pointer-events:none;opacity:.8;
+ background:url("baladhika-brush-transisi.png") center / cover no-repeat;
+}
+.block-registration .reg-medal-heading,.block-registration .reg-medal-visual{position:relative;z-index:1}
+.block-registration .reg-medal-heading h3,
+.block-registration .reg-benefits-showcase h3{
+ font:900 clamp(38px,6vw,86px)/1.04 Anton,Impact,"Arial Narrow",sans-serif!important;
+ letter-spacing:-.02em;margin:0!important;color:#103522!important;
+ font-style:normal!important;transform:none!important;
+}
+.block-registration .reg-medal-heading h3 span,
+.block-registration .reg-medal-heading h3 em{display:block;font-style:normal!important}
+.block-registration .reg-medal-heading h3 em,
+.block-registration .reg-benefits-showcase h3 span{color:#ff641b!important}
+.block-registration .reg-medal-heading p{
+ font:900 clamp(13px,1.6vw,22px)/1.3 Montserrat,Arial,sans-serif!important;
+ color:#103522!important;margin:14px 0!important;
+}
+.block-registration .reg-medal-visual{text-align:center}
+.block-registration .reg-medal-visual img{
+ width:min(100%,610px);height:auto;max-height:520px;object-fit:contain;
+ filter:drop-shadow(0 20px 16px rgba(27,38,22,.15));
+}
+.block-registration .reg-benefits-showcase{
+ padding:32px 0 30px;border-top:1px solid rgba(16,53,34,.16);
+}
+.block-registration .reg-benefits-showcase h3{text-align:center;margin-bottom:25px!important}
+.block-registration .reg-benefits-banner>img{display:block;width:100%;height:auto;object-fit:contain}
+.block-registration .reg-benefits-fallback{
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;
+}
+.block-registration .reg-benefits-fallback[hidden]{display:none!important}
+.block-registration .reg-benefits-fallback>div{
+ border:1px solid #d5d0bb;border-radius:14px;padding:22px 7px;
+ min-height:100px;text-align:center;background:rgba(255,255,255,.35);
+ display:flex;flex-direction:column;justify-content:center;gap:5px;
+ font-family:Montserrat,Arial,sans-serif!important;color:#103522;
+}
+.block-registration .reg-benefits-fallback strong{font-size:clamp(10px,1.6vw,16px);font-weight:900}
+.block-registration .reg-benefits-fallback small{font-size:clamp(9px,1.3vw,12px);font-weight:800}
+@media(max-width:768px){
+ .block-registration .reg-medal-showcase{grid-template-columns:1fr;gap:0;margin:30px 0}
+ .block-registration .reg-medal-heading h3{font-size:clamp(48px,11vw,72px)!important}
+ .block-registration .reg-medal-visual img{max-height:400px}
+ .block-registration .reg-benefits-showcase h3{font-size:clamp(39px,9vw,60px)!important}
+ .block-registration .reg-benefits-fallback{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .block-registration .reg-benefits-fallback>div:last-child{grid-column:1/-1}
+}
+
 </style>
 </head>
 <body>
@@ -1870,7 +2115,29 @@ section{position:relative;overflow:hidden;isolation:isolate}
       Setiap peserta tetap mengisi identitas, alamat lengkap,
       ukuran jersey, dan kontak darurat.
     </p>
-    <div class="reg-art" aria-hidden="true"><img src="pelari-registrasi.png" alt="Dua pelari Baladhika Fun Run mengenakan jersey merah"></div>
+    <section class="reg-medal-showcase" aria-label="Medali finisher">
+      <div class="reg-medal-heading">
+        <h3><span>MEDALI</span> <em>FINISHER</em></h3>
+        <p>BALADHIKA FUN RUN 2026</p>
+      </div>
+      <div class="reg-medal-visual">
+        <img src="medali.png" alt="Medali Baladhika Fun Run 2026" loading="lazy">
+      </div>
+    </section>
+    <section class="reg-benefits-showcase" aria-label="Benefit peserta">
+      <h3>BENEFIT <span>PESERTA</span></h3>
+      <div class="reg-benefits-banner">
+        <img src="banner-fasilitas.png.png" alt="Gambar fasilitas dan benefit peserta Baladhika Fun Run 2026" loading="lazy"
+          onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
+        <div class="reg-benefits-fallback" hidden>
+          <div><strong>JERSEY</strong><small>EKSKLUSIF</small></div>
+          <div><strong>GOODIE BAG</strong><small>PESERTA</small></div>
+          <div><strong>MEDALI</strong><small>FINISHER</small></div>
+          <div><strong>BIB</strong><small>NON CHIP</small></div>
+          <div><strong>REFRESHMENT</strong><small>& MEDIC</small></div>
+        </div>
+      </div>
+    </section>
     </div>
 
     <!-- STEP 2 -->
@@ -2198,7 +2465,8 @@ section{position:relative;overflow:hidden;isolation:isolate}
             const esc=v=>String(v??"-").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
             const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
             const rows=(invoice.participants||[]).map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.name)}</td><td>${esc(p.ticket_category)}</td><td>${esc(p.booking_code)}</td><td>${esc(p.registration_number)}</td></tr>`).join("");
-            const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(invoice.order_number)}</title><style>body{font:14px Arial,sans-serif;background:#e9eee9;color:#1d3326;margin:0}.paper{max-width:790px;background:white;margin:25px auto;padding:32px;border-radius:12px}.header{background:#263d2b;text-align:center;padding:18px;border-radius:10px}.header img{max-height:115px;max-width:100%}h1{color:#bd3c24}.alert{padding:14px;background:#fff1d7;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left}.btnprint{background:#ff691f;border:0;border-radius:8px;padding:14px 20px;font-weight:bold;cursor:pointer;margin-top:18px}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.btnprint{display:none}@page{size:A4;margin:15mm}}</style></head><body><div class="paper"><div class="header"><img src="/logo-baladhika.png" alt="Baladhika Fun Run"></div><h1>INVOICE LUNAS — DEMO / TEST</h1><p class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</p><p><b>Nomor pesanan:</b> ${esc(invoice.order_number)}</p><p><b>Pemesan:</b> ${esc(invoice.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(invoice.total_participants)}</p><p><b>Total simulasi:</b> ${esc(rupiah(invoice.total_amount))}</p><p><b>Status:</b> PAID_DEMO</p><h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>No. Registrasi</th></tr></thead><tbody>${rows}</tbody></table><p>Gunakan kode booking untuk verifikasi pengambilan racepack.</p><button class="btnprint" onclick="window.print()">SIMPAN PDF / CETAK ↓</button><p><small>DEMO / TEST — bukan bukti pembayaran sah.</small></p></div></body></html>`;
+            const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(invoice.order_number)}</title><style>body{font:14px Arial,sans-serif;background:#e9eee9;color:#1d3326;margin:0}.paper{max-width:790px;background:white;margin:25px auto;padding:32px;border-radius:12px}.header{background:#263d2b;text-align:center;padding:18px;border-radius:10px}.header img{max-height:115px;max-width:100%}h1{color:#bd3c24}.alert{padding:14px;background:#fff1d7;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left}.btnprint{background:#ff691f;border:0;border-radius:8px;padding:14px 20px;font-weight:bold;cursor:pointer;margin-top:18px}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.btnprint{display:none}@page{size:A4;margin:15mm}}
+</style></head><body><div class="paper"><div class="header"><img src="/logo-baladhika.png" alt="Baladhika Fun Run"></div><h1>INVOICE LUNAS — DEMO / TEST</h1><p class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</p><p><b>Nomor pesanan:</b> ${esc(invoice.order_number)}</p><p><b>Pemesan:</b> ${esc(invoice.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(invoice.total_participants)}</p><p><b>Total simulasi:</b> ${esc(rupiah(invoice.total_amount))}</p><p><b>Status:</b> PAID_DEMO</p><h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>No. Registrasi</th></tr></thead><tbody>${rows}</tbody></table><p>Gunakan kode booking untuk verifikasi pengambilan racepack.</p><button class="btnprint" onclick="window.print()">SIMPAN PDF / CETAK ↓</button><p><small>DEMO / TEST — bukan bukti pembayaran sah.</small></p></div></body></html>`;
             popup.document.open();popup.document.write(html);popup.document.close();
             msg.textContent="Invoice terbuka. Klik SIMPAN PDF / CETAK, lalu pilih Save as PDF.";
           }catch(err){popup.close();msg.textContent=err.message||"Gagal mengambil invoice.";}
