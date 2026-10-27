@@ -63,7 +63,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
   padding:16px 5%;display:flex;align-items:center;
   justify-content:space-between;gap:15px;
 }
-.nav-logo{width:175px;max-height:75px;object-fit:contain}
+.nav-logo{
+  width:auto;
+  height:55px;
+  max-width:100%;
+  object-fit:contain;
+}
 .nav-links{display:flex;align-items:center;gap:23px}
 .nav-links>a:not(.btn){font-size:11px;font-weight:900}
 .demo-ribbon{
@@ -457,7 +462,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
   .price-ring{border-width:32px}
 }
 @media(max-width:768px){
-  .nav-logo{width:115px}
+  .nav-logo{
+  width:auto;
+  height:42px;
+  max-width:100%;
+  object-fit:contain;
+}
   .navbar .btn{padding:12px;font-size:9px}
   .hero .inner{align-items:flex-start;padding-top:145px}
   .hero-content{width:100%}
@@ -835,7 +845,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 
 <nav class="navbar">
   <a href="#home">
-    <img class="nav-logo" src="logo-baladhika.png" alt="BALADHIKA FUN RUN 2026">
+    <img class="nav-logo" src="logo-63.png" alt="HUT ke-63 Korem 083/BDJ">
   </a>
   <div class="nav-links">
     <a href="#tanggal">EVENT</a>
