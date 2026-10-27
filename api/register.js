@@ -52,12 +52,12 @@ function makeCode(prefix) {
   );
 }
 
-// Nomor PESANAN baru: tepat 6 karakter A-Z dan 0-9.
+// Nomor pesanan: BDJ + 5 karakter acak.
 function makeOrderNumber() {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let value = "";
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let value = "BDJ-";
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 5; i++) {
     value += alphabet[crypto.randomInt(alphabet.length)];
   }
 
