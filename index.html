@@ -559,46 +559,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
     transition-duration:.01ms!important;
   }
 }
-/* Kode CSS sebelumnya tetap ada */
-
-/* PERBAIKAN HERO KHUSUS HP */
-@media (max-width: 768px) {
-  .hero-content {
-    position: relative;
-    z-index: 30;
-  }
-
-  .hero-actions {
-    position: relative;
-    z-index: 40;
-    margin-bottom: 30px;
-  }
-
-  .hero-actions .btn {
-    position: relative;
-    z-index: 41;
-  }
-
- .hero-runner {
-  width: 110%;
-  max-width: none;
-  height: 52%;
-  right: -5%;
-  bottom: 0;
-  object-fit: contain;
-  object-position: right bottom;
-  pointer-events: none;
-}
-
-  .hero .scroll-hint {
-    display: none;
-  }
-
-  .hero-deco {
-    pointer-events: none;
-  }
-}
-
 /* PERBAIKAN TANGGAL KHUSUS HP */
 @media (max-width: 768px) {
   .date-section {
@@ -846,19 +806,34 @@ section{position:relative;overflow:hidden;isolation:isolate}
 @media(max-width:768px){.check-order-layout{grid-template-columns:1fr;gap:25px}.check-order-section{padding:65px 0}.check-order-panel{padding:20px}}
 
 
-/* Kode CSS sebelumnya tetap ada */
-
-/* PERBAIKAN HERO KHUSUS HP */
+/* HERO HP — GAMBAR PELARI DI BAWAH TOMBOL, TANPA TUMPUK */
 @media (max-width: 768px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 100svh;
+  }
+
+  .hero .inner {
+    width: 90%;
+    min-height: 0;
+    display: block;
+    padding: 145px 0 0;
+  }
+
   .hero-content {
     position: relative;
     z-index: 30;
+    width: 100%;
   }
 
   .hero-actions {
     position: relative;
     z-index: 40;
-    margin-bottom: 30px;
+    margin-top: 24px;
+    margin-bottom: 0;
   }
 
   .hero-actions .btn {
@@ -866,40 +841,30 @@ section{position:relative;overflow:hidden;isolation:isolate}
     z-index: 41;
   }
 
+  /* Mengikuti alur halaman: rambut tidak mungkin menabrak tombol */
   .hero-runner {
-    width: 100%;
-    height: 48%;
-    right: 0;
-    bottom: 0;
+    position: relative;
+    display: block;
+    align-self: flex-end;
+    width: 110%;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    right: auto;
+    bottom: auto;
+    margin: 12px -5% 0 0;
     object-fit: contain;
     object-position: right bottom;
+    transform: none !important;
     pointer-events: none;
+    z-index: 5;
   }
 
-  .scroll-hint {
+  .hero .scroll-hint {
     display: none;
   }
 
   .hero-deco {
-    pointer-events: none;
-  }
-}
-
-  .hero-runner {
-  width: 100%;
-  height: 48%;
-  right: 0;
-  bottom: 0;
-  object-fit: contain;
-  object-position: right bottom;
-  pointer-events: none;
-}
-  .scroll-hint {
-  display: none;
-}
-
-  .hero-deco,
-  .scroll-hint {
     pointer-events: none;
   }
 }
