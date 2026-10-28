@@ -3102,7 +3102,10 @@ function showRegistrationResult(message, success=false){
 }
 
 async function previewPayment(){
-  if(MIGRATION_REGISTRATION_CLOSED){alert("Pendaftaran ditutup sementara selama migrasi sistem.");return;}
+  if(MIGRATION_REGISTRATION_CLOSED){
+    alert("Pendaftaran ditutup sementara selama migrasi sistem.");
+    return;
+  }
   if(registrationSubmitting||registrationCompleted)return;
   if(!$("agreeRules").checked||!selectedPayment){
     alert("Setujui peraturan dan pilih metode pembayaran.");
@@ -3120,14 +3123,13 @@ async function previewPayment(){
   $("registrationResult").hidden=true;
 
   try{
-    // Periksa kembali kategori yang masih tersedia.
     const statusResponse=await fetch("/api/ticket-status",{cache:"no-store"});
     if(!statusResponse.ok)throw new Error("Status tiket belum dapat diperiksa.");
     const currentStatus=await statusResponse.json();
-    const selectedCategory=qty.early>0?"early_bird":"normal";
     if(currentStatus.success!==true ||
-       currentStatus[selectedCategory]?.can_register!==true){
-      throw new Error("Kategori tiket sudah tidak tersedia. Silakan kembali ke pilihan tiket.");
+       currentStatus.regular?.can_register!==true ||
+       currentStatus.regular?.status!=="AVAILABLE"){
+      throw new Error("Tiket REGULER tidak tersedia. Silakan kembali ke pilihan tiket.");
     }
 
     const payload={
@@ -3138,10 +3140,10 @@ async function previewPayment(){
       },
       participants:participantData.map(person=>({
         ...person,
-        category:person.category==="early"?"EARLY_BIRD":"NORMAL",
-        ticket_category:person.category==="early"?"EARLY_BIRD":"NORMAL"
+        category:"REGULER",
+        ticket_category:"REGULER"
       })),
-      payment_method:selectedPayment
+      payment_method:"QRIS_MANUAL"
     };
 
     const response=await fetch("/api/register",{
@@ -3156,38 +3158,23 @@ async function previewPayment(){
     }
 
     registrationCompleted=true;
-    const orderNumber=String(data.order_number||"");
-    const paymentToken=String(data.payment_token||"");
-    if(!/^BDJ-[A-HJ-NP-Z2-9]{5}$/.test(orderNumber) || !/^[a-f0-9]{64}$/.test(paymentToken)){
-      showRegistrationResult("Pendaftaran tersimpan, tetapi token pembayaran simulasi tidak diterima. Hubungi panitia dengan nomor pesanan: "+orderNumber);
-      button.textContent="PENDAFTARAN TERSIMPAN";
+    const orderNumber=String(data.order_number||"").trim();
+    if(!orderNumber){
+      showRegistrationResult("Pendaftaran berhasil diproses tetapi nomor pesanan tidak diterima. Hubungi panitia menggunakan email pendaftaran.");
+      button.textContent="PENDAFTARAN DIPROSES";
       return;
     }
-    // Akses hanya disimpan di sessionStorage pada tab browser ini (maksimal 24 jam).
-    // Jangan bagikan token/tautan; cek pesanan publik tidak pernah mengembalikan token.
-    try {
-      sessionStorage.setItem("bdj_demo_payment_"+orderNumber,
-        JSON.stringify({order:orderNumber,token:paymentToken,savedAt:Date.now()}));
-    } catch (_) {}
-    // QR adalah kredensial simulasi khusus pesanan; jangan dibagikan kepada orang lain.
-    const paymentUrl=new URL("payment-demo.html",window.location.href);
-    paymentUrl.hash=new URLSearchParams({order:orderNumber,token:paymentToken}).toString();
-    showRegistrationResult("PENDAFTARAN DEMO TERSIMPAN\nNomor pesanan: "+orderNumber+"\nJumlah peserta: "+data.total_participants+"\nTotal simulasi: "+rupiah(data.total_amount)+"\nStatus: PENDING_DEMO\n\nPindai QR tautan atau buka halaman pembayaran DEMO untuk melanjutkan simulasi. Belum lunas.",true);
-    const panel=document.createElement("div");
-    panel.style.cssText="margin-top:20px;padding:18px;background:#fff;color:#24362b;border-radius:14px;text-align:center";
-    const title=document.createElement("h3");title.textContent="QR TAUTAN SIMULASI";title.style.cssText="font-size:24px;margin:5px";
-    const qr=document.createElement("div");qr.style.cssText="display:flex;justify-content:center;margin:15px auto";
-    panel.append(title,qr);
-    const caption=document.createElement("p");caption.textContent="QR ini membuka halaman DEMO khusus pesanan, bukan QRIS bank. Jangan bagikan QR karena berisi akses simulasi pesanan.";
-    caption.style.cssText="font-size:12px;line-height:1.7";panel.append(caption);
-    const open=document.createElement("a");open.className="btn";open.textContent="BUKA HALAMAN PEMBAYARAN DEMO →";
-    open.href=paymentUrl.href;open.style.margin="8px";panel.append(open);
-    const save=document.createElement("button");save.type="button";save.className="btn btn-outline";save.style.cssText="margin:8px;color:#24362b;border-color:#24362b";save.textContent="SIMPAN QR TAUTAN ↓";
-    save.onclick=()=>{const canvas=qr.querySelector("canvas"),img=qr.querySelector("img");const url=canvas?.toDataURL("image/png")||img?.src;if(!url){alert("QR belum siap");return;}const a=document.createElement("a");a.href=url;a.download="QR-DEMO-"+orderNumber+".png";a.click();};
-    panel.append(save);$("registrationResult").append(panel);
-    if(typeof QRCode!=="undefined")new QRCode(qr,{text:paymentUrl.href,width:220,height:220,correctLevel:QRCode.CorrectLevel.M});
-    else {const fallback=document.createElement("p");fallback.textContent="Generator QR belum termuat. Gunakan tombol Buka Halaman Pembayaran.";qr.append(fallback);}
-    button.textContent="PENDAFTARAN DEMO TERSIMPAN";
+
+    showRegistrationResult(
+      "PENDAFTARAN BERHASIL DISIMPAN\\n"+
+      "Nomor pesanan: "+orderNumber+"\\n"+
+      "Jumlah peserta: "+data.total_participants+"\\n"+
+      "Total pembayaran: "+rupiah(data.total_amount)+"\\n"+
+      "Status: "+String(data.payment_status||"PENDING_PAYMENT")+"\\n\\n"+
+      "Pesanan belum lunas. Simpan nomor pesanan ini. Instruksi pembayaran QRIS LIVE akan ditampilkan setelah integrasi pembayaran selesai.",
+      true
+    );
+    button.textContent="PENDAFTARAN TERSIMPAN";
     await refreshTicketStatus();
   }catch(error){
     showRegistrationResult(error?.message||"Terjadi kesalahan sistem.");
