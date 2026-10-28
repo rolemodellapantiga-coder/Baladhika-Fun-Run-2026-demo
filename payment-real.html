@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="id">
 <head>
@@ -28,38 +27,22 @@ label{display:block}
 <main>
 <h1>BALADHIKA FUN RUN 2026</h1>
 <h2>Pembayaran QRIS Resmi</h2>
-
-<p class="notice">
-<strong>Penting:</strong> Hanya bayar untuk pesanan yang sudah terdaftar dan sesuai nominal tagihan. Bukti pembayaran bukan konfirmasi LUNAS; admin harus mencocokkan uang masuk.
-</p>
-
+<p class="notice"><strong>Penting:</strong> Hanya bayar untuk pesanan yang sudah terdaftar dan sesuai nominal tagihan. Bukti pembayaran bukan konfirmasi LUNAS; admin harus mencocokkan uang masuk.</p>
 <section>
 <h3>QRIS TOKO BALADHIKA JAYA</h3>
 <img src="/qris-resmi.jpg" alt="QRIS resmi TOKO BALADHIKA JAYA">
 <a class="button" href="/qris-resmi.jpg" download="QRIS-BALADHIKA-JAYA.jpg">UNDUH QRIS</a>
 <p>Pastikan nama penerima <strong>TOKO BALADHIKA JAYA</strong> dan nominal sesuai tagihan pesanan Anda.</p>
 </section>
-
 <section>
 <h3>Verifikasi email untuk mengunggah bukti</h3>
-
-<label>Nomor pesanan
-<input id="order" placeholder="BDJ-XXXX" autocomplete="off" maxlength="8">
-</label>
-
-<label>Email pendaftaran
-<input id="email" type="email" placeholder="email peserta" autocomplete="email">
-</label>
-
+<label>Nomor pesanan<input id="order" placeholder="BDJ-XXXX" autocomplete="off" maxlength="8"></label>
+<label>Email pendaftaran<input id="email" type="email" placeholder="email peserta" autocomplete="email"></label>
 <button id="send">KIRIM OTP KE EMAIL</button>
-
 <div id="verifyBox" class="hidden">
-<label>Kode OTP dari email
-<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit OTP">
-</label>
+<label>Kode OTP dari email<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit OTP"></label>
 <button id="verify">VERIFIKASI OTP</button>
 </div>
-
 <div id="billBox" class="hidden">
 <h3>RINCIAN TAGIHAN</h3>
 <p>Nomor Pesanan: <strong id="billOrder"></strong></p>
@@ -69,35 +52,29 @@ label{display:block}
 <p id="billPaymentStatus"></p>
 <small>Bayarkan nominal sesuai tagihan melalui QRIS resmi.</small>
 </div>
-
 <div id="uploadBox" class="hidden">
-<p>Verifikasi berhasil. Sesi berlaku maksimal 30 menit. Unggah bukti pembayaran JPG, PNG, atau WebP maksimal 1 MB.</p>
-<label>Gambar bukti pembayaran
-<input id="proof" type="file" accept="image/jpeg,image/png,image/webp">
-</label>
+<p>Verifikasi berhasil. Sesi berlaku maksimal 30 menit. Pilih gambar JPG, PNG, atau WebP. Website akan mengompres gambar secara otomatis dengan target 200 KB sebelum diunggah.</p>
+<label>Gambar bukti pembayaran<input id="proof" type="file" accept="image/jpeg,image/png,image/webp"></label>
 <button id="upload">UNGGAH BUKTI PEMBAYARAN</button>
 </div>
-
 <p id="status" role="status" aria-live="polite"></p>
 </section>
-
 <a class="button" href="/">KEMBALI KE WEBSITE</a>
 <small>Pendaftaran tetap ditutup selama finalisasi sistem.</small>
 </main>
-
 <script>
 (() => {
   'use strict';
-
   let token = '';
   let expires = 0;
-
   const $ = id => document.getElementById(id);
-  const status = msg => {
-    $('status').textContent = msg;
-  };
+  const status = msg => { $('status').textContent = msg; };
   const order = () => $('order').value.trim().toUpperCase();
   const email = () => $('email').value.trim().toLowerCase();
+  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
+  const TARGET_BYTES = 200 * 1024;
+  const MAX_UPLOAD_BYTES = 1024 * 1024;
+  const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
 
   async function post(url, body) {
     const r = await fetch(url, {
@@ -106,34 +83,104 @@ label{display:block}
       body: JSON.stringify(body),
       cache: 'no-store'
     });
-
     const d = await r.json().catch(() => ({}));
-
-    if (!r.ok || !d.ok) {
-      throw Error(d.message || `Permintaan gagal (${r.status})`);
-    }
-
+    if (!r.ok || !d.ok) throw Error(d.message || `Permintaan gagal (${r.status})`);
     return d;
   }
 
   function valid() {
-    if (!/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(order())) {
-      throw Error('Nomor pesanan harus berformat BDJ-XXXX.');
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) {
-      throw Error('Masukkan email pendaftaran yang benar.');
-    }
+    if (!/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(order())) throw Error('Nomor pesanan harus berformat BDJ-XXXX.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) throw Error('Masukkan email pendaftaran yang benar.');
   }
 
   async function run(btn, fn) {
     btn.disabled = true;
+    try { await fn(); }
+    catch (e) { status(e.message || 'Terjadi kesalahan.'); }
+    finally { btn.disabled = false; }
+  }
+
+  function canvasBlob(canvas, mime, quality) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(Error('Gagal mengompres gambar.')), mime, quality);
+    });
+  }
+
+  async function loadImage(file) {
+    const url = URL.createObjectURL(file);
     try {
-      await fn();
-    } catch (e) {
-      status(e.message || 'Terjadi kesalahan.');
+      const img = new Image();
+      img.decoding = 'async';
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(Error('Gambar tidak dapat dibuka. Gunakan JPG, PNG, atau WebP yang valid.'));
+        img.src = url;
+      });
+      if (!img.naturalWidth || !img.naturalHeight) throw Error('Dimensi gambar tidak valid.');
+      return img;
     } finally {
-      btn.disabled = false;
+      // Object URL dilepas setelah gambar berhasil dimuat oleh browser.
+      URL.revokeObjectURL(url);
     }
+  }
+
+  async function compressProof(file) {
+    if (!ALLOWED.includes(file.type)) throw Error('Pilih gambar JPG, PNG, atau WebP.');
+    if (file.size < 16 || file.size > MAX_SOURCE_BYTES) throw Error('Gambar asli harus lebih kecil dari 20 MB.');
+
+    // File yang sudah memenuhi target tidak perlu dikompresi ulang.
+    if (file.size <= TARGET_BYTES) return {blob: file, mime: file.type, original: file.size};
+
+    const img = await loadImage(file);
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    if (w * h > 50000000) throw Error('Resolusi gambar terlalu besar. Pilih gambar dengan resolusi lebih kecil.');
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', {alpha: false});
+    if (!ctx) throw Error('Browser tidak mendukung kompresi gambar.');
+
+    // Gunakan JPEG agar dapat dikirim melalui API yang sudah mendukung image/jpeg.
+    // Latar putih menjaga gambar PNG transparan tetap terbaca.
+    let best = null;
+    const maxEdges = [1800, 1600, 1400, 1200, 1000, 850];
+    const qualities = [0.88, 0.82, 0.76, 0.70, 0.64, 0.58];
+    for (const edge of maxEdges) {
+      const scale = Math.min(1, edge / Math.max(w, h));
+      canvas.width = Math.max(1, Math.round(w * scale));
+      canvas.height = Math.max(1, Math.round(h * scale));
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      for (const q of qualities) {
+        const blob = await canvasBlob(canvas, 'image/jpeg', q);
+        if (!best || blob.size < best.size) best = blob;
+        if (blob.size <= TARGET_BYTES) {
+          return {blob, mime: 'image/jpeg', original: file.size};
+        }
+      }
+    }
+    // Jangan menurunkan resolusi lebih jauh karena tulisan bukti transfer bisa sulit dibaca.
+    if (best && best.size <= MAX_UPLOAD_BYTES) {
+      return {blob: best, mime: 'image/jpeg', original: file.size};
+    }
+    throw Error('Gambar belum bisa diperkecil hingga 1 MB tanpa mengurangi keterbacaan. Gunakan gambar yang lebih jelas atau resolusi lebih kecil.');
+  }
+
+  function toBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const value = String(reader.result || '');
+        const comma = value.indexOf(',');
+        if (comma < 0) return reject(Error('Gagal membaca hasil kompresi.'));
+        resolve(value.slice(comma + 1));
+      };
+      reader.onerror = () => reject(Error('Gagal membaca hasil kompresi.'));
+      reader.readAsDataURL(blob);
+    });
   }
 
   $('send').onclick = () => run($('send'), async () => {
@@ -143,12 +190,7 @@ label{display:block}
     $('billBox').classList.add('hidden');
     $('uploadBox').classList.add('hidden');
     $('verifyBox').classList.add('hidden');
-
-    await post('/api/request-real-payment-otp', {
-      order_number: order(),
-      email: email()
-    });
-
+    await post('/api/request-real-payment-otp', {order_number: order(), email: email()});
     $('verifyBox').classList.remove('hidden');
     status('Jika data pesanan cocok, kode OTP dikirim ke email. Periksa juga folder spam.');
   });
@@ -156,106 +198,57 @@ label{display:block}
   $('verify').onclick = () => run($('verify'), async () => {
     valid();
     const otp = $('otp').value.trim();
-
-    if (!/^\d{6}$/.test(otp)) {
-      throw Error('Masukkan 6 digit kode OTP.');
-    }
-
+    if (!/^\d{6}$/.test(otp)) throw Error('Masukkan 6 digit kode OTP.');
     if (!token || Date.now() >= expires) {
-      const d = await post('/api/verify-real-payment-otp', {
-        order_number: order(),
-        email: email(),
-        otp
-      });
-
+      const d = await post('/api/verify-real-payment-otp', {order_number: order(), email: email(), otp});
       token = d.session_token;
       expires = Date.parse(d.expires_at);
-
       if (!token || !Number.isFinite(expires) || Date.now() >= expires) {
         token = '';
         throw Error('Sesi tidak tersedia atau telah berakhir.');
       }
     }
-
-    const detail = await post('/api/order-details', {
-      order_number: order(),
-      session_token: token
-    });
-
+    const detail = await post('/api/order-details', {order_number: order(), session_token: token});
     const bill = detail.order;
-
-    if (
-      !bill ||
-      bill.order_number !== order() ||
-      bill.payment_status !== 'PENDING_PAYMENT' ||
-      !Number.isSafeInteger(bill.total_amount) ||
-      bill.total_amount <= 0 ||
-      !Number.isSafeInteger(bill.total_participants) ||
-      bill.total_participants < 1
-    ) {
+    if (!bill || bill.order_number !== order() || bill.payment_status !== 'PENDING_PAYMENT' ||
+        !Number.isSafeInteger(bill.total_amount) || bill.total_amount <= 0 ||
+        !Number.isSafeInteger(bill.total_participants) || bill.total_participants < 1) {
       throw Error('Pesanan tidak tersedia untuk pembayaran.');
     }
-
     $('billOrder').textContent = bill.order_number;
     $('billCount').textContent = bill.total_participants + ' orang';
-
-    $('billAmount').textContent =
-      new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0
-      }).format(bill.total_amount);
-
-    $('billPaymentStatus').textContent =
-      'Status: Menunggu Pembayaran';
-
+    $('billAmount').textContent = new Intl.NumberFormat('id-ID', {
+      style: 'currency', currency: 'IDR', maximumFractionDigits: 0
+    }).format(bill.total_amount);
+    $('billPaymentStatus').textContent = 'Status: Menunggu Pembayaran';
     $('order').readOnly = true;
     $('email').readOnly = true;
     $('verifyBox').classList.add('hidden');
     $('billBox').classList.remove('hidden');
     $('uploadBox').classList.remove('hidden');
-
     status('Email terverifikasi. Periksa nominal tagihan sebelum membayar.');
   });
 
   $('upload').onclick = () => run($('upload'), async () => {
-    if (!token || Date.now() >= expires) {
-      throw Error('Sesi berakhir. Muat ulang halaman dan minta OTP baru.');
-    }
-
-    const f = $('proof').files[0];
-    if (!f) throw Error('Pilih gambar bukti pembayaran.');
-
-    if (
-      !['image/jpeg', 'image/png', 'image/webp'].includes(f.type) ||
-      f.size > 1048576 ||
-      f.size < 16
-    ) {
-      throw Error('File harus JPG, PNG, atau WebP maksimal 1 MB.');
-    }
-
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () =>
-        resolve(String(reader.result).split(',')[1]);
-      reader.onerror = () =>
-        reject(Error('Gagal membaca gambar.'));
-      reader.readAsDataURL(f);
-    });
-
+    if (!token || Date.now() >= expires) throw Error('Sesi berakhir. Muat ulang halaman dan minta OTP baru.');
+    const file = $('proof').files[0];
+    if (!file) throw Error('Pilih gambar bukti pembayaran.');
+    status('Mengompres gambar otomatis. Mohon tunggu...');
+    const result = await compressProof(file);
+    if (Date.now() >= expires) throw Error('Sesi berakhir saat kompresi. Muat ulang halaman dan minta OTP baru.');
+    if (result.blob.size > MAX_UPLOAD_BYTES || result.blob.size < 16) throw Error('Ukuran hasil kompresi tidak valid.');
+    const kb = n => Math.round(n / 1024);
+    status(`Kompresi selesai: ${kb(result.original)} KB → ${kb(result.blob.size)} KB. Mengunggah bukti...`);
+    const base64 = await toBase64(result.blob);
     const d = await post('/api/upload-real-proof', {
-      order_number: order(),
-      session_token: token,
-      mime_type: f.type,
-      file_base64: base64
+      order_number: order(), session_token: token,
+      mime_type: result.mime, file_base64: base64
     });
-
     token = '';
     expires = 0;
     $('uploadBox').classList.add('hidden');
-    $('billPaymentStatus').textContent =
-      'Status: Bukti dikirim, menunggu verifikasi admin.';
-    status(d.message || 'Bukti diterima. Menunggu verifikasi admin.');
+    $('billPaymentStatus').textContent = 'Status: Bukti dikirim, menunggu verifikasi admin.';
+    status(`${d.message || 'Bukti diterima. Menunggu verifikasi admin.'}\nUkuran gambar tersimpan: sekitar ${kb(result.blob.size)} KB.`);
   });
 })();
 </script>
