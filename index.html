@@ -2133,10 +2133,10 @@ html, body {
   }
 }
 
-
-/* PERBAIKAN HERO KHUSUS DESKTOP */
+/* PERBAIKAN HERO FINAL KHUSUS DESKTOP */
 @media (min-width: 1024px) {
 
+  /* Hero penuh layar dengan warna solid */
   .block-hero .hero-shell {
     width: 100%;
     max-width: none;
@@ -2144,68 +2144,100 @@ html, body {
     min-height: 720px;
     max-height: none;
     overflow: hidden;
+    background: #203629;
+  }
+
+  .block-hero .hero-reference {
+    background: #203629 !important;
   }
 
   /* Logo HUT ke-63 */
   .block-hero .hero-emblem {
     top: 3%;
     left: 3%;
-    width: 11%;
-    max-width: 150px;
+    width: 10%;
+    max-width: 145px;
   }
- 
-  /* Logo BALADHIKA FUN RUN */
+
+  /* Logo Baladhika Fun Run diperkecil */
   .block-hero .hero-brand {
     top: 17%;
-    left: 12%;
-    width: 68%;
+    left: 17%;
+    width: 57%;
     text-align: center;
   }
 
-  /* Tanggal kegiatan */
+  .block-hero .hero-wordmark {
+    width: 100%;
+    height: auto;
+    max-height: 185px;
+    object-fit: contain;
+  }
+
+  /* Countdown dan tombol pendaftaran */
+  .block-hero .hero-countdown {
+    top: 3%;
+    right: 3%;
+    width: 25%;
+    max-width: 360px;
+    z-index: 20;
+  }
+
+  /* Tanggal kegiatan di kiri bawah */
   .block-hero .hero-event-date {
-    top: 44%;
-    left: 5%;
-  }
-
-  /* Lokasi kegiatan */
-  .block-hero .hero-venue {
-    left: 5%;
-    bottom: 3%;
-  }
-
-  /* Medali digeser ke kiri */
-  .block-hero .hero-medal-backdrop {
-    right: 8%;
+    top: auto;
     bottom: 8%;
-    width: 58%;
+    left: 4%;
+    width: 28%;
+    z-index: 6;
+  }
+
+  .block-hero .hero-date-main {
+    font-size: clamp(48px, 4.5vw, 78px);
+  }
+
+  .block-hero .hero-year {
+    font-size: clamp(55px, 5vw, 85px);
+    line-height: 0.95;
+  }
+
+  /* Lokasi berdampingan dengan tanggal */
+  .block-hero .hero-venue {
+    top: auto;
+    bottom: 8%;
+    left: 34%;
+    right: auto;
+    width: 24%;
+    z-index: 7;
+    align-items: flex-start;
+  }
+
+  .block-hero .hero-venue strong {
+    font-size: clamp(40px, 4vw, 68px);
+    line-height: 0.95;
+  }
+
+  /* Medali di belakang pelari */
+  .block-hero .hero-medal-backdrop {
+    right: 0;
+    bottom: 13%;
+    width: 55%;
     height: 58%;
     object-fit: contain;
     object-position: center;
   }
 
-  
-  /* Ukuran tulisan tanggal dan lokasi khusus desktop */
-  .block-hero .hero-year {
-    font-size: clamp(60px, 6vw, 90px);
-    line-height: 0.95;
-  }
-
-  .block-hero .hero-venue strong {
-    font-size: clamp(48px, 5vw, 76px);
-    line-height: 0.95;
-  }
-
-  /* Pelari digeser ke kiri agar tidak terpotong */
+  /* Kedua pelari tetap utuh */
   .block-hero .hero-people {
-    right: 5%;
+    right: 1%;
     bottom: 0;
-    width: 46%;
+    width: 43%;
     height: 48%;
     object-fit: contain;
     object-position: bottom center;
   }
 }
+
 
 </style>
 
