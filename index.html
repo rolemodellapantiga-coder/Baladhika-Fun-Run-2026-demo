@@ -2099,6 +2099,12 @@ section{position:relative;overflow:hidden;isolation:isolate}
 @media(max-width:768px){
  .event-block .bf-entry:not(.bf-visible){translate:0 42px!important;filter:blur(5px)}
 }
+
+/* Penutupan sementara selama migrasi */
+.migration-notice{padding:25px 28px;margin:15px 0 22px;background:#142119;color:#fff8ed;border:2px solid #ff691f;border-radius:16px;text-align:center}
+.migration-notice strong{font:900 clamp(17px,3vw,27px)/1.4 Montserrat,sans-serif;color:#ffad78}
+.migration-notice p{margin:12px 0 0;font-size:13px;line-height:1.8}
+#continueTickets,#earlyPlus,#earlyMinus,#normalPlus,#normalMinus{pointer-events:none}
 </style>
 </head>
 <body>
@@ -2132,7 +2138,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
         <div class="time-box"><span class="time-value" id="minutes">--</span><span class="time-label">MENIT</span></div>
         <div class="time-box"><span class="time-value" id="seconds">--</span><span class="time-label">DETIK</span></div>
       </div>
-      <a class="btn hero-register" href="#registration">DAFTAR SEKARANG ↗</a>
+      <a class="btn hero-register" href="#registration">PENDAFTARAN DITUTUP SEMENTARA</a>
     </div>
     <div class="hero-brand">
       <img class="hero-wordmark" src="logo-baladhika.png" alt="Baladhika Fun Run 2026">
@@ -2162,6 +2168,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
     </div>
 
     <!-- STEP 1 -->
+    <div class="migration-notice" role="status" aria-live="polite"><strong>PENDAFTARAN DITUTUP SEMENTARA</strong><p>Sistem Baladhika Fun Run 2026 sedang dalam proses migrasi. Pendaftaran dan pembayaran belum dapat dilakukan. Informasi event tetap dapat dilihat di halaman ini.</p></div>
     <div class="registration-panel" id="ticketStep">
       <p class="kicker orange">STEP 01</p>
       <h3 id="chooseYourTicketHeading">CHOOSE YOUR <span class="orange">TICKET</span></h3>
@@ -2221,15 +2228,14 @@ section{position:relative;overflow:hidden;isolation:isolate}
       </div>
 
       <p class="notice">
-        MODE DEMO. Status tiket mengikuti API pengujian.
-        Tidak ada pembayaran nyata.
+        PENDAFTARAN DITUTUP SEMENTARA. Sistem sedang dalam proses migrasi ke pendaftaran resmi. Mohon tidak melakukan pembayaran sampai pendaftaran dibuka kembali.
       </p>
 
       <div class="registration-actions">
         <span></span>
         <button class="btn" id="continueTickets"
                 onclick="openParticipantStep()" disabled>
-          CONTINUE REGISTRATION →
+          PENDAFTARAN DITUTUP SEMENTARA
         </button>
       </div>
     </div>
@@ -2687,7 +2693,9 @@ let participantData=[];
 function totalPeople(){return qty.early+qty.normal}
 function totalPrice(){return qty.early*prices.early+qty.normal*prices.normal}
 
+const MIGRATION_REGISTRATION_CLOSED = true;
 function isAvailable(category){
+  if(MIGRATION_REGISTRATION_CLOSED)return false;
   if(category==="early")return false; // Halaman 2 hanya menampilkan tiket Reguler
   if(!ticketStatus)return false;
   const key=category==="early"?"early_bird":"normal";
@@ -2756,6 +2764,7 @@ async function refreshTicketStatus(){
 }
 
 function changeQty(category,change){
+  if(MIGRATION_REGISTRATION_CLOSED)return;
   if(category==="early")return; // Tiket Early Bird tidak ditawarkan di halaman ini
   if(!["early","normal"].includes(category))return;
   if(!isAvailable(category)){
@@ -2958,6 +2967,7 @@ function createParticipant(index,category){
 }
 
 async function openParticipantStep(){
+  if(MIGRATION_REGISTRATION_CLOSED){alert("Pendaftaran ditutup sementara selama migrasi sistem.");return;}
   await refreshTicketStatus();
   if(totalPeople()===0){
     alert("Pilih tiket yang tersedia.");
@@ -3108,6 +3118,7 @@ function showRegistrationResult(message, success=false){
 }
 
 async function previewPayment(){
+  if(MIGRATION_REGISTRATION_CLOSED){alert("Pendaftaran ditutup sementara selama migrasi sistem.");return;}
   if(registrationSubmitting||registrationCompleted)return;
   if(!$("agreeRules").checked||!selectedPayment){
     alert("Setujui peraturan dan pilih metode pembayaran.");
