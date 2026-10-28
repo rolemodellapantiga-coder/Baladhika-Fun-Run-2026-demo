@@ -2869,134 +2869,9 @@ function makeGrid(...elements){
   return grid;
 }
 
-/* INDONESIA REGION DROPDOWNS */
-const REGION_API="https://www.emsifa.com/api-wilayah-indonesia/api";
-const regionCache=new Map();
-
-async function fetchRegions(type,parentId=""){
-  const path={
-    provinces:"/provinces.json",
-    regencies:"/regencies/"+parentId+".json",
-    districts:"/districts/"+parentId+".json",
-    villages:"/villages/"+parentId+".json"
-  }[type];
-  if(!path)throw Error("Tipe wilayah tidak dikenal");
-  const url=REGION_API+path;
-  if(regionCache.has(url))return regionCache.get(url);
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),12000);
-  try{
-    const response=await fetch(url,{signal:controller.signal});
-    if(!response.ok)throw Error("HTTP "+response.status);
-    const data=await response.json();
-    if(!Array.isArray(data))throw Error("Data wilayah tidak valid");
-    regionCache.set(url,data);
-    return data;
-  }finally{
-    clearTimeout(timeout);
-  }
-}
-
-function addRegionSelect(label,name){
-  const field=document.createElement("div");
-  field.className="field";
-  const title=document.createElement("label");
-  title.textContent=label+" *";
-  const select=document.createElement("select");
-  select.name=name;
-  select.required=true;
-  select.disabled=true;
-  field.append(title,select);
-  return{field,select};
-}
-
-function resetRegionSelect(select,message){
-  select.replaceChildren();
-  const option=document.createElement("option");
-  option.value="";
-  option.textContent=message;
-  select.append(option);
-  select.disabled=true;
-}
-
-function fillRegionSelect(select,data,label){
-  select.replaceChildren();
-  const first=document.createElement("option");
-  first.value="";
-  first.textContent="Pilih "+label;
-  select.append(first);
-  data.forEach(item=>{
-    const option=document.createElement("option");
-    option.value=String(item.id);
-    option.textContent=item.name;
-    select.append(option);
-  });
-  select.disabled=false;
-}
-
-function selectedRegionName(select){
-  if(!select||!select.value)return "";
-  return select.selectedOptions[0]?.textContent||"";
-}
-
+/* ALAMAT MANUAL — satu kolom, tanpa pilihan wilayah atau kode pos */
 function setupRegions(card){
-  const province=addRegionSelect("Provinsi","province");
-  const regency=addRegionSelect("Kabupaten / Kota","regency");
-  const district=addRegionSelect("Kecamatan","district");
-  const village=addRegionSelect("Desa / Kelurahan","village");
-  const selects=[
-    province.select,regency.select,district.select,village.select
-  ];
-  const labels=[
-    "provinsi","kabupaten / kota","kecamatan","desa / kelurahan"
-  ];
-  const types=["provinces","regencies","districts","villages"];
-  const versions=[0,0,0,0];
-  const status=document.createElement("p");
-  status.className="address-status";
-  status.setAttribute("role","status");
-
-  card.append(
-    makeGrid(province.field,regency.field,district.field,village.field),
-    status,
-    makeGrid(makeTextarea("Alamat Detail","street_address"))
-  );
-
-  async function loadLevel(level,parentId=""){
-    const select=selects[level];
-    const version=++versions[level];
-    resetRegionSelect(select,"Memuat pilihan...");
-    status.textContent="Memuat data "+labels[level]+"...";
-    try{
-      const data=await fetchRegions(types[level],parentId);
-      if(version!==versions[level])return;
-      fillRegionSelect(select,data,labels[level]);
-      status.textContent="";
-    }catch(error){
-      if(version!==versions[level])return;
-      resetRegionSelect(select,"Gagal memuat wilayah");
-      status.textContent=
-        "Data wilayah gagal dimuat. Periksa internet, "+
-        "lalu pilih ulang wilayah sebelumnya.";
-      console.warn(error);
-    }
-  }
-
-  for(let i=0;i<3;i++){
-    selects[i].addEventListener("change",()=>{
-      for(let j=i+1;j<4;j++){
-        versions[j]++;
-        resetRegionSelect(selects[j],"Pilih "+labels[j]);
-      }
-      status.textContent="";
-      if(selects[i].value)loadLevel(i+1,selects[i].value);
-    });
-  }
-  resetRegionSelect(selects[0],"Memuat provinsi...");
-  for(let i=1;i<4;i++){
-    resetRegionSelect(selects[i],"Pilih "+labels[i]);
-  }
-  loadLevel(0);
+  card.append(makeGrid(makeTextarea("Alamat Lengkap","street_address")));
 }
 
 /* PARTICIPANT FORM */
@@ -3063,8 +2938,7 @@ function createParticipant(index,category){
   setupRegions(card);
 
   card.append(makeGrid(
-    makeInput("WhatsApp Peserta (opsional)","phone","tel",false),
-    makeInput("Kode Pos (opsional)","postal_code","text",false)
+    makeInput("WhatsApp Peserta (opsional)","phone","tel",false)
   ));
 
   const emergencyTitle=document.createElement("p");
@@ -3111,9 +2985,6 @@ function collectParticipants(){
     const get=name=>card.querySelector(
       `[name="${name}"]`
     )?.value.trim()||"";
-    const region=name=>selectedRegionName(
-      card.querySelector(`[name="${name}"]`)
-    );
     return{
       category:card.dataset.category,
       first_name:get("first_name"),
@@ -3125,12 +2996,12 @@ function collectParticipants(){
       identity_type:get("identity_type"),
       identity_number:get("identity_number"),
       health_status:get("health_status"),
-      province:region("province"),
-      regency:region("regency"),
-      district:region("district"),
-      village:region("village"),
+      province:"",
+      regency:"",
+      district:"",
+      village:"",
       street_address:get("street_address"),
-      postal_code:get("postal_code"),
+      postal_code:"",
       phone:get("phone"),
       emergency_name:get("emergency_name"),
       emergency_phone:get("emergency_phone"),
@@ -3184,8 +3055,7 @@ $("registrationForm").addEventListener("submit",event=>{
     addReviewLine(card,"Status Kesehatan: "+person.health_status);
 
     const address=[
-      person.street_address,person.village,person.district,
-      person.regency,person.province,person.postal_code
+      person.street_address
     ].filter(Boolean).join(", ");
     addReviewLine(card,"Alamat Lengkap: "+address);
 
