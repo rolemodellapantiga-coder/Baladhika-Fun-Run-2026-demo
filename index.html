@@ -2132,6 +2132,31 @@ html, body {
     overflow-x: clip;
   }
 }
+
+/* PERBAIKAN HERO KHUSUS DESKTOP */
+@media (min-width: 1024px) {
+  .block-hero .hero-shell {
+    height: clamp(680px, 100vh, 900px);
+  }
+
+  .block-hero .hero-people {
+    width: 57%;
+    height: 43%;
+    right: 1%;
+    bottom: 0;
+    object-fit: contain;
+    object-position: bottom right;
+  }
+
+  .block-hero .hero-medal-backdrop {
+    width: 66%;
+    height: auto;
+    right: 0;
+    bottom: 5%;
+    object-fit: contain;
+  }
+}
+
 </style>
 
 </head>
