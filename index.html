@@ -2682,7 +2682,7 @@ function isAvailable(category){
   if(MIGRATION_REGISTRATION_CLOSED)return false;
   if(category==="early")return false; // Halaman 2 hanya menampilkan tiket Reguler
   if(!ticketStatus)return false;
-  const key=category==="early"?"early_bird":"normal";
+  const key=category==="early"?"early_bird":"regular";
   return ticketStatus.registration_open===true &&
     ticketStatus[key]?.status==="AVAILABLE" &&
     ticketStatus[key]?.can_register===true;
@@ -2698,7 +2698,7 @@ function updateTicketDisplay(){
     ["early","early_bird","priceEarly","cardEarly",
      "priceEarlyStatus","cardEarlyStatus","priceEarlyButton",
      "earlyPlus","earlyMinus"],
-    ["normal","normal","priceNormal","cardNormal",
+    ["normal","regular","priceNormal","cardNormal",
      "priceNormalStatus","cardNormalStatus","priceNormalButton",
      "normalPlus","normalMinus"]
   ].forEach(c=>{
@@ -2736,9 +2736,9 @@ async function refreshTicketStatus(){
     const response=await fetch("/api/ticket-status",{cache:"no-store"});
     if(!response.ok)throw Error("HTTP "+response.status);
     const data=await response.json();
-    if(data.success!==true||!data.early_bird||!data.normal){
-      throw Error("Respons API tidak valid");
-    }
+    if(data.success!==true||!data.regular){
+  throw Error("Respons API REGULER tidak valid");
+}
     ticketStatus=data;
   }catch(error){
     console.warn("Status tiket tidak tersedia:",error);
