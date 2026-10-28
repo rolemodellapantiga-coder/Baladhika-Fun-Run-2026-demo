@@ -2133,58 +2133,80 @@ html, body {
   }
 }
 
+
 /* PERBAIKAN HERO KHUSUS DESKTOP */
 @media (min-width: 1024px) {
+
   .block-hero .hero-shell {
-    height: 900px;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    min-height: 720px;
     max-height: none;
+    overflow: hidden;
   }
 
+  /* Logo HUT ke-63 */
   .block-hero .hero-emblem {
-    top: 2%;
-    left: 5%;
-    width: 13%;
+    top: 3%;
+    left: 3%;
+    width: 11%;
+    max-width: 150px;
   }
 
+  /* Logo BALADHIKA FUN RUN */
   .block-hero .hero-brand {
-    top: 21%;
-    left: 5%;
-    width: 90%;
+    top: 20%;
+    left: 15%;
+    width: 70%;
     text-align: center;
   }
 
-  .block-hero .hero-brand-main {
-    font-size: clamp(68px, 8vw, 116px);
+  .block-hero .hero-wordmark {
+    width: 100%;
+    max-height: 230px;
+    object-fit: contain;
   }
 
+  /* Countdown */
+  .block-hero .hero-countdown {
+    top: 3%;
+    right: 3%;
+    width: 29%;
+  }
+
+  /* Tanggal */
   .block-hero .hero-event-date {
-    top: 48%;
+    top: 46%;
     left: 5%;
   }
 
+  /* Lokasi */
   .block-hero .hero-venue {
     left: 5%;
     bottom: 5%;
   }
 
-  .block-hero .hero-people {
-    right: 2%;
-    bottom: 0;
-    width: 54%;
-    height: 45%;
+  /* Medali digeser ke kiri */
+  .block-hero .hero-medal-backdrop {
+    right: 8%;
+    bottom: 8%;
+    width: 58%;
+    height: 58%;
     object-fit: contain;
-    object-position: bottom right;
+    object-position: center;
   }
 
-  .block-hero .hero-medal-backdrop {
-    right: 2%;
-    bottom: 14%;
-    width: 60%;
-    height: auto;
+  /* Pelari digeser ke kiri agar tidak terpotong */
+  .block-hero .hero-people {
+    right: 5%;
+    bottom: 0;
+    width: 46%;
+    height: 48%;
     object-fit: contain;
+    object-position: bottom center;
   }
 }
-
 
 </style>
 
