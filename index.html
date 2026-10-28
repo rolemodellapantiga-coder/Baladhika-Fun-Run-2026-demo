@@ -2136,26 +2136,55 @@ html, body {
 /* PERBAIKAN HERO KHUSUS DESKTOP */
 @media (min-width: 1024px) {
   .block-hero .hero-shell {
-    height: clamp(680px, 100vh, 900px);
+    height: 900px;
+    max-height: none;
+  }
+
+  .block-hero .hero-emblem {
+    top: 2%;
+    left: 5%;
+    width: 13%;
+  }
+
+  .block-hero .hero-brand {
+    top: 21%;
+    left: 5%;
+    width: 90%;
+    text-align: center;
+  }
+
+  .block-hero .hero-brand-main {
+    font-size: clamp(68px, 8vw, 116px);
+  }
+
+  .block-hero .hero-event-date {
+    top: 48%;
+    left: 5%;
+  }
+
+  .block-hero .hero-venue {
+    left: 5%;
+    bottom: 5%;
   }
 
   .block-hero .hero-people {
-    width: 57%;
-    height: 43%;
-    right: 1%;
+    right: 2%;
     bottom: 0;
+    width: 54%;
+    height: 45%;
     object-fit: contain;
     object-position: bottom right;
   }
 
   .block-hero .hero-medal-backdrop {
-    width: 66%;
+    right: 2%;
+    bottom: 14%;
+    width: 60%;
     height: auto;
-    right: 0;
-    bottom: 5%;
     object-fit: contain;
   }
 }
+
 
 </style>
 
