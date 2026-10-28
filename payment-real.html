@@ -1,3 +1,263 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Pembayaran QRIS | Baladhika Fun Run 2026</title><style>*{box-sizing:border-box}body{margin:0;background:#14251a;color:#f6f0df;font:16px/1.6 system-ui,Arial;padding:18px}main{max-width:680px;margin:25px auto;padding:24px;background:#263d2d;border-radius:20px}h1{color:#ff782b;line-height:1.2}section{padding:18px;border:1px solid #6a826b;border-radius:14px;margin:18px 0}img{display:block;width:100%;max-width:420px;margin:auto;border-radius:8px}button,a.button{display:block;width:100%;text-align:center;background:#ff782b;color:#14251a;text-decoration:none;font-weight:800;border:0;border-radius:10px;padding:14px;margin:12px 0;cursor:pointer}button:disabled{opacity:.55;cursor:wait}input{width:100%;padding:12px;border:1px solid #9caf9d;border-radius:8px;margin:5px 0 12px;font-size:16px}.notice{background:#fff1cf;color:#3e2b0c;padding:15px;border-radius:10px}small{color:#d3dfd0}label{disaplay:block}#status{white-space:pre-wrap} .hidden{display:none}</style></head><body><main><h1>BALADHIKA FUN RUN 2026</h1><h2>Pembayaran QRIS Resmi</h2><p class="notice"><strong>Penting:</strong> Hanya bayar untuk pesanan yang sudah terdaftar dan sesuai nominal tagihan. Bukti pembayaran bukan konfirmasi LUNAS; admin harus mencocokkan uang masuk.</p><section><h3>QRIS TOKO BALADHIKA JAYA</h3><img src="/qris-resmi.jpg" alt="QRIS resmi TOKO BALADHIKA JAYA"><a class="button" href="/qris-resmi.jpg" download="QRIS-BALADHIKA-JAYA.jpg">UNDUH QRIS</a><p>Pastikan nama penerima <strong>TOKO BALADHIKA JAYA</strong> dan nominal sesuai tagihan pesanan Anda.</p></section><section><h3>Verifikasi email untuk mengunggah bukti</h3><label>Nomor pesanan<input id="order" placeholder="BDJ-XXXX" autocomplete="off" maxlength="8"></label><label>Email pendaftaran<input id="email" type="email" placeholder="email peserta" autocomplete="email"></label><button id="send">KIRIM OTP KE EMAIL</button><div id="verifyBox" class="hidden"><label>Kode OTP dari email<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit OTP"></label><button id="verify">VERIFIKASI OTP</button></div><div id="uploadBox" class="hidden"><p>Verifikasi berhasil. Sesi berlaku 30 menit. Unggah bukti pembayaran JPG, PNG, atau WebP maksimal 1 MB.</p><label>Gambar bukti pembayaran<input id="proof" type="file" accept="image/jpeg,image/png,image/webp"></label><button id="upload">UNGGAH BUKTI PEMBAYARAN</button></div><p id="status" role="status" aria-live="polite"></p></section><a class="button" href="/">KEMBALI KE WEBSITE</a><small>Pendaftaran tetap ditutup selama finalisasi sistem.</small></main><script>
-(()=>{'use strict';let token='',expires=0;const $=id=>document.getElementById(id);const status=msg=>{$('status').textContent=msg};const order=()=> $('order').value.trim().toUpperCase();const email=()=> $('email').value.trim().toLowerCase();async function post(url,body){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw Error(d.message||`Permintaan gagal (${r.status})`);return d}function valid(){if(!/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(order()))throw Error('Nomor pesanan harus berformat BDJ-XXXX.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email()))throw Error('Masukkan email pendaftaran yang benar.')}async function run(btn,fn){btn.disabled=true;try{await fn()}catch(e){status(e.message||'Terjadi kesalahan.')}finally{btn.disabled=false}}$('send').onclick=()=>run($('send'),async()=>{valid();token='';$('uploadBox').classList.add('hidden');await post('/api/request-real-payment-otp',{order_number:order(),email:email()});$('verifyBox').classList.remove('hidden');status('Jika data pesanan cocok, kode OTP dikirim ke email. Periksa juga folder spam.');});$('verify').onclick=()=>run($('verify'),async()=>{valid();const otp=$('otp').value.trim();if(!/^\d{6}$/.test(otp))throw Error('Masukkan 6 digit kode OTP.');const d=await post('/api/verify-real-payment-otp',{order_number:order(),email:email(),otp});token=d.session_token;expires=Date.parse(d.expires_at);if(!token||!Number.isFinite(expires))throw Error('Sesi tidak tersedia.');$('order').readOnly=true;$('email').readOnly=true;$('verifyBox').classList.add('hidden');$('uploadBox').classList.remove('hidden');status('Email terverifikasi. Silakan unggah bukti pembayaran.');});$('upload').onclick=()=>run($('upload'),async()=>{if(!token||Date.now()>=expires)throw Error('Sesi berakhir. Muat ulang halaman dan minta OTP baru.');const f=$('proof').files[0];if(!f)throw Error('Pilih gambar bukti pembayaran.');if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>1048576||f.size<16)throw Error('File harus JPG, PNG, atau WebP maksimal 1 MB.');const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=()=>reject(Error('Gagal membaca gambar.'));reader.readAsDataURL(f)});const d=await post('/api/upload-real-proof',{order_number:order(),session_token:token,mime_type:f.type,file_base64:base64});token='';$('uploadBox').classList.add('hidden');status(d.message||'Bukti diterima. Menunggu verifikasi admin.');});})();
-</script></body></html>
+
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Pembayaran QRIS | Baladhika Fun Run 2026</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#14251a;color:#f6f0df;font:16px/1.6 system-ui,Arial;padding:18px}
+main{max-width:680px;margin:25px auto;padding:24px;background:#263d2d;border-radius:20px}
+h1{color:#ff782b;line-height:1.2}
+section{padding:18px;border:1px solid #6a826b;border-radius:14px;margin:18px 0}
+img{display:block;width:100%;max-width:420px;margin:auto;border-radius:8px}
+button,a.button{display:block;width:100%;text-align:center;background:#ff782b;color:#14251a;text-decoration:none;font-weight:800;border:0;border-radius:10px;padding:14px;margin:12px 0;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+input{width:100%;padding:12px;border:1px solid #9caf9d;border-radius:8px;margin:5px 0 12px;font-size:16px}
+.notice{background:#fff1cf;color:#3e2b0c;padding:15px;border-radius:10px}
+small{color:#d3dfd0}
+label{display:block}
+#status{white-space:pre-wrap}
+.hidden{display:none}
+#billAmount{font-size:32px;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main>
+<h1>BALADHIKA FUN RUN 2026</h1>
+<h2>Pembayaran QRIS Resmi</h2>
+
+<p class="notice">
+<strong>Penting:</strong> Hanya bayar untuk pesanan yang sudah terdaftar dan sesuai nominal tagihan. Bukti pembayaran bukan konfirmasi LUNAS; admin harus mencocokkan uang masuk.
+</p>
+
+<section>
+<h3>QRIS TOKO BALADHIKA JAYA</h3>
+<img src="/qris-resmi.jpg" alt="QRIS resmi TOKO BALADHIKA JAYA">
+<a class="button" href="/qris-resmi.jpg" download="QRIS-BALADHIKA-JAYA.jpg">UNDUH QRIS</a>
+<p>Pastikan nama penerima <strong>TOKO BALADHIKA JAYA</strong> dan nominal sesuai tagihan pesanan Anda.</p>
+</section>
+
+<section>
+<h3>Verifikasi email untuk mengunggah bukti</h3>
+
+<label>Nomor pesanan
+<input id="order" placeholder="BDJ-XXXX" autocomplete="off" maxlength="8">
+</label>
+
+<label>Email pendaftaran
+<input id="email" type="email" placeholder="email peserta" autocomplete="email">
+</label>
+
+<button id="send">KIRIM OTP KE EMAIL</button>
+
+<div id="verifyBox" class="hidden">
+<label>Kode OTP dari email
+<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit OTP">
+</label>
+<button id="verify">VERIFIKASI OTP</button>
+</div>
+
+<div id="billBox" class="hidden">
+<h3>RINCIAN TAGIHAN</h3>
+<p>Nomor Pesanan: <strong id="billOrder"></strong></p>
+<p>Jumlah Peserta: <strong id="billCount"></strong></p>
+<p>Total Pembayaran:</p>
+<h1 id="billAmount"></h1>
+<p id="billPaymentStatus"></p>
+<small>Bayarkan nominal sesuai tagihan melalui QRIS resmi.</small>
+</div>
+
+<div id="uploadBox" class="hidden">
+<p>Verifikasi berhasil. Sesi berlaku maksimal 30 menit. Unggah bukti pembayaran JPG, PNG, atau WebP maksimal 1 MB.</p>
+<label>Gambar bukti pembayaran
+<input id="proof" type="file" accept="image/jpeg,image/png,image/webp">
+</label>
+<button id="upload">UNGGAH BUKTI PEMBAYARAN</button>
+</div>
+
+<p id="status" role="status" aria-live="polite"></p>
+</section>
+
+<a class="button" href="/">KEMBALI KE WEBSITE</a>
+<small>Pendaftaran tetap ditutup selama finalisasi sistem.</small>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  let token = '';
+  let expires = 0;
+
+  const $ = id => document.getElementById(id);
+  const status = msg => {
+    $('status').textContent = msg;
+  };
+  const order = () => $('order').value.trim().toUpperCase();
+  const email = () => $('email').value.trim().toLowerCase();
+
+  async function post(url, body) {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+      cache: 'no-store'
+    });
+
+    const d = await r.json().catch(() => ({}));
+
+    if (!r.ok || !d.ok) {
+      throw Error(d.message || `Permintaan gagal (${r.status})`);
+    }
+
+    return d;
+  }
+
+  function valid() {
+    if (!/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(order())) {
+      throw Error('Nomor pesanan harus berformat BDJ-XXXX.');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) {
+      throw Error('Masukkan email pendaftaran yang benar.');
+    }
+  }
+
+  async function run(btn, fn) {
+    btn.disabled = true;
+    try {
+      await fn();
+    } catch (e) {
+      status(e.message || 'Terjadi kesalahan.');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  $('send').onclick = () => run($('send'), async () => {
+    valid();
+    token = '';
+    expires = 0;
+    $('billBox').classList.add('hidden');
+    $('uploadBox').classList.add('hidden');
+    $('verifyBox').classList.add('hidden');
+
+    await post('/api/request-real-payment-otp', {
+      order_number: order(),
+      email: email()
+    });
+
+    $('verifyBox').classList.remove('hidden');
+    status('Jika data pesanan cocok, kode OTP dikirim ke email. Periksa juga folder spam.');
+  });
+
+  $('verify').onclick = () => run($('verify'), async () => {
+    valid();
+    const otp = $('otp').value.trim();
+
+    if (!/^\d{6}$/.test(otp)) {
+      throw Error('Masukkan 6 digit kode OTP.');
+    }
+
+    if (!token || Date.now() >= expires) {
+      const d = await post('/api/verify-real-payment-otp', {
+        order_number: order(),
+        email: email(),
+        otp
+      });
+
+      token = d.session_token;
+      expires = Date.parse(d.expires_at);
+
+      if (!token || !Number.isFinite(expires) || Date.now() >= expires) {
+        token = '';
+        throw Error('Sesi tidak tersedia atau telah berakhir.');
+      }
+    }
+
+    const detail = await post('/api/order-details', {
+      order_number: order(),
+      session_token: token
+    });
+
+    const bill = detail.order;
+
+    if (
+      !bill ||
+      bill.order_number !== order() ||
+      bill.payment_status !== 'PENDING_PAYMENT' ||
+      !Number.isSafeInteger(bill.total_amount) ||
+      bill.total_amount <= 0 ||
+      !Number.isSafeInteger(bill.total_participants) ||
+      bill.total_participants < 1
+    ) {
+      throw Error('Pesanan tidak tersedia untuk pembayaran.');
+    }
+
+    $('billOrder').textContent = bill.order_number;
+    $('billCount').textContent = bill.total_participants + ' orang';
+
+    $('billAmount').textContent =
+      new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+      }).format(bill.total_amount);
+
+    $('billPaymentStatus').textContent =
+      'Status: Menunggu Pembayaran';
+
+    $('order').readOnly = true;
+    $('email').readOnly = true;
+    $('verifyBox').classList.add('hidden');
+    $('billBox').classList.remove('hidden');
+    $('uploadBox').classList.remove('hidden');
+
+    status('Email terverifikasi. Periksa nominal tagihan sebelum membayar.');
+  });
+
+  $('upload').onclick = () => run($('upload'), async () => {
+    if (!token || Date.now() >= expires) {
+      throw Error('Sesi berakhir. Muat ulang halaman dan minta OTP baru.');
+    }
+
+    const f = $('proof').files[0];
+    if (!f) throw Error('Pilih gambar bukti pembayaran.');
+
+    if (
+      !['image/jpeg', 'image/png', 'image/webp'].includes(f.type) ||
+      f.size > 1048576 ||
+      f.size < 16
+    ) {
+      throw Error('File harus JPG, PNG, atau WebP maksimal 1 MB.');
+    }
+
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () =>
+        resolve(String(reader.result).split(',')[1]);
+      reader.onerror = () =>
+        reject(Error('Gagal membaca gambar.'));
+      reader.readAsDataURL(f);
+    });
+
+    const d = await post('/api/upload-real-proof', {
+      order_number: order(),
+      session_token: token,
+      mime_type: f.type,
+      file_base64: base64
+    });
+
+    token = '';
+    expires = 0;
+    $('uploadBox').classList.add('hidden');
+    $('billPaymentStatus').textContent =
+      'Status: Bukti dikirim, menunggu verifikasi admin.';
+    status(d.message || 'Bukti diterima. Menunggu verifikasi admin.');
+  });
+})();
+</script>
+</body>
+</html>
