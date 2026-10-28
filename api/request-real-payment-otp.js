@@ -8,6 +8,10 @@ const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
 const OTP_SECRET = process.env.OTP_SECRET;
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+
+// Aktifkan hanya setelah payment-real.html mengirim token Turnstile.
+const TURNSTILE_ENFORCE = process.env.TURNSTILE_ENFORCE === "true";
 
 const GENERIC_RESPONSE = {
   ok: true,
@@ -22,9 +26,7 @@ function reply(res, status, payload) {
 }
 
 function normalizeEmail(value) {
-  return typeof value === "string"
-    ? value.trim().toLowerCase()
-    : "";
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
 
 function makeOtp() {
@@ -32,26 +34,51 @@ function makeOtp() {
 }
 
 function hmac(value) {
-  return crypto
-    .createHmac("sha256", OTP_SECRET)
-    .update(value)
-    .digest("hex");
+  return crypto.createHmac("sha256", OTP_SECRET).update(value).digest("hex");
 }
 
 function getClientIp(req) {
   const realIp = req.headers["x-real-ip"];
-
-  if (typeof realIp === "string" && realIp.trim()) {
-    return realIp.trim();
-  }
+  if (typeof realIp === "string" && realIp.trim()) return realIp.trim();
 
   const forwarded = req.headers["x-forwarded-for"];
-
   if (typeof forwarded === "string" && forwarded.trim()) {
     return forwarded.split(",")[0].trim();
   }
 
   return null;
+}
+
+async function verifyTurnstile(token, ip) {
+  if (!TURNSTILE_SECRET_KEY || !token || token.length > 2048) return false;
+
+  const params = new URLSearchParams({
+    secret: TURNSTILE_SECRET_KEY,
+    response: token
+  });
+
+  if (ip) params.set("remoteip", ip);
+
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+      signal: AbortSignal.timeout(10000),
+      cache: "no-store"
+    }
+  );
+
+  if (!response.ok) throw new Error(`Turnstile HTTP ${response.status}`);
+
+  const result = await response.json();
+  if (result?.success !== true) return false;
+
+  const hostname = String(result.hostname || "").toLowerCase();
+
+  return hostname === "baladhikafunrun.com" ||
+    hostname === "www.baladhikafunrun.com";
 }
 
 async function supabaseRpc(name, params) {
@@ -73,10 +100,7 @@ async function supabaseRpc(name, params) {
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    const error = new Error(
-      data?.message || `Supabase HTTP ${response.status}`
-    );
-
+    const error = new Error(data?.message || `Supabase HTTP ${response.status}`);
     error.code = data?.message || "";
     throw error;
   }
@@ -100,7 +124,6 @@ async function consumeLimit(key, windowSeconds, maxRequests) {
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-
     return reply(res, 405, {
       ok: false,
       message: "Method not allowed"
@@ -115,10 +138,17 @@ module.exports = async function handler(req, res) {
     !OTP_SECRET
   ) {
     console.error("REAL payment OTP configuration incomplete");
-
     return reply(res, 503, {
       ok: false,
       message: "Layanan OTP belum siap."
+    });
+  }
+
+  if (TURNSTILE_ENFORCE && !TURNSTILE_SECRET_KEY) {
+    console.error("Turnstile enforcement enabled without secret key");
+    return reply(res, 503, {
+      ok: false,
+      message: "Layanan keamanan belum siap."
     });
   }
 
@@ -136,7 +166,7 @@ module.exports = async function handler(req, res) {
     body = {};
   }
 
-  if (Buffer.byteLength(JSON.stringify(body)) > 2048) {
+  if (Buffer.byteLength(JSON.stringify(body)) > 4096) {
     return reply(res, 413, {
       ok: false,
       message: "Permintaan terlalu besar."
@@ -150,6 +180,31 @@ module.exports = async function handler(req, res) {
       ok: false,
       message: "Permintaan tidak dapat diproses."
     });
+  }
+
+  // Mode transisi: permintaan lama masih diterima.
+  // Saat TURNSTILE_ENFORCE=true, token Turnstile wajib valid.
+  if (TURNSTILE_ENFORCE) {
+    const token = typeof body.turnstile_token === "string"
+      ? body.turnstile_token.trim()
+      : "";
+
+    try {
+      const valid = await verifyTurnstile(token, clientIp);
+
+      if (!valid) {
+        return reply(res, 403, {
+          ok: false,
+          message: "Pemeriksaan keamanan gagal. Muat ulang halaman dan coba lagi."
+        });
+      }
+    } catch (error) {
+      console.error("Turnstile verification unavailable:", error.message);
+      return reply(res, 503, {
+        ok: false,
+        message: "Pemeriksaan keamanan sementara tidak tersedia."
+      });
+    }
   }
 
   try {
@@ -232,7 +287,7 @@ module.exports = async function handler(req, res) {
         "OTP_REQUEST_NOT_AVAILABLE",
         "OTP_COOLDOWN_ACTIVE",
         "INVALID_OTP_REQUEST"
-      ].some(code => error.code.includes(code))
+      ].some(code => String(error.code).includes(code))
     ) {
       return reply(res, 200, GENERIC_RESPONSE);
     }
