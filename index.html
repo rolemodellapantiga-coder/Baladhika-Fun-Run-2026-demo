@@ -2116,10 +2116,26 @@ img, video, iframe, svg { max-width: 100%; }
   .hero-brand, .hero-actions, .hero-countdown { max-width: 100%; }
 }
 </style>
+  
+<style>
+/* Perbaikan geser kiri-kanan pada HP */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+@media (max-width: 768px) {
+  .event-block,
+  .hero-shell {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+}
+</style>
+
 </head>
 <body>
-
-
 
 <nav class="navbar">
   <a href="#home">
