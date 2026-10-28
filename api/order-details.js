@@ -5,7 +5,9 @@ const crypto = require("node:crypto");
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const OTP_SECRET = process.env.OTP_SECRET;
+
+const ORDER_PATTERN = /^BDJ-[A-HJ-NP-Z2-9]{4}$/;
+const TOKEN_PATTERN = /^[a-f0-9]{64}$/;
 
 function reply(res, status, data) {
   res.setHeader("Cache-Control", "no-store, private");
@@ -13,64 +15,34 @@ function reply(res, status, data) {
   return res.status(status).json(data);
 }
 
-function hmac(value) {
+function tokenHash(token) {
   return crypto
-    .createHmac("sha256", OTP_SECRET)
-    .update(value)
+    .createHash("sha256")
+    .update(token)
     .digest("hex");
 }
 
-function verifySession(token) {
-  if (typeof token !== "string" || token.length > 4096) {
-    return null;
+async function supabaseRpc(name, params) {
+  const response = await fetch(
+    `${SUPABASE_URL.replace(/\/+$/, "")}/rest/v1/rpc/${name}`,
+    {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params),
+      cache: "no-store",
+      signal: AbortSignal.timeout(10000)
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Supabase RPC HTTP ${response.status}`);
   }
 
-  const parts = token.split(".");
-
-  if (parts.length !== 2) {
-    return null;
-  }
-
-  const [payload, signature] = parts;
-
-  if (!/^[A-Za-z0-9_-]+$/.test(payload) ||
-      !/^[a-f0-9]{64}$/.test(signature)) {
-    return null;
-  }
-
-  const expected = hmac(`session:${payload}`);
-
-  const receivedBuffer = Buffer.from(signature, "hex");
-  const expectedBuffer = Buffer.from(expected, "hex");
-
-  if (!crypto.timingSafeEqual(receivedBuffer, expectedBuffer)) {
-    return null;
-  }
-
-  let session;
-
-  try {
-    session = JSON.parse(
-      Buffer.from(payload, "base64url").toString("utf8")
-    );
-  } catch {
-    return null;
-  }
-
-  const now = Math.floor(Date.now() / 1000);
-
-  if (
-    session.iss !== "baladhika-funrun-2026" ||
-    !Number.isSafeInteger(session.exp) ||
-    session.exp <= now ||
-    session.exp > now + 900 ||
-    typeof session.order_number !== "string" ||
-    typeof session.email !== "string"
-  ) {
-    return null;
-  }
-
-  return session;
+  return response.json();
 }
 
 async function supabaseGet(table, params) {
@@ -78,9 +50,9 @@ async function supabaseGet(table, params) {
     `${SUPABASE_URL.replace(/\/+$/, "")}/rest/v1/${table}`
   );
 
-  Object.entries(params).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
-  });
+  }
 
   const response = await fetch(url, {
     headers: {
@@ -92,7 +64,7 @@ async function supabaseGet(table, params) {
   });
 
   if (!response.ok) {
-    throw new Error(`Supabase ${table}: HTTP ${response.status}`);
+    throw new Error(`Supabase ${table} HTTP ${response.status}`);
   }
 
   return response.json();
@@ -108,10 +80,10 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (!SUPABASE_URL || !SUPABASE_KEY || !OTP_SECRET) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
     return reply(res, 503, {
       ok: false,
-      message: "Layanan riwayat belum siap."
+      message: "Layanan detail pesanan belum siap."
     });
   }
 
@@ -129,57 +101,53 @@ module.exports = async function handler(req, res) {
     body = {};
   }
 
-  if (Buffer.byteLength(JSON.stringify(body)) > 8192) {
+  if (Buffer.byteLength(JSON.stringify(body)) > 2048) {
     return reply(res, 413, {
       ok: false,
       message: "Permintaan terlalu besar."
     });
   }
 
-  const session = verifySession(body.session_token);
+  const orderNumber =
+    typeof body.order_number === "string"
+      ? body.order_number.trim().toUpperCase()
+      : "";
 
-  if (!session) {
+  const sessionToken =
+    typeof body.session_token === "string"
+      ? body.session_token.trim()
+      : "";
+
+  if (
+    !ORDER_PATTERN.test(orderNumber) ||
+    !TOKEN_PATTERN.test(sessionToken)
+  ) {
     return reply(res, 401, {
       ok: false,
-      message: "Sesi tidak valid atau telah berakhir. Verifikasi OTP kembali."
+      message: "Sesi tidak valid. Silakan verifikasi OTP kembali."
     });
   }
 
   try {
-    const orderNumber = session.order_number.toUpperCase();
-    const email = session.email.trim().toLowerCase();
-
-    let orderId = null;
-
-    // Cari nomor pesanan langsung terlebih dahulu.
-    const directOrders = await supabaseGet("orders", {
-      select: "id",
-      order_number: `eq.${orderNumber}`,
-      limit: "1"
-    });
-
-    if (directOrders.length) {
-      orderId = directOrders[0].id;
-    } else {
-      // Mendukung nomor pesanan baru maupun nomor lama.
-      const mappings = await supabaseGet(
-        "order_number_mapping_20261026",
-        {
-          select: "order_id",
-          or: `(new_order_number.eq.${orderNumber},old_order_number.eq.${orderNumber})`,
-          limit: "1"
-        }
-      );
-
-      if (mappings.length) {
-        orderId = mappings[0].order_id;
+    const validated = await supabaseRpc(
+      "validate_real_payment_session",
+      {
+        p_order_number: orderNumber,
+        p_token_hash: tokenHash(sessionToken)
       }
-    }
+    );
 
-    if (!orderId) {
-      return reply(res, 404, {
+    const session = Array.isArray(validated)
+      ? validated[0]
+      : validated;
+
+    if (
+      !session?.order_id ||
+      session.order_number !== orderNumber
+    ) {
+      return reply(res, 401, {
         ok: false,
-        message: "Pesanan tidak ditemukan."
+        message: "Sesi tidak valid atau telah berakhir."
       });
     }
 
@@ -189,36 +157,31 @@ module.exports = async function handler(req, res) {
         "total_participants,total_amount,currency," +
         "payment_status,payment_method,created_at,paid_at," +
         "payment_expires_at,expiry_policy_version",
-      id: `eq.${orderId}`,
+      id: `eq.${session.order_id}`,
       limit: "1"
     });
 
     const order = orders[0];
 
-    if (
-      !order ||
-      order.buyer_email.trim().toLowerCase() !== email
-    ) {
-      return reply(res, 403, {
+    if (!order || order.order_number !== orderNumber) {
+      return reply(res, 404, {
         ok: false,
-        message: "Akses pesanan tidak diizinkan."
+        message: "Pesanan tidak ditemukan."
       });
     }
 
-    const isPaid = order.payment_status === "PAID_DEMO";
+    const isPaid = order.payment_status === "PAID";
     const isLegacy = order.expiry_policy_version === 0;
 
     if (
       !isPaid &&
       !isLegacy &&
-      (
-        !order.payment_expires_at ||
-        new Date(order.payment_expires_at).getTime() <= Date.now()
-      )
+      order.payment_expires_at &&
+      new Date(order.payment_expires_at).getTime() <= Date.now()
     ) {
       return reply(res, 410, {
         ok: false,
-        message: "Masa berlaku pesanan telah berakhir."
+        message: "Masa pembayaran pesanan telah berakhir."
       });
     }
 
@@ -230,13 +193,13 @@ module.exports = async function handler(req, res) {
         "racepack_status",
       order_id: `eq.${order.id}`,
       order: "created_at.asc",
-      limit: "100"
+      limit: "10"
     });
 
     return reply(res, 200, {
       ok: true,
       order: {
-        order_number: orderNumber,
+        order_number: order.order_number,
         buyer_name: order.buyer_name,
         buyer_email: order.buyer_email,
         buyer_phone: order.buyer_phone,
@@ -246,9 +209,12 @@ module.exports = async function handler(req, res) {
         payment_status: order.payment_status,
         payment_method: order.payment_method,
         created_at: order.created_at,
-        paid_at: order.paid_at
+        paid_at: order.paid_at,
+        payment_expires_at: order.payment_expires_at,
+        payment_allowed:
+          order.payment_status === "PENDING_PAYMENT"
       },
-      participants: participants.map((p) => ({
+      participants: participants.map(p => ({
         id: p.id,
         registration_number: p.registration_number,
         ticket_category: p.ticket_category,
@@ -268,11 +234,11 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("Order details failed:", error.message);
+    console.error("REAL order details failed:", error.message);
 
     return reply(res, 503, {
       ok: false,
-      message: "Riwayat pendaftaran sementara tidak tersedia."
+      message: "Detail pesanan sementara tidak tersedia."
     });
   }
 };
