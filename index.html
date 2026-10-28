@@ -2511,183 +2511,22 @@ html, body {
 <script>
 "use strict";
 
-/* CEK PESANAN — DEMO */
-(function initializeCheckOrder(){
-  const form=document.getElementById("checkOrderForm");
-  const result=document.getElementById("checkOrderResult");
-  const button=document.getElementById("checkOrderButton");
-  const input=document.getElementById("checkOrderNumber");
-  if(!form||!result||!button||!input)return;
+/* CEK PESANAN — MENUNGGU INTEGRASI SISTEM NYATA */
+(function initializeCheckOrder() {
+  const form = document.getElementById("checkOrderForm");
+  const result = document.getElementById("checkOrderResult");
+  if (!form || !result) return;
 
-  input.addEventListener("input",()=>{
-    input.value=input.value.toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,"").slice(0,5);
-  });
-
-  function showMessage(message){
-    result.replaceChildren();
-    const p=document.createElement("p");
-    p.textContent=message;
-    result.appendChild(p);
-    result.hidden=false;
-  }
-
-  form.addEventListener("submit",async event=>{
+  form.addEventListener("submit", function(event) {
     event.preventDefault();
-    const code=input.value.trim().toUpperCase();
-    if(!/^[A-HJ-NP-Z2-9]{5}$/.test(code)){
-      showMessage("Masukkan tepat 5 karakter kode pesanan setelah BDJ-.");
-      return;
-    }
-    button.disabled=true;
-    button.textContent="MEMERIKSA...";
-    result.hidden=true;
-    try{
-      const response=await fetch("/api/check-order",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({order_number:code}),
-        cache:"no-store"
-      });
-      const data=await response.json();
-      if(!response.ok||data.success!==true){
-        showMessage(data.error||"Pesanan belum dapat diperiksa.");
-        return;
-      }
-      result.replaceChildren();
-      const heading=document.createElement("strong");
-      heading.textContent="HASIL CEK PESANAN — DEMO";
-      const number=document.createElement("p");
-      number.textContent="Nomor Pesanan: "+data.order_number;
-      const payment=document.createElement("p");
-      payment.textContent="Status Pembayaran: "+data.payment_status;
-      const notice=document.createElement("p");
-      notice.textContent="DEMO / TEST — BUKAN BUKTI PEMBAYARAN SAH.";
-      result.append(heading,number,payment,notice);
-      if(data.payment_status==="PAID_DEMO"){
-        const wrap=document.createElement("div");
-        wrap.style.cssText="margin-top:18px;padding:18px;border:1px solid #ffffff44;border-radius:14px";
-        const label=document.createElement("label");
-        label.textContent="EMAIL PEMESAN (UNTUK VERIFIKASI INVOICE)";
-        label.style.cssText="display:block;font-size:11px;font-weight:800;margin-bottom:9px";
-        const email=document.createElement("input");
-        email.type="email";email.autocomplete="email";email.placeholder="Email yang digunakan saat mendaftar";
-        email.style.cssText="display:block;width:100%;padding:14px;border-radius:9px;border:1px solid #ffffff66;background:#0f1b14;color:white;margin-bottom:12px";
-        const download=document.createElement("button");
-        download.type="button";download.className="btn";
-        download.textContent="DOWNLOAD INVOICE DEMO (PDF) ↓";
-        const msg=document.createElement("p");
-        msg.style.cssText="font-size:12px;margin:12px 0 0;color:#ffd6b7";
-        download.addEventListener("click",async()=>{
-          const buyerEmail=email.value.trim();
-          if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)){
-            msg.textContent="Masukkan email pemesan yang digunakan saat pendaftaran.";return;
-          }
-          // Buka jendela secara langsung agar tidak diblokir popup blocker.
-          const popup=window.open("","_blank");
-          if(!popup){msg.textContent="Izinkan pop-up untuk mengunduh invoice.";return;}
-          popup.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Menyiapkan invoice DEMO</title></head><body><p>Menyiapkan invoice DEMO...</p></body></html>");
-          popup.document.close();
-          download.disabled=true;msg.textContent="Memverifikasi email dan menyiapkan invoice...";
-          try{
-            const response=await fetch("/api/participant-demo-invoice",{
-              method:"POST",headers:{"Content-Type":"application/json"},
-              body:JSON.stringify({order_number:data.order_number,buyer_email:buyerEmail}),cache:"no-store"
-            });
-            const payload=await response.json();
-            if(!response.ok||!payload.success)throw new Error(payload.error||"Invoice belum tersedia.");
-            const invoice=payload.invoice;
-            const esc=v=>String(v??"-").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-            const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-            const rows=(invoice.participants||[]).map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.name)}</td><td>${esc(p.ticket_category)}</td><td>${esc(p.booking_code)}</td><td>${esc(p.registration_number)}</td></tr>`).join("");
-            const html=`\x3c!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Invoice DEMO ${esc(invoice.order_number)}</title><style>body{font:14px Arial,sans-serif;background:#e9eee9;color:#1d3326;margin:0}.paper{max-width:790px;background:white;margin:25px auto;padding:32px;border-radius:12px}.header{background:#263d2b;text-align:center;padding:18px;border-radius:10px}.header img{max-height:115px;max-width:100%}h1{color:#bd3c24}.alert{padding:14px;background:#fff1d7;font-weight:bold}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border:1px solid #d9e0d8;padding:9px;text-align:left}.btnprint{background:#ff691f;border:0;border-radius:8px;padding:14px 20px;font-weight:bold;cursor:pointer;margin-top:18px}@media print{body{background:white}.paper{margin:0;padding:0;max-width:none}.btnprint{display:none}@page{size:A4;margin:15mm}}
-\x3c/style>\x3c/head><body><div class="paper"><div class="header"><img src="/logo-baladhika.png" alt="Baladhika Fun Run"></div><h1>INVOICE LUNAS — DEMO / TEST</h1><p class="alert">BUKAN BUKTI PEMBAYARAN NYATA — KHUSUS SIMULASI</p><p><b>Nomor pesanan:</b> ${esc(invoice.order_number)}</p><p><b>Pemesan:</b> ${esc(invoice.buyer_name)}</p><p><b>Jumlah peserta:</b> ${esc(invoice.total_participants)}</p><p><b>Total simulasi:</b> ${esc(rupiah(invoice.total_amount))}</p><p><b>Status:</b> PAID_DEMO</p><h2>Peserta & Kode Booking Racepack</h2><table><thead><tr><th>No.</th><th>Nama</th><th>Kategori</th><th>Kode Booking</th><th>No. Registrasi</th></tr></thead><tbody>${rows}</tbody></table><p>Gunakan kode booking untuk verifikasi pengambilan racepack.</p><button class="btnprint" onclick="window.print()">SIMPAN PDF / CETAK ↓</button><p><small>DEMO / TEST — bukan bukti pembayaran sah.</small></p></div></body></html>`;
-            popup.document.open();popup.document.write(html);popup.document.close();
-            msg.textContent="Invoice terbuka. Klik SIMPAN PDF / CETAK, lalu pilih Save as PDF.";
-          }catch(err){popup.close();msg.textContent=err.message||"Gagal mengambil invoice.";}
-          finally{download.disabled=false;}
-        });
-        wrap.append(label,email,download,msg);result.append(wrap);
-      }
-      if(data.payment_status==="PENDING_DEMO"){
-        const fullOrder=String(data.order_number||"").toUpperCase();
-        const stored=sessionStorage.getItem("bdj_demo_payment_"+fullOrder);
-        let savedToken="";
-        try{
-          const parsed=JSON.parse(stored||"null");
-          if(parsed && parsed.order===fullOrder && Date.now()-parsed.savedAt<86400000 &&
-             /^[a-f0-9]{64}$/.test(parsed.token)) savedToken=parsed.token;
-        }catch(_){}
-        const section=document.createElement("section");
-        section.style.cssText="margin-top:18px;padding:18px;border:1px solid #ffffff44;border-radius:14px;text-align:center";
-        const label=document.createElement("h3");
-        label.textContent="QRIS SIMULASI — "+fullOrder;
-        label.style.cssText="font-size:18px;margin:0 0 12px;color:#fff";
-        const qrImg=document.createElement("img");
-        qrImg.alt="Kode QR demonstrasi, bukan QRIS bank dan tidak dapat menerima pembayaran";
-        qrImg.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANcAAADXAQAAAAChBvkYAAACeElEQVR4nO1YMY7bQAwceg2sOzrIA9Yvke5bAXwn+XRAvpGnaPMSqku5qrIC1poUMpAmd0nj2xTHRgJZkCA5Qy6FeE24e9UEfNjezwauANCgsywsgCQgb4YKcSqZoXscKPuQeTwHtKTVydlFAFxPjAnQmFwEZX9Hf3+xyTRweYKzDO3fwd8fZb99eHQ4iC6nH3n+XJY6sewAdITwUcAjprkN/QRhqRPLLHLg0Vlu8NU2bRQ51cD0JskZ2oSQge6mendMg6sWADoQwhLQwNGv2lfgF3DVwfyoBbnRgVyVzI32oQbXSQLmh3kw/zwvIjtc5CDJxSr9kjpyhGNuAOQ2nYG2Vr8AQMseHJXmYzoHT9Lq1MiZf55LODRAWB7gDFH6u/l7Q8jUWYYWeHIwjlrAmM51cATHm3MtQMuhHr+QtAw4+pgQtv2l0Vpc1wfGjXw75kYL/Kg1evdWGbnVKPhRSTKd63Dd1Adeg7dlh5dpfgIm8Hg/f28ImZzlNp0Dmc4hS0JAy1IhL+CqNDIBXNHd/kbU2L3BVXtkwBkjaX5VMrcJVfJCluBHdAQ2RA3GyFIlL7d+cZYlnQEAAY0OlTA9GFcdmFv2ITebusYM2AHz0oqblpN/ngfTyAIfk2OVN4l6w3f18fDz03LKwEsw7vDN6ryPplPzHY9w63USWV2U+/n7h3fAqjQAnUFYwLXWbASARmmeyZEjnN228Cq8y9xoCSRJT/ZbfFVwhIsAcw+R40UAOJOdllDlFqT9tjyhJS23JD2Tq7J7AwAkvUwc5z74Z1xPyw5fTnXyQuY2OfrIgblRMkul2fj7Xtdu86gzP6JG78rHffe/t/0CJEXosITwT6cAAAAASUVORK5CYII=";
-        qrImg.style.cssText="display:block;margin:0 auto;max-width:230px;width:80%;height:auto;border:12px solid white;border-radius:10px";
-        const disclaimer=document.createElement("p");
-        disclaimer.textContent="DEMO / TEST — QR ini hanya contoh tampilan, bukan QRIS bank. Memindainya tidak membayar pesanan.";
-        disclaimer.style.cssText="font-size:12px;line-height:1.6;color:#ffd6b7";
-        const info=document.createElement("p");
-        info.textContent="Untuk versi LIVE, QRIS pembayaran asli akan dibuat oleh penyedia pembayaran berdasarkan nomor dan nominal pesanan. Status lunas hanya boleh diperbarui dari notifikasi pembayaran terverifikasi.";
-        info.style.cssText="font-size:12px;line-height:1.6;text-align:left";
-        section.append(label,qrImg,disclaimer,info);
-        const qrDownload=document.createElement("button");
-        qrDownload.type="button";qrDownload.className="btn";
-        qrDownload.textContent="DOWNLOAD QRIS DEMO ↓";
-        qrDownload.style.cssText="width:100%;margin:12px 0";
-        qrDownload.addEventListener("click",()=>{
-          const canvas=document.createElement("canvas");canvas.width=640;canvas.height=760;
-          const ctx=canvas.getContext("2d");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,640,760);
-          ctx.fillStyle="#163022";ctx.textAlign="center";ctx.font="bold 29px Arial";
-          ctx.fillText("BALADHIKA FUN RUN 2026",320,58);
-          ctx.font="bold 24px Arial";ctx.fillText("QRIS SIMULASI",320,105);
-          ctx.fillText(fullOrder,320,145);
-          const paint=()=>{
-            ctx.drawImage(qrImg,135,180,370,370);
-            ctx.font="bold 19px Arial";ctx.fillStyle="#aa2c12";
-            ctx.fillText("DEMO / TEST - BUKAN QRIS BANK",320,615);
-            ctx.font="17px Arial";ctx.fillStyle="#163022";
-            ctx.fillText("TIDAK UNTUK PEMBAYARAN NYATA",320,650);
-            const a=document.createElement("a");a.download="QRIS-DEMO-"+fullOrder+".png";
-            a.href=canvas.toDataURL("image/png");a.click();
-          };
-          if(qrImg.complete&&qrImg.naturalWidth)paint();
-          else qrImg.addEventListener("load",paint,{once:true});
-        });
-        section.append(qrDownload);
-        result.append(section);
-        if(savedToken){
-          const resume=document.createElement("button");
-          resume.type="button";
-          resume.className="btn";
-          resume.style.width="100%";
-          resume.textContent="UPLOAD BUKTI & TERBITKAN INVOICE DEMO →";
-          resume.addEventListener("click",()=>{
-            const u=new URL("/payment-demo.html",location.origin);
-            u.hash=new URLSearchParams({order:fullOrder,token:savedToken}).toString();
-            location.assign(u.href);
-          });
-          result.append(resume);
-        }else{
-          const help=document.createElement("p");
-          help.textContent="Untuk mengunggah bukti dan menerbitkan invoice, akses pesanan lama perlu dipulihkan oleh panitia setelah verifikasi pemilik. QR contoh ini dapat diunduh, tetapi tidak dapat mengubah status pembayaran.";
-          const locked=document.createElement("button");locked.type="button";locked.className="btn";
-          locked.style.width="100%";locked.disabled=true;
-          locked.textContent="UPLOAD BUKTI & INVOICE — MENUNGGU VERIFIKASI";
-          result.append(locked);
-          help.style.cssText="font-size:12px;line-height:1.7";
-          result.append(help);
-        }
-      }
-      result.hidden=false;
-    }catch(error){
-      showMessage("Koneksi gagal. Silakan coba kembali nanti.");
-    }finally{
-      button.disabled=false;
-      button.textContent="CEK STATUS PESANAN →";
-    }
+    result.replaceChildren();
+
+    const message = document.createElement("p");
+    message.textContent =
+      "Pengecekan pesanan sedang disiapkan untuk sistem pembayaran resmi. Silakan hubungi panitia apabila memerlukan bantuan.";
+
+    result.appendChild(message);
+    result.hidden = false;
   });
 })();
 
