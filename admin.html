@@ -277,9 +277,8 @@
       <p class="info" id="ownerInfo"></p>
 
       <div class="notice">
-        Mode DEMO: status PENDING_DEMO bukan bukti pembayaran.
-        Verifikasi pembayaran dan penyerahan racepack hanya dapat dilakukan oleh OWNER.
-        Semua pembayaran yang ditampilkan merupakan simulasi, bukan transaksi riil.
+        Mode QRIS LIVE: bukti pembayaran harus dicocokkan dengan mutasi rekening merchant.
+        Hanya OWNER yang dapat menyetujui atau menolak pembayaran. Pendaftaran publik masih ditutup selama pengujian.
       </div>
 
       <h2 class="section-title">Ringkasan Pendaftaran</h2>
@@ -295,7 +294,7 @@
           <div class="note">Pesanan individu dan rombongan</div>
         </div>
         <div class="card">
-          <div class="label">Pesanan Pending DEMO</div>
+          <div class="label">Pesanan Menunggu Pembayaran</div>
           <div class="value" id="pendingOrders">—</div>
           <div class="note">Belum merupakan pembayaran lunas</div>
         </div>
@@ -309,7 +308,7 @@
       <h2 class="section-title">Monitoring Kuota</h2>
       <div class="quota-grid">
         <div class="card">
-          <strong>EARLY BIRD</strong>
+          <strong>REGULER 5K — TOTAL KUOTA</strong>
           <div class="value" id="earlyValue">—</div>
           <div class="quota-track">
             <div class="quota-fill" id="earlyBar"></div>
@@ -317,7 +316,7 @@
           <div class="info" id="earlyNote">—</div>
         </div>
         <div class="card">
-          <strong>NORMAL</strong>
+          <strong>RINCIAN KATEGORI DATABASE</strong>
           <div class="value" id="normalValue">—</div>
           <div class="quota-track">
             <div class="quota-fill" id="normalBar"></div>
@@ -503,36 +502,37 @@
       el("totalOrders").textContent =
         numberFormat(data.total_orders);
 
-      el("pendingOrders").textContent =
-        numberFormat(data.pending_demo_orders);
+      // RPC ringkasan lama belum dipastikan menyediakan jumlah pending LIVE.
+      // Jangan tampilkan hitungan DEMO sebagai angka pembayaran LIVE.
+      el("pendingOrders").textContent = "—";
 
       el("totalValue").textContent =
         rupiah(data.total_order_value);
 
       const early = Number(data.early_bird_registered || 0);
       const normal = Number(data.normal_registered || 0);
-      const earlyQuota = Number(data.early_bird_quota ?? 1500);
-      const normalQuota = Number(data.normal_quota ?? 500);
+      const earlyQuota = 2000;
+      const normalQuota = 2000;
+      const registered = early + normal;
 
       el("earlyValue").textContent =
-        numberFormat(early) + " / " + numberFormat(earlyQuota);
+        numberFormat(registered) + " / " + numberFormat(earlyQuota);
 
       el("normalValue").textContent =
-        numberFormat(normal) + " / " + numberFormat(normalQuota);
+        "REGULER: " + numberFormat(normal);
 
       el("earlyBar").style.width =
-        Math.min(100, earlyQuota ? early / earlyQuota * 100 : 0) + "%";
+        Math.min(100, earlyQuota ? registered / earlyQuota * 100 : 0) + "%";
 
       el("normalBar").style.width =
         Math.min(100, normalQuota ? normal / normalQuota * 100 : 0) + "%";
 
       el("earlyNote").textContent =
         "Sisa berdasarkan jumlah pesanan: " +
-        numberFormat(Math.max(0, earlyQuota - early));
+        numberFormat(Math.max(0, earlyQuota - registered));
 
       el("normalNote").textContent =
-        "Sisa berdasarkan jumlah pesanan: " +
-        numberFormat(Math.max(0, normalQuota - normal));
+        "Kolom Normal dipakai untuk tiket REGULER. Angka mengikuti RPC ringkasan yang ada.";
     }
 
     function addCell(row, value) {
@@ -605,7 +605,7 @@
         const statusCell = addCell(tr, "");
         const badge = document.createElement("span");
         badge.className = "status" +
-          (p.payment_status === "PAID_DEMO" ? " paid" : "");
+          (p.payment_status === "PAID" ? " paid" : "");
         badge.textContent = p.payment_status || "-";
         statusCell.appendChild(badge);
 
@@ -907,7 +907,7 @@
       <div class="card">
         <p class="info">
           Rekap otomatis berdasarkan seluruh peserta terdaftar.
-          Termasuk peserta dengan status PENDING_DEMO.
+          Termasuk peserta yang pembayarannya belum diverifikasi.
         </p>
 
         <div id="jerseySummaryGrid" class="cards"
@@ -1086,7 +1086,7 @@
       <div class="card">
         <p class="info">
           Data pesanan diambil langsung dari Supabase.
-          Status PENDING_DEMO bukan bukti pembayaran lunas.
+          Status PAID hanya boleh ditetapkan setelah dana diterima dan diperiksa OWNER.
         </p>
 
         <div class="toolbar" style="margin-top:18px">
@@ -1104,8 +1104,8 @@
           <select id="orderStatusFilter" aria-label="Filter status pembayaran" style="padding:12px;border:1px solid #cdd6cd;border-radius:9px">
             <option value="ALL">Semua status</option>
             <option value="WAITING">Kuning — Menunggu verifikasi</option>
-            <option value="PENDING_DEMO">Belum upload</option>
-            <option value="PAID_DEMO">Lunas DEMO</option>
+            <option value="NOT_UPLOADED">Belum upload</option>
+            <option value="PAID">Lunas LIVE</option>
             <option value="REJECTED">Ditolak</option>
           </select>
           <button class="btn btn-orange" id="orderExportButton" type="button">
@@ -1121,8 +1121,8 @@
                 <th>Nomor Pesanan</th>
                 <th>Nama Pemesan</th>
                 <th>HP Pemesan / Ketua Kelompok</th>
-                <th>Early Bird</th>
-                <th>Normal</th>
+                <th>Kategori</th>
+                <th>Reguler</th>
                 <th>Jumlah Peserta</th>
                 <th>Total Tagihan</th>
                 <th>Metode Pembayaran</th>
@@ -1173,12 +1173,12 @@
         alert("Izinkan pop-up untuk membuka bukti pembayaran.");
         return;
       }
-      popup.document.title = "Memuat bukti pembayaran DEMO";
+      popup.document.title = "Memuat bukti pembayaran QRIS LIVE";
       popup.document.body.textContent = "Memuat bukti pembayaran...";
 
       try {
         if (!accessToken) throw new Error("Silakan login OWNER kembali.");
-        const path = await rpc("owner_get_demo_proof_path", {
+        const path = await rpc("owner_get_real_proof_path", {
           p_order_number: orderNumber
         });
         if (typeof path !== "string" || !path.trim()) {
@@ -1189,7 +1189,7 @@
         // Tidak memakai URL tanda tangan yang sebelumnya salah path.
         const objectPath = path.split("/").map(encodeURIComponent).join("/");
         const url = SUPABASE_URL +
-          "/storage/v1/object/authenticated/demo-payment-proofs/" + objectPath;
+          "/storage/v1/object/authenticated/real-payment-proofs/" + objectPath;
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -1224,7 +1224,10 @@
       if (reviewBusy) return;
       const approving = decision === "APPROVE";
       if (!confirm((approving ? "SETUJUI" : "TOLAK") +
-        " bukti untuk " + orderNumber + "?\nPastikan bukti sudah diperiksa.")) return;
+        " pembayaran " + orderNumber + "?\n" +
+        (approving
+          ? "WAJIB: pastikan dana benar-benar masuk ke rekening merchant, bukan hanya melihat gambar bukti."
+          : "Pastikan bukti sudah diperiksa dan alasan penolakan jelas."))) return;
       let reason = null;
       if (!approving) {
         reason = prompt("Alasan penolakan (wajib):");
@@ -1237,8 +1240,8 @@
       reviewBusy = true;
       try {
         const result = approving
-          ? await rpc("owner_verify_demo_payment", { p_order_number: orderNumber })
-          : await rpc("owner_reject_demo_proof", {
+          ? await rpc("owner_approve_real_payment", { p_order_number: orderNumber })
+          : await rpc("owner_reject_real_payment", {
               p_order_number: orderNumber, p_reason: reason
             });
         alert(typeof result === "string" ? result :
@@ -1273,8 +1276,8 @@
         addCell(row, order.order_number);
         addCell(row, order.buyer_name);
         addCell(row, orderPhone(order));
-        addCell(row, order.early_bird_qty);
-        addCell(row, order.normal_qty);
+        addCell(row, order.ticket_category || "REGULER");
+        addCell(row, order.regular_qty ?? order.normal_qty);
         addCell(row, order.total_participants);
         addCell(row, rupiah(order.total_amount));
         addCell(row, order.payment_method);
@@ -1283,26 +1286,31 @@
         const statusBadge = document.createElement("span");
 
         const state = String(order.payment_status || "");
-        const proofState = String(order.demo_proof_review_status || "NOT_UPLOADED");
-        const waiting = proofState === "WAITING";
-        const approved = proofState === "APPROVED" || state === "PAID_DEMO";
-        const rejected = proofState === "REJECTED";
+        const proofState = String(order.payment_review_status || "NOT_UPLOADED");
+        const waiting = proofState === "WAITING" && state === "PENDING_PAYMENT";
+        const approved = proofState === "APPROVED" || state === "PAID";
+        const rejected = proofState === "REJECTED" || state === "REJECTED";
+        const hasProof = Boolean(order.has_real_payment_proof);
         statusBadge.className = "status" +
           (approved ? " paid" : waiting ? " waiting" : rejected ? " rejected" : "");
         statusBadge.textContent = waiting ? "KUNING — PERIKSA" :
-          approved ? "LUNAS DEMO" : rejected ? "DITOLAK" : state || "-";
+          approved ? "LUNAS LIVE" : rejected ? "DITOLAK" : state || "-";
         statusCell.appendChild(statusBadge);
         if (waiting) row.classList.add("review-needed");
 
         const proofCell = addCell(row, "");
         const actionCell = addCell(row, "");
-        if (waiting) {
+        if (hasProof) {
           const proof = document.createElement("button");
           proof.type = "button";
           proof.className = "btn btn-proof";
           proof.textContent = "LIHAT BUKTI";
           proof.addEventListener("click", () => openOwnerProof(order.order_number));
           proofCell.appendChild(proof);
+        } else {
+          proofCell.textContent = "Belum upload";
+        }
+        if (waiting && hasProof) {
           const actions = document.createElement("div");
           actions.className = "review-actions";
           const approve = document.createElement("button");
@@ -1316,8 +1324,9 @@
           actions.append(approve, reject);
           actionCell.appendChild(actions);
         } else {
-          proofCell.textContent = approved ? "Terverifikasi" : "—";
-          actionCell.textContent = "—";
+          actionCell.textContent = rejected
+            ? (order.payment_rejection_reason || "Ditolak")
+            : approved ? "Terverifikasi" : "—";
         }
         addCell(row, displayDate(order.created_at));
         tbody.appendChild(row);
@@ -1337,8 +1346,16 @@
 
       orderTotal = Number(result.total || 0);
       const chosenStatus = document.getElementById("orderStatusFilter").value;
-      renderOrders(chosenStatus === "ALL" ? items :
-        items.filter(item => item.payment_status === chosenStatus));
+      // Filter diterapkan pada halaman yang sedang ditampilkan.
+      // Pencarian semua halaman tetap menggunakan RPC get_owner_orders.
+      const filtered = chosenStatus === "ALL" ? items : items.filter(item => {
+        const proof = String(item.payment_review_status || "NOT_UPLOADED");
+        const state = String(item.payment_status || "");
+        if (chosenStatus === "WAITING") return proof === "WAITING" && state === "PENDING_PAYMENT";
+        if (chosenStatus === "NOT_UPLOADED") return proof === "NOT_UPLOADED";
+        return state === chosenStatus;
+      });
+      renderOrders(filtered);
 
       const start = orderTotal
         ? orderPage * ORDER_PAGE_SIZE + 1
@@ -1352,7 +1369,8 @@
       document.getElementById("orderPageInfo").textContent =
         "Menampilkan " + numberFormat(start) +
         "–" + numberFormat(end) +
-        " dari " + numberFormat(orderTotal) + " pesanan";
+        " dari " + numberFormat(orderTotal) + " pesanan" +
+        (chosenStatus === "ALL" ? "" : " (filter hanya halaman ini: " + filtered.length + ")");
 
       document.getElementById("orderPrevButton").disabled =
         orderPage === 0;
@@ -1479,13 +1497,14 @@
             "Nomor Pesanan",
             "Nama Pemesan",
             "HP Pemesan / Ketua Kelompok",
-            "Early Bird",
-            "Normal",
+            "Kategori",
+            "Reguler",
             "Jumlah Peserta",
             "Total Tagihan",
             "Mata Uang",
             "Metode Pembayaran",
             "Status Pembayaran",
+            "Status Bukti LIVE",
             "Tanggal Pesanan",
             "Tanggal Lunas"
           ];
@@ -1495,13 +1514,14 @@
             o.order_number,
             o.buyer_name,
             orderPhone(o),
-            o.early_bird_qty,
-            o.normal_qty,
+            o.ticket_category || "REGULER",
+            o.regular_qty ?? o.normal_qty,
             o.total_participants,
             o.total_amount,
             o.currency,
             o.payment_method,
             o.payment_status,
+            o.payment_review_status,
             displayDate(o.created_at),
             displayDate(o.paid_at)
           ]);
