@@ -2070,35 +2070,34 @@ section{position:relative;overflow:hidden;isolation:isolate}
 /* Parallax entrance: performa HP dan aksesibilitas. */
 @media(prefers-reduced-motion:reduce){.event-block *{scroll-behavior:auto!important}}
 
-/* PARALLAX TOTAL: efek masuk semua judul, teks, gambar dan panel slide 2–3. */
+/* Efek masuk nyata (lebih kuat) dan depth parallax seluruh halaman */
 @media(prefers-reduced-motion:no-preference){
- .block-registration .reveal-entry,.block-info .reveal-entry{
-   opacity:0;
-   clip-path:inset(0 0 13% 0);
-   filter:blur(5px);
-   transition:opacity .9s cubic-bezier(.2,.75,.2,1),
-              clip-path 1s cubic-bezier(.2,.75,.2,1),
-              filter .9s cubic-bezier(.2,.75,.2,1);
-   transition-delay:var(--reveal-delay,0ms);
+ .event-block .bf-entry:not(.bf-visible){
+   opacity:0!important;
+   translate:0 65px!important;
+   filter:blur(9px);
  }
- .block-registration .reveal-entry.reveal-visible,
- .block-info .reveal-entry.reveal-visible{
-   opacity:1;
-   clip-path:inset(0 0 0 0);
-   filter:blur(0);
+ .event-block .bf-entry{
+   transition:opacity .85s ease-out,translate 1s cubic-bezier(.18,.8,.25,1),
+     filter .9s ease-out!important;
+   transition-delay:var(--bf-delay,0ms)!important;
  }
- .block-hero .hero-people,.block-hero .hero-medal-backdrop,.block-hero .hero-six,
+ .event-block .bf-entry.bf-visible{
+   opacity:1!important;
+   translate:0 var(--bf-depth,0px)!important;
+   filter:blur(0)!important;
+ }
+ .block-hero .hero-people,.block-hero .hero-medal-backdrop,
+ .block-hero .hero-six,.block-hero .hero-brand,
  .block-registration .reg-medal-showcase,.block-registration .reg-benefits-banner,
  .block-registration .check-order-panel,.block-info .jersey-frame,
  .block-info .route-frame,.block-info .racepack-card,.block-info .rules-info{
-   translate:0 var(--parallax-y,0px)!important;
+   translate:0 var(--bf-depth,0px)!important;
    will-change:translate;
  }
 }
 @media(max-width:768px){
- .block-registration .reveal-entry,.block-info .reveal-entry{
-   transition-duration:.72s,.8s,.72s;
- }
+ .event-block .bf-entry:not(.bf-visible){translate:0 42px!important;filter:blur(5px)}
 }
 </style>
 </head>
@@ -3334,89 +3333,81 @@ async function previewPayment(){
   }
 }
 
-/* PARALLAX TOTAL — 3 SLIDE, tanpa ketergantungan pada library eksternal.
-   Scroll reveal menggunakan IntersectionObserver; depth parallax dengan translate
-   sehingga tidak berbenturan dengan transform:none!important desain asli. */
+/* PARALLAX VISIBLE V3: animasi seluruh 3 slide tanpa library eksternal. */
 function initializeParallax(){
-  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mobile=window.matchMedia("(max-width:768px)").matches;
-  const heading=document.getElementById("chooseYourTicketHeading");
-  if(heading){
-    const span=heading.querySelector(".orange");
-    if(span)span.textContent="TICKET";
-  }
+  const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile=matchMedia("(max-width:768px)").matches;
+  const ticket=document.querySelector("#chooseYourTicketHeading .orange");
+  if(ticket)ticket.textContent="TICKET";
   if(reduced)return;
-  const sections=[...document.querySelectorAll(".event-block section")];
-  const skip=(el)=>!!el.closest("[hidden], [aria-hidden='true'], .registration-panel[hidden]");
-  const selector=[
-    ".kicker","h1","h2","h3",".copy",".registration-intro",
-    ".registration-steps",".ticket-card",".ticket-name",".ticket-price",
-    ".ticket-counter",".order-summary",".notice",".registration-actions",
-    ".reg-medal-showcase",".reg-benefits-showcase",".reg-benefits-banner",
-    ".check-order-layout",".check-order-title",".check-order-panel",
-    ".jersey-description",".jersey-frame",".jersey-note",
-    ".route-frame",".racepack-card",".rules-info",".rules-info-item",
-    ".rules-list",".hero-actions",".btn","img"
-  ].join(",");
-  const targets=new Set();
-  sections.forEach(section=>{
-    section.querySelectorAll(selector).forEach(el=>{
-      if(skip(el))return;
-      if(el.closest(".block-hero"))return; // hero animasi aslinya tetap utuh
-      if(el.matches("img") && el.closest(".jersey-frame,.route-frame,.reg-medal-showcase,.reg-benefits-showcase,.reg-benefits-banner"))return;
-      if(el.matches(".btn") && el.closest(".hero-actions,.registration-actions,.racepack-card"))return;
-      if(el.matches(".rules-info-item") && el.closest(".rules-info.reveal-entry"))return;
-      targets.add(el);
+  const blocks=[...document.querySelectorAll(".event-block")];
+  const items=[];
+  const selector="h1,h2,h3,.kicker,.copy,.registration-intro,.registration-steps,.ticket-card,.ticket-name,.ticket-price,.ticket-counter,.order-summary,.notice,.registration-actions,.reg-medal-showcase,.reg-benefits-showcase,.reg-benefits-banner,.check-order-layout,.check-order-title,.check-order-panel,.jersey-description,.jersey-frame,.jersey-note,.route-frame,.racepack-card,.rules-info,.rules-list,.hero-actions,.btn,.hero-brand,.hero-event-date,.hero-venue,.hero-people,.hero-medal-backdrop,.hero-six,.hero-spark,img";
+  blocks.forEach(block=>{
+    block.querySelectorAll(selector).forEach(el=>{
+      if(el.closest("[hidden],[aria-hidden='true']"))return;
+      if(el.closest(".registration-panel") && el.closest(".registration-panel").hidden)return;
+      if(el.matches("img") && el.closest(".jersey-frame,.route-frame,.reg-medal-showcase,.reg-benefits-showcase,.hero-people,.hero-medal-backdrop"))return;
+      if(el.matches(".btn") && el.closest(".registration-actions,.hero-actions,.hero-countdown"))return;
+      // Jangan menghilangkan form saat pengguna melanjutkan proses pendaftaran.
+      if(el.closest("#participantStep,#reviewStep,#paymentStep"))return;
+      if(items.some(parent=>parent.contains(el)))return;
+      items.push(el);
     });
   });
-  const observer=new IntersectionObserver(entries=>{
+  const io=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
-      if(!entry.isIntersecting)return;
-      const el=entry.target;
-      el.classList.add("reveal-visible");
-      observer.unobserve(el);
+      if(entry.isIntersecting){
+        entry.target.classList.add("bf-visible");
+        io.unobserve(entry.target);
+      }
     });
-  },{threshold:0.08,rootMargin:"0px 0px -5% 0px"});
-  targets.forEach((el,index)=>{
-    if(el.closest("[hidden]"))return;
-    el.classList.add("reveal-entry");
-    el.style.setProperty("--reveal-delay",`${(index%4)*70}ms`);
-    observer.observe(el);
+  },{threshold:.06,rootMargin:"0px 0px -7% 0px"});
+  items.forEach((el,i)=>{
+    // Hero langsung tampil; efek masuk diputar tanpa menunggu scroll.
+    if(el.closest(".block-hero")){
+      el.classList.add("bf-entry","bf-visible");
+    }else{
+      el.classList.add("bf-entry");
+      io.observe(el);
+    }
+    el.style.setProperty("--bf-delay",`${Math.min(i%4,3)*90}ms`);
   });
-  // Kedalaman gerak terpisah dari reveal: tiap slide bergerak saat di-scroll.
   const layers=[
-    [".block-hero .hero-people",35],
-    [".block-hero .hero-medal-backdrop",-32],
-    [".block-hero .hero-six",20],
-    [".block-registration .reg-medal-showcase",25],
-    [".block-registration .reg-benefits-banner",-18],
-    [".block-registration .check-order-panel",12],
-    [".block-info .jersey-frame",22],
-    [".block-info .route-frame",-18],
-    [".block-info .racepack-card",16],
-    [".block-info .rules-info",12]
-  ].map(([selector,range])=>({el:document.querySelector(selector),range})).filter(item=>item.el);
-  let ticking=false;
-  function renderDepth(){
-    ticking=false;
-    const vh=window.innerHeight||800;
-    layers.forEach(({el,range})=>{
+    [".block-hero .hero-people",110],
+    [".block-hero .hero-medal-backdrop",-100],
+    [".block-hero .hero-six",95],
+    [".block-hero .hero-brand",-55],
+    [".block-registration .reg-medal-showcase",100],
+    [".block-registration .reg-benefits-banner",-85],
+    [".block-registration .check-order-panel",65],
+    [".block-info .jersey-frame",100],
+    [".block-info .route-frame",-100],
+    [".block-info .racepack-card",80],
+    [".block-info .rules-info",70]
+  ].map(([sel,dist])=>({el:document.querySelector(sel),dist})).filter(x=>x.el);
+  let pending=false;
+  const paint=()=>{
+    pending=false;
+    const vh=innerHeight||800;
+    layers.forEach(({el,dist})=>{
       if(el.closest("[hidden]"))return;
-      const rect=el.getBoundingClientRect();
-      if(rect.bottom< -vh*.25 || rect.top>vh*1.25)return;
-      const progress=(vh-rect.top)/(vh+rect.height);
-      const centered=Math.max(-1,Math.min(1,(progress-.5)*2));
-      el.style.setProperty("--parallax-y",`${(centered*range*(mobile?.55:1)).toFixed(2)}px`);
+      const r=el.getBoundingClientRect();
+      if(r.bottom< -vh || r.top>vh*2)return;
+      const progress=(vh-r.top)/(vh+r.height);
+      const movement=Math.max(-1,Math.min(1,(progress-.5)*2))*dist*(mobile?.7:1);
+      el.style.setProperty("--bf-depth",`${movement.toFixed(1)}px`);
     });
-  }
-  function onScroll(){
-    if(!ticking){ticking=true;requestAnimationFrame(renderDepth);}
-  }
-  window.addEventListener("scroll",onScroll,{passive:true});
-  window.addEventListener("resize",onScroll,{passive:true});
-  onScroll();
+  };
+  const onScroll=()=>{if(!pending){pending=true;requestAnimationFrame(paint)}};
+  addEventListener("scroll",onScroll,{passive:true});
+  addEventListener("resize",onScroll,{passive:true});
+  paint();
 }
-initializeParallax();
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",initializeParallax,{once:true});
+}else{initializeParallax();}
+
 </script>
 
 </body>
