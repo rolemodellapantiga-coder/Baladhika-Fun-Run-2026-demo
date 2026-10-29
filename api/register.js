@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  // Pendaftaran tetap ditutup selama migrasi.
+  // Pendaftaran tetap ditutup selama pengujian.
   if (process.env.REGISTRATION_OPEN !== "true") {
     return respond(res, 503, {
       success: false,
@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
 
   const supabaseUrl = (
     process.env.SUPABASE_URL || ""
-  ).replace(/\/$/, "");
+  ).replace(/\/+$/, "");
 
   const serviceKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY || "";
@@ -170,7 +170,7 @@ module.exports = async function handler(req, res) {
     );
 
     const response = await fetch(
-      `${supabaseUrl}/rest/v1/rpc/create_real_registration`,
+      `${supabaseUrl}/rest/v1/rpc/create_real_registration_with_access`,
       {
         method: "POST",
         headers: {
@@ -220,12 +220,26 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (!result || result.success !== true) {
+    if (
+      !result ||
+      result.success !== true ||
+      typeof result.order_number !== "string" ||
+      !/^[a-f0-9]{64}$/.test(
+        String(result.payment_access_token || "")
+      )
+    ) {
       return respond(res, 500, {
         success: false,
         error: "Respons pendaftaran tidak valid."
       });
     }
+
+    const paymentAccessToken = result.payment_access_token;
+
+    const paymentUrl =
+      `https://www.baladhikafunrun.com/payment-real.html` +
+      `#order=${encodeURIComponent(result.order_number)}` +
+      `&access=${encodeURIComponent(paymentAccessToken)}`;
 
     return respond(res, 201, {
       success: true,
@@ -234,8 +248,11 @@ module.exports = async function handler(req, res) {
       total_amount: result.total_amount,
       payment_method: result.payment_method,
       payment_status: result.payment_status,
-      booking_codes: result.booking_codes
+      booking_codes: result.booking_codes,
+      payment_access_token: paymentAccessToken,
+      payment_url: paymentUrl
     });
+
   } catch (error) {
     console.error(
       "Registration error:",
