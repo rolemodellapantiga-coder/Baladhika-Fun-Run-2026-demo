@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="id">
 <head>
@@ -25,7 +24,6 @@ label{display:block}
 .order-input{display:flex;align-items:stretch;margin:5px 0 12px}
 .order-input span{background:#dce6d7;color:#14251a;font-weight:800;padding:12px;border-radius:8px 0 0 8px;border:1px solid #9caf9d;border-right:0}
 .order-input input{margin:0;border-radius:0 8px 8px 0;letter-spacing:2px;text-transform:uppercase;min-width:0}
-#turnstileBox{margin:12px 0;min-height:65px}
 </style>
 </head>
 <body>
@@ -33,39 +31,22 @@ label{display:block}
 <h1>BALADHIKA FUN RUN 2026</h1>
 <h2>Pembayaran QRIS Resmi</h2>
 <p class="notice"><strong>Penting:</strong> Hanya bayar untuk pesanan yang sudah terdaftar dan sesuai nominal tagihan. Bukti pembayaran bukan konfirmasi LUNAS; admin harus mencocokkan uang masuk.</p>
-
 <section>
 <h3>QRIS TOKO BALADHIKA JAYA</h3>
 <img src="/qris-resmi.jpg" alt="QRIS resmi TOKO BALADHIKA JAYA">
 <a class="button" href="/qris-resmi.jpg" download="QRIS-BALADHIKA-JAYA.jpg">UNDUH QRIS</a>
 <p>Pastikan nama penerima <strong>TOKO BALADHIKA JAYA</strong> dan nominal sesuai tagihan pesanan Anda.</p>
 </section>
-
 <section>
-<h3>Verifikasi email untuk mengunggah bukti</h3>
-
+<h3>Akses Pembayaran Pribadi</h3>
+<p>Gunakan tautan pribadi yang diberikan setelah pendaftaran. Tidak diperlukan OTP atau pemeriksaan Turnstile.</p>
+<div id="accessBox" class="hidden">
 <label for="order">Nomor pesanan</label>
-<div class="order-input">
-<span aria-hidden="true">BDJ-</span>
-<input id="order" placeholder="4 KODE" autocomplete="off" maxlength="4" autocapitalize="characters" spellcheck="false" aria-label="Empat karakter terakhir nomor pesanan">
+<div class="order-input"><span aria-hidden="true">BDJ-</span><input id="order" placeholder="4 KODE" autocomplete="off" maxlength="4" autocapitalize="characters" spellcheck="false"></div>
+<label for="access">Token akses pembayaran pribadi</label>
+<input id="access" type="password" placeholder="Tempel token pribadi 64 karakter" autocomplete="off" spellcheck="false">
+<button type="button" id="check">LIHAT RINCIAN PESANAN</button>
 </div>
-
-<label>Email pendaftaran
-<input id="email" type="email" placeholder="email peserta" autocomplete="email">
-</label>
-
-<div id="turnstileBox"></div>
-<small id="turnstileHelp">Selesaikan pemeriksaan keamanan sebelum meminta OTP.</small>
-
-<button type="button" id="send">KIRIM OTP KE EMAIL</button>
-
-<div id="verifyBox" class="hidden">
-<label>Kode OTP dari email
-<input id="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6 digit OTP">
-</label>
-<button type="button" id="verify">VERIFIKASI OTP</button>
-</div>
-
 <div id="billBox" class="hidden">
 <h3>RINCIAN TAGIHAN</h3>
 <p>Nomor Pesanan: <strong id="billOrder"></strong></p>
@@ -75,125 +56,55 @@ label{display:block}
 <p id="billPaymentStatus"></p>
 <small>Bayarkan nominal sesuai tagihan melalui QRIS resmi.</small>
 </div>
-
 <div id="uploadBox" class="hidden">
-<p>Verifikasi berhasil. Sesi berlaku maksimal 30 menit. Pilih bukti JPG, PNG, atau WebP; gambar akan dikompres otomatis sebelum diunggah.</p>
-<label>Gambar bukti pembayaran
+<p>Pilih bukti JPG, PNG, atau WebP. Gambar akan dikompres otomatis sebelum diunggah (target sekitar 200 KB; maksimal 1 MB).</p>
+<label for="proof">Gambar bukti pembayaran</label>
 <input id="proof" type="file" accept="image/jpeg,image/png,image/webp">
-</label>
 <button type="button" id="upload">UNGGAH BUKTI PEMBAYARAN</button>
 </div>
-
 <p id="status" role="status" aria-live="polite"></p>
 </section>
-
 <a class="button" href="/">KEMBALI KE WEBSITE</a>
 <small>Pendaftaran tetap ditutup selama finalisasi sistem.</small>
 </main>
-
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <script>
 (() => {
   'use strict';
-
-  const TURNSTILE_SITE_KEY = 'ISI_SITE_KEY_ANDA_DI_SINI';
-
-  let token = '';
-  let expires = 0;
-  let verifiedOrder = '';
-  let turnstileWidgetId = null;
-
   const $ = id => document.getElementById(id);
   const status = msg => { $('status').textContent = msg; };
-  const order = () => 'BDJ-' + $('order').value.trim().toUpperCase();
-  const email = () => $('email').value.trim().toLowerCase();
+  const ORDER_PATTERN = /^BDJ-[A-HJ-NP-Z2-9]{4}$/;
+  const TOKEN_PATTERN = /^[a-f0-9]{64}$/;
+  let orderNumber = '';
+  let accessToken = '';
+  let verifiedOrder = '';
+
+  // Token berada di URL fragment (#), bukan query string.
+  // Fragment tidak dikirim dalam permintaan HTTP ke server.
+  const fragment = new URLSearchParams(location.hash.slice(1));
+  const initialOrder = (fragment.get('order') || '').trim().toUpperCase();
+  const initialToken = (fragment.get('access') || '').trim();
+  history.replaceState(null, '', location.pathname + location.search);
 
   $('order').addEventListener('input', () => {
-    $('order').value = $('order').value
-      .toUpperCase()
-      .replace(/[^A-Z2-9]/g, '')
-      .slice(0, 4);
+    $('order').value = $('order').value.toUpperCase()
+      .replace(/[^A-HJ-NP-Z2-9]/g, '').slice(0, 4);
   });
-
-  function initTurnstile() {
-    if (!window.turnstile || turnstileWidgetId !== null) return;
-
-    if (TURNSTILE_SITE_KEY === 'GANTI_DENGAN_SITE_KEY_CLOUDFLARE') {
-      $('turnstileHelp').textContent = 'Site Key Turnstile belum dipasang.';
-      return;
-    }
-
-    turnstileWidgetId = window.turnstile.render('#turnstileBox', {
-      sitekey: TURNSTILE_SITE_KEY,
-      theme: 'auto',
-      'expired-callback': () => {
-        status('Pemeriksaan keamanan kedaluwarsa. Silakan ulangi.');
-      },
-      'error-callback': () => {
-        status('Pemeriksaan keamanan gagal dimuat. Muat ulang halaman.');
-      }
-    });
-  }
-
-  const turnstileLoader = setInterval(() => {
-    if (window.turnstile) {
-      clearInterval(turnstileLoader);
-      initTurnstile();
-    }
-  }, 200);
-
-  setTimeout(() => clearInterval(turnstileLoader), 15000);
-
-  function turnstileToken() {
-    if (turnstileWidgetId === null || !window.turnstile) {
-      throw Error('Pemeriksaan keamanan belum siap. Muat ulang halaman.');
-    }
-
-    const value = window.turnstile.getResponse(turnstileWidgetId);
-
-    if (!value) {
-      throw Error('Selesaikan pemeriksaan keamanan terlebih dahulu.');
-    }
-
-    return value;
-  }
-
-  function resetTurnstile() {
-    if (turnstileWidgetId !== null && window.turnstile) {
-      window.turnstile.reset(turnstileWidgetId);
-    }
-  }
 
   async function post(url, body) {
     const r = await fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(body),
-      cache: 'no-store'
+      cache: 'no-store',
+      credentials: 'same-origin'
     });
-
     const d = await r.json().catch(() => ({}));
-
-    if (!r.ok || !d.ok) {
-      throw Error(d.message || `Permintaan gagal (${r.status})`);
-    }
-
+    if (!r.ok || !d.ok) throw Error(d.message || `Permintaan gagal (${r.status})`);
     return d;
-  }
-
-  function valid() {
-    if (!/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(order())) {
-      throw Error('Masukkan 4 karakter kode pesanan setelah BDJ-.');
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email())) {
-      throw Error('Masukkan email pendaftaran yang benar.');
-    }
   }
 
   async function run(btn, fn) {
     btn.disabled = true;
-
     try {
       status('Memproses...');
       await fn();
@@ -204,99 +115,51 @@ label{display:block}
     }
   }
 
-  $('send').addEventListener('click', () => run($('send'), async () => {
-    valid();
+  function paymentStatusLabel(bill) {
+    if (bill.payment_status === 'PAID') return 'Status: LUNAS (diverifikasi admin).';
+    if (bill.payment_proof_uploaded || bill.payment_review_status === 'WAITING')
+      return 'Status: Bukti diterima, menunggu verifikasi admin.';
+    if (bill.payment_status === 'REJECTED') return 'Status: Pembayaran ditolak. Hubungi admin.';
+    return 'Status: Menunggu Pembayaran';
+  }
 
-    const securityToken = turnstileToken();
-
-    token = '';
-    expires = 0;
+  async function loadOrder(number, token) {
+    if (!ORDER_PATTERN.test(number) || !TOKEN_PATTERN.test(token))
+      throw Error('Nomor pesanan atau token pribadi tidak valid. Gunakan tautan dari pendaftaran.');
     verifiedOrder = '';
-
     $('billBox').classList.add('hidden');
     $('uploadBox').classList.add('hidden');
-    $('verifyBox').classList.add('hidden');
-
-    try {
-      await post('/api/request-real-payment-otp', {
-        order_number: order(),
-        email: email(),
-        turnstile_token: securityToken
-      });
-    } finally {
-      resetTurnstile();
-    }
-
-    $('verifyBox').classList.remove('hidden');
-
-    status('Jika data pesanan cocok, kode OTP dikirim ke email. Periksa juga folder spam.');
-  }));
-
-  $('verify').addEventListener('click', () => run($('verify'), async () => {
-    valid();
-
-    const otp = $('otp').value.trim();
-
-    if (!/^\d{6}$/.test(otp)) {
-      throw Error('Masukkan 6 digit kode OTP.');
-    }
-
-    if (!token || Date.now() >= expires) {
-      const d = await post('/api/verify-real-payment-otp', {
-        order_number: order(),
-        email: email(),
-        otp
-      });
-
-      token = d.session_token;
-      expires = Date.parse(d.expires_at);
-
-      if (!token || !Number.isFinite(expires) || Date.now() >= expires) {
-        token = '';
-        throw Error('Sesi tidak tersedia atau telah berakhir.');
-      }
-    }
-
     const detail = await post('/api/order-details', {
-      order_number: order(),
-      session_token: token
+      order_number: number,
+      payment_access_token: token
     });
-
     const bill = detail.order;
-
-    if (
-      !bill ||
-      bill.order_number !== order() ||
-      bill.payment_status !== 'PENDING_PAYMENT' ||
-      !Number.isSafeInteger(bill.total_amount) ||
-      bill.total_amount <= 0 ||
-      !Number.isSafeInteger(bill.total_participants) ||
-      bill.total_participants < 1
-    ) {
-      throw Error('Pesanan tidak tersedia untuk pembayaran.');
-    }
-
-    verifiedOrder = order();
-
+    if (!bill || bill.order_number !== number ||
+        !Number.isSafeInteger(bill.total_amount) || bill.total_amount <= 0 ||
+        !Number.isSafeInteger(bill.total_participants) || bill.total_participants < 1)
+      throw Error('Data tagihan tidak valid. Hubungi admin.');
+    orderNumber = number;
+    accessToken = token;
+    verifiedOrder = number;
     $('billOrder').textContent = bill.order_number;
     $('billCount').textContent = bill.total_participants + ' orang';
-
     $('billAmount').textContent = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0
+      style: 'currency', currency: 'IDR', maximumFractionDigits: 0
     }).format(bill.total_amount);
-
-    $('billPaymentStatus').textContent = 'Status: Menunggu Pembayaran';
-
-    $('order').readOnly = true;
-    $('email').readOnly = true;
-
-    $('verifyBox').classList.add('hidden');
+    $('billPaymentStatus').textContent = paymentStatusLabel(bill);
     $('billBox').classList.remove('hidden');
-    $('uploadBox').classList.remove('hidden');
+    $('accessBox').classList.add('hidden');
+    if (bill.payment_allowed === true) {
+      $('uploadBox').classList.remove('hidden');
+      status('Pesanan ditemukan. Periksa nominal tagihan sebelum membayar.');
+    } else {
+      status('Bukti pembayaran tidak dapat diunggah lagi. Jika perlu bantuan, hubungi admin.');
+    }
+  }
 
-    status('Email terverifikasi. Periksa nominal tagihan sebelum membayar.');
+  $('check').addEventListener('click', () => run($('check'), async () => {
+    await loadOrder('BDJ-' + $('order').value.trim().toUpperCase(),
+      $('access').value.trim());
   }));
 
   function loadImage(file) {
@@ -421,50 +284,38 @@ label{display:block}
   }
 
   $('upload').addEventListener('click', () => run($('upload'), async () => {
-    if (!token || Date.now() >= expires) {
-      throw Error('Sesi berakhir. Muat ulang halaman dan minta OTP baru.');
-    }
-
-    if (!verifiedOrder || verifiedOrder !== order()) {
-      throw Error('Pesanan belum terverifikasi.');
-    }
-
+    if (!verifiedOrder || verifiedOrder !== orderNumber || !TOKEN_PATTERN.test(accessToken))
+      throw Error('Akses pembayaran tidak valid. Buka kembali tautan pribadi Anda.');
     const file = $('proof').files[0];
-
-    if (!file) {
-      throw Error('Pilih gambar bukti pembayaran.');
-    }
-
+    if (!file) throw Error('Pilih gambar bukti pembayaran.');
     status('Sedang mengompres gambar...');
-
     const compressed = await compressProof(file);
-
-    status(
-      'Gambar siap (' +
-      Math.ceil(compressed.size / 1024) +
-      ' KB). Sedang mengunggah...'
-    );
-
+    status('Gambar siap (' + Math.ceil(compressed.size / 1024) + ' KB). Sedang mengunggah...');
     const base64 = await toBase64(compressed);
-
     const d = await post('/api/upload-real-proof', {
       order_number: verifiedOrder,
-      session_token: token,
+      payment_access_token: accessToken,
       mime_type: 'image/jpeg',
       file_base64: base64
     });
-
-    token = '';
-    expires = 0;
-
     $('uploadBox').classList.add('hidden');
-    $('billPaymentStatus').textContent =
-      'Status: Bukti dikirim, menunggu verifikasi admin.';
-
-     status(
-      d.message || 'Bukti diterima. Menunggu verifikasi admin.'
-    );
+    $('billPaymentStatus').textContent = 'Status: Bukti dikirim, menunggu verifikasi admin.';
+    status(d.message || 'Bukti diterima. Menunggu verifikasi admin.');
   }));
+
+  if (ORDER_PATTERN.test(initialOrder) && TOKEN_PATTERN.test(initialToken)) {
+    status('Memuat rincian pesanan...');
+    loadOrder(initialOrder, initialToken).catch(e => {
+      $('accessBox').classList.remove('hidden');
+      $('order').value = initialOrder.slice(4);
+      $('access').value = initialToken;
+      status(e.message || 'Gagal memuat pesanan.');
+    });
+  } else {
+    $('accessBox').classList.remove('hidden');
+    if (initialOrder.startsWith('BDJ-')) $('order').value = initialOrder.slice(4);
+    status('Buka tautan pembayaran pribadi yang diterima saat pendaftaran. Jika hanya memiliki nomor pesanan, hubungi admin untuk bantuan akses.');
+  }
 })();
 </script>
 </body>
