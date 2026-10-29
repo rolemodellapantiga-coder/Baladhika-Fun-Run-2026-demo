@@ -408,6 +408,7 @@ label{display:block}
       img.onload = resolve;
       img.onerror = () => reject(Error('Gambar invoice gagal dimuat.'));
     })));
+    $('invoicePrint').style.display = 'block';
     window.print();
     status('Pilih "Simpan sebagai PDF" pada dialog cetak.');
   }));
