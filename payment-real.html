@@ -25,18 +25,26 @@ label{display:block}
 .order-input span{background:#dce6d7;color:#14251a;font-weight:800;padding:12px;border-radius:8px 0 0 8px;border:1px solid #9caf9d;border-right:0}
 .order-input input{margin:0;border-radius:0 8px 8px 0;letter-spacing:2px;text-transform:uppercase;min-width:0}
 @media print {
-  @page { size:A4 portrait; margin:9mm; }
-  body {background:#fff;color:#111;padding:0;font:10px/1.25 Arial,sans-serif}
+  @page { size:A4 portrait; margin:12mm; }
+  body {background:#fff!important;color:#17251b!important;padding:0;font:11px/1.4 Arial,sans-serif}
   main {display:none!important}
-  #invoicePrint {display:block!important;position:static!important;color:#111;background:#fff;padding:0;margin:0;max-width:none}
-  #invoicePrint h1 {font-size:17px;color:#111;margin:0 0 4px}
-  #invoicePrint h2 {font-size:14px;margin:8px 0}
-  #invoicePrint table {border-collapse:collapse;width:100%;font-size:9px}
-  #invoicePrint th,#invoicePrint td {border:1px solid #777;padding:4px;text-align:left;overflow-wrap:anywhere}
-  #invoicePrint .proof-image {display:block;max-width:100%;width:auto;height:auto;max-height:105mm;object-fit:contain;margin:5px auto}
-  #invoicePrint .invoice-meta {display:grid;grid-template-columns:1fr 1fr;gap:3px 12px}
-  #invoicePrint .paid-stamp {font-weight:bold;font-size:16px}
-  #invoicePrint .invoice-footer {font-size:9px;margin-top:5px}
+  #invoicePrint {display:block!important;position:static!important;background:#fff!important;color:#17251b!important;margin:0;padding:0;max-width:none}
+  #invoicePrint .invoice-header {display:flex;align-items:center;gap:15px;border-bottom:3px solid #284c34;padding-bottom:13px;margin-bottom:17px}
+  #invoicePrint .invoice-logo {width:94px;max-width:94px;height:80px;object-fit:contain;margin:0;border-radius:0}
+  #invoicePrint h1 {font-size:21px;color:#24432e;margin:0 0 3px;line-height:1.2}
+  #invoicePrint h2 {font-size:13px;color:#24432e;margin:16px 0 8px;border-bottom:1px solid #cbd6cb;padding-bottom:5px}
+  #invoicePrint .invoice-subtitle {font-size:11px;color:#56675b}
+  #invoicePrint .invoice-meta {display:grid;grid-template-columns:1fr 1fr;gap:8px 15px;margin-bottom:14px}
+  #invoicePrint .invoice-meta > div {overflow-wrap:anywhere}
+  #invoicePrint .paid-stamp {font-weight:bold;font-size:15px;color:#176039}
+  #invoicePrint table {border-collapse:collapse;width:100%;font-size:10px}
+  #invoicePrint th,#invoicePrint td {border:1px solid #a8b5a8;padding:7px;text-align:left;overflow-wrap:anywhere}
+  #invoicePrint th {background:#eaf0e9!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #invoicePrint .invoice-footer {font-size:10px;line-height:1.5;margin-top:17px;padding:10px;border:1px solid #cbd6cb}
+  #invoicePrint .proof-page {break-before:page;page-break-before:always}
+  #invoicePrint .proof-page h2 {margin-top:0}
+  #invoicePrint .proof-image {display:block;max-width:100%;width:auto;height:auto;max-height:235mm;object-fit:contain;margin:10px auto;border-radius:0}
+  #invoicePrint .proof-caption {font-size:10px;color:#56675b}
 }
 #invoicePrint {display:none}
 </style>
@@ -345,11 +353,20 @@ label{display:block}
     const o = data.order;
     const rows = data.participants.map((p, i) => `<tr><td>${i+1}</td><td>${safeText(p.full_name)}</td><td>${safeText(p.phone || '-')}</td><td>${safeText(p.jersey_size || '-')}</td><td>${safeText(p.booking_code)}</td></tr>`).join('');
     const money = new Intl.NumberFormat('id-ID', {style:'currency',currency:'IDR',maximumFractionDigits:0}).format(o.total_amount);
-    const date = o.paid_at ? new Date(o.paid_at).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}) : '-';
+    const date = o.paid_at ? new Date(o.paid_at).toLocaleString('id-ID',{
+      timeZone:'Asia/Jakarta',day:'2-digit',month:'2-digit',year:'numeric',
+      hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
+    }) + ' WIB' : '-';
     $('invoicePrint').innerHTML = `
-      <h1>BALADHIKA FUN RUN 2026</h1>
-      <div>6 Desember 2026 | Lapangan Rampal, Kota Malang</div>
-      <h2>INVOICE LUNAS & PENGAMBILAN RACEPACK</h2>
+      <div class="invoice-header">
+        <img class="invoice-logo" alt="Logo Baladhika Fun Run 2026" src="/logo-baladhika.png">
+        <div>
+          <h1>BALADHIKA FUN RUN 2026</h1>
+          <div class="invoice-subtitle">5K | 6 Desember 2026 | Lapangan Rampal, Kota Malang</div>
+          <strong>INVOICE PEMBAYARAN & RACEPACK</strong>
+        </div>
+      </div>
+      <h2>DETAIL PEMBAYARAN</h2>
       <div class="invoice-meta">
         <div>Nomor Pesanan: <b>${safeText(o.order_number)}</b></div>
         <div class="paid-stamp">STATUS: LUNAS</div>
@@ -357,16 +374,29 @@ label{display:block}
         <div>HP Pemesan: ${safeText(o.buyer_phone)}</div>
         <div>Email: ${safeText(o.buyer_email)}</div>
         <div>Jumlah Peserta: ${safeText(o.total_participants)}</div>
-        <div>Total: <b>${safeText(money)}</b></div>
-        <div>Metode: QRIS | Verifikasi: ${safeText(date)}</div>
+        <div>Total Dibayar: <b>${safeText(money)}</b></div>
+        <div>Metode: QRIS | Disetujui OWNER: ${safeText(date)}</div>
       </div>
       <h2>DAFTAR PESERTA & KODE BOOKING RACEPACK</h2>
       <table><thead><tr><th>No.</th><th>Nama Peserta</th><th>No. HP</th><th>Jersey</th><th>Kode Booking</th></tr></thead><tbody>${rows}</tbody></table>
-      <h2>LAMPIRAN BUKTI PEMBAYARAN QRIS</h2>
-      <img class="proof-image" alt="Bukti pembayaran peserta" src="${data.proof_data_url}">
-      <div class="invoice-footer">Pengambilan racepack: Aula Makorem 083/BDJ, H-2 s.d. H-1. Kode booking diperiksa petugas dan hanya berlaku untuk satu kali pengambilan. Invoice diterbitkan setelah konfirmasi Merchant dan persetujuan OWNER.</div>`;
-    const img = $('invoicePrint').querySelector('img');
-    await new Promise((resolve,reject) => { if (img.complete && img.naturalWidth) return resolve(); img.onload=resolve; img.onerror=()=>reject(Error('Lampiran bukti gagal dimuat.')); });
+      <div class="invoice-footer">
+        <b>INFORMASI PENGAMBILAN RACEPACK</b><br>
+        Tanggal: 4–5 Desember 2026 | Tempat: Aula Makorem 083/BDJ<br>
+        Lokasi: https://maps.app.goo.gl/dYJC8VDHShwtpsqG6<br>
+        Kode booking diperiksa petugas dan hanya berlaku untuk satu kali pengambilan.
+        Invoice diterbitkan setelah konfirmasi pembayaran dan persetujuan OWNER.
+      </div>
+      <div class="proof-page">
+        <h2>LAMPIRAN BUKTI PEMBAYARAN QRIS</h2>
+        <div class="proof-caption">Pesanan ${safeText(o.order_number)} | Bukti diunggah peserta dan pembayaran disetujui OWNER.</div>
+        <img class="proof-image" alt="Bukti pembayaran peserta" src="${data.proof_data_url}">
+      </div>`;
+    const images = [...$('invoicePrint').querySelectorAll('img')];
+    await Promise.all(images.map(img => new Promise((resolve,reject) => {
+      if (img.complete) return img.naturalWidth ? resolve() : reject(Error('Gambar invoice gagal dimuat.'));
+      img.onload = resolve;
+      img.onerror = () => reject(Error('Gambar invoice gagal dimuat.'));
+    })));
     window.print();
     status('Pilih "Simpan sebagai PDF" pada dialog cetak.');
   }));
