@@ -2675,6 +2675,44 @@ html, body {
         "Nomor Pesanan: " + data.order_number + "\n" +
         "Status: " + data.payment_notice;
       result.style.whiteSpace = "pre-line";
+      // Invoice hanya untuk pesanan PAID, dengan verifikasi email pemesan.
+      if (data.payment_status === "PAID") {
+        const panel = document.createElement("div");
+        panel.style.cssText = "margin-top:16px;padding-top:14px;border-top:1px solid #ffffff33";
+        const label = document.createElement("label");
+        label.textContent = "Email pemesan (untuk verifikasi invoice)";
+        label.style.cssText = "display:block;font-weight:700;margin-bottom:8px";
+        const email = document.createElement("input");
+        email.type = "email";
+        email.placeholder = "Email yang digunakan saat mendaftar";
+        email.autocomplete = "email";
+        email.style.cssText = "width:100%;padding:13px;border-radius:9px;background:#0f1b14;color:white;border:1px solid #ffffff55;margin-bottom:10px";
+        const download = document.createElement("button");
+        download.type = "button";
+        download.className = "btn";
+        download.textContent = "DOWNLOAD INVOICE PDF";
+        const info = document.createElement("p");
+        info.style.cssText = "margin:10px 0 0;font-size:12px";
+        download.addEventListener("click", async () => {
+          if (!email.value.trim() || !email.checkValidity()) { info.textContent = "Masukkan email pemesan yang benar."; return; }
+          download.disabled = true;
+          info.textContent = "Menyiapkan invoice...";
+          try {
+            const r = await fetch("/api/download-invoice", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({order_number:data.order_number,buyer_email:email.value.trim()}), cache:"no-store" });
+            if (!r.ok) { const err=await r.json().catch(()=>({})); throw new Error(err.error||"Invoice tidak tersedia."); }
+            const blob=await r.blob();
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement("a"); a.href=url; a.download="INVOICE-"+data.order_number+".pdf";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url),30000);
+            info.textContent = "Invoice berhasil disiapkan.";
+          } catch(e) { info.textContent = e.message; }
+          finally { download.disabled = false; }
+        });
+        panel.append(label,email,download,info);
+        result.appendChild(panel);
+      }
+
     } catch (error) {
       result.textContent = error.message;
     } finally {
