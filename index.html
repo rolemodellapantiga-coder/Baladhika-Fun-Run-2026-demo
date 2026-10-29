@@ -2677,7 +2677,7 @@ let participantData=[];
 function totalPeople(){return qty.early+qty.normal}
 function totalPrice(){return qty.early*prices.early+qty.normal*prices.normal}
 
-const MIGRATION_REGISTRATION_CLOSED = true;
+const MIGRATION_REGISTRATION_CLOSED = false;
 function isAvailable(category){
   if(MIGRATION_REGISTRATION_CLOSED)return false;
   if(category==="early")return false; // Halaman 2 hanya menampilkan tiket Reguler
