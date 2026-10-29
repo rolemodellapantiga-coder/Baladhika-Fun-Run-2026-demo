@@ -884,15 +884,16 @@ section{position:relative;overflow:hidden;isolation:isolate}
 }
 
 
-/* SATU KATEGORI REGULER — identitas teknis normal tetap dipakai agar API kompatibel */
-#priceEarly, #cardEarly { display: none !important; }
-#earlySubtotal { display: none; }
-.order-summary .summary-line:has(#earlySubtotal) { display: none !important; }
+/* TAMPILAN TAHAP EARLY BIRD SAJA — SEMUA UKURAN LAYAR
+   Elemen Normal tetap berada di DOM agar JavaScript lama tetap kompatibel. */
+#priceNormal, #cardNormal { display: none !important; }
+#normalSubtotal { display: none; }
+.order-summary .summary-line:has(#normalSubtotal) { display: none !important; }
 .price-section .inner {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   max-width: 1020px;
 }
-.price-col#priceNormal { text-align: left; }
+.price-col#priceEarly { text-align: left; }
 .price-visual { min-width: 0; }
 .ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: 650px; }
 @media (max-width: 768px) {
@@ -901,39 +902,39 @@ section{position:relative;overflow:hidden;isolation:isolate}
     grid-template-rows: auto auto !important;
     gap: 18px;
   }
-  #priceNormal { grid-column: 1; grid-row: 1; }
+  #priceEarly { grid-column: 1; grid-row: 1; }
   .price-visual { grid-column: 1 !important; grid-row: 2 !important; }
   .ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: none; }
 }
 
-/* PENYESUAIAN KARTU REGULER — TAMPILAN SAJA */
-#priceNormal {
+/* PENYESUAIAN KARTU EARLY BIRD — TAMPILAN SAJA */
+#priceEarly {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 0;
 }
-#priceNormal .kicker {
+#priceEarly .kicker {
   font-size: clamp(14px, 1.4vw, 19px);
   letter-spacing: .13em;
 }
-#priceNormal .price-title {
+#priceEarly .price-title {
   font-size: clamp(76px, 8.5vw, 125px);
   line-height: .93;
   margin: 22px 0 15px;
 }
-#priceNormal .price-number {
+#priceEarly .price-number {
   font-size: clamp(76px, 8vw, 116px);
   line-height: 1;
   margin: 10px 0 16px;
 }
-#priceNormal .ticket-status {
+#priceEarly .ticket-status {
   font-size: clamp(13px, 1.4vw, 18px);
   font-weight: 900;
   letter-spacing: .08em;
 }
-#priceNormal .btn {
+#priceEarly .btn {
   width: 100%;
   max-width: 410px;
   margin-top: 30px;
@@ -948,22 +949,22 @@ section{position:relative;overflow:hidden;isolation:isolate}
     padding-bottom: 20px;
     gap: 4px !important;
   }
-  #priceNormal .kicker {
+  #priceEarly .kicker {
     font-size: 15px;
   }
-  #priceNormal .price-title {
+  #priceEarly .price-title {
     font-size: clamp(86px, 19vw, 132px);
     line-height: .9;
     margin: 22px 0 18px;
   }
-  #priceNormal .price-number {
+  #priceEarly .price-number {
     font-size: clamp(88px, 20vw, 132px);
     margin: 12px 0 18px;
   }
-  #priceNormal .ticket-status {
+  #priceEarly .ticket-status {
     font-size: clamp(13px, 3.8vw, 18px);
   }
-  #priceNormal .btn {
+  #priceEarly .btn {
     max-width: none;
     margin-top: 32px;
     padding: 22px 16px;
@@ -2118,13 +2119,6 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .migration-notice strong{font:900 clamp(17px,3vw,27px)/1.4 Montserrat,sans-serif;color:#ffad78}
 .migration-notice p{margin:12px 0 0;font-size:13px;line-height:1.8}
 
-
-/* FINAL: HANYA REGULER (Rp150.000), TANPA EARLY BIRD / NORMAL */
-#priceEarly, #cardEarly { display:none!important; }
-#priceNormal { display:flex!important; }
-#cardNormal { display:block!important; }
-.order-summary .summary-line:has(#earlySubtotal) { display:none!important; }
-.order-summary .summary-line:has(#normalSubtotal) { display:none!important; }
 </style>
 <style>
 /* Perbaikan khusus layar HP: mencegah halaman melebar ke samping. */
@@ -2325,13 +2319,13 @@ html, body {
       <p class="kicker orange">STEP 01</p>
       <h3 id="chooseYourTicketHeading">CHOOSE YOUR <span class="orange">TICKET</span></h3>
       <p class="registration-intro copy">
-        Tiket REGULER Rp150.000 per peserta. Pilih jumlah peserta untuk melanjutkan.
+        Pilih kategori yang tersedia sesuai status sistem.
       </p>
 
       <div class="ticket-grid">
-        <div class="ticket-card unavailable" id="cardEarly" hidden aria-hidden="true">
+        <div class="ticket-card unavailable" id="cardEarly">
           <div class="ticket-name">
-            REGULER
+            EARLY BIRD
             <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
           </div>
           <div class="ticket-price">RP150.000</div>
@@ -2365,8 +2359,8 @@ html, body {
       </div>
 
       <div class="order-summary">
-        <div class="summary-line" hidden aria-hidden="true">
-          <span>REGULER</span><strong id="earlySubtotal">Rp0</strong>
+        <div class="summary-line">
+          <span>Early Bird</span><strong id="earlySubtotal">Rp0</strong>
         </div>
         <div class="summary-line">
           <span>Reguler</span><strong id="normalSubtotal">Rp0</strong>
@@ -2380,7 +2374,7 @@ html, body {
       </div>
 
       <p class="notice">
-        Pendaftaran REGULER dibuka sesuai ketersediaan tiket. Pembayaran dilakukan melalui QRIS resmi setelah nomor pesanan diterbitkan.
+        DAFTAR SEKARANG. Sistem sedang dalam proses migrasi ke pendaftaran resmi. Mohon tidak melakukan pembayaran sampai pendaftaran dibuka kembali.
       </p>
 
       <div class="registration-actions">
@@ -2754,17 +2748,21 @@ function updateTicketDisplay(){
         available?"PENDAFTARAN DIBUKA":
         "BELUM TERSEDIA";
     }
-    $(priceStatus).textContent=status;
-    $(cardStatus).textContent=status;
-    $(cardId).classList.toggle("available",available);
-    $(cardId).classList.toggle("unavailable",!available);
-    $(plus).disabled=!available;
-    $(minus).disabled=!available;
+    if ($(priceStatus)) $(priceStatus).textContent=status;
+    if ($(cardStatus)) $(cardStatus).textContent=status;
+    if ($(cardId)) {
+      $(cardId).classList.toggle("available",available);
+      $(cardId).classList.toggle("unavailable",!available);
+    }
+    if ($(plus)) $(plus).disabled=!available;
+    if ($(minus)) $(minus).disabled= !available || qty[key]===0;
     const link=$(button);
-    link.classList.toggle("disabled-link",!available);
-    link.setAttribute("aria-disabled",String(!available));
-    link.tabIndex=available?0:-1;
-    link.textContent=available?"PILIH TIKET ↗":status;
+    if (link) {
+      link.classList.toggle("disabled-link",!available);
+      link.setAttribute("aria-disabled",String(!available));
+      link.tabIndex=available?0:-1;
+      link.textContent=available?"PILIH TIKET ↗":status;
+    }
     if(!available)qty[key]=0;
   });
   updateTicketSummary();
