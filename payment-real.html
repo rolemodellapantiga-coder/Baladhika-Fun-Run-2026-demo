@@ -75,12 +75,18 @@ label{display:block}
 </section>
 <section>
 <h3>Akses Pembayaran Pribadi</h3>
-<p>Gunakan tautan pribadi yang diberikan setelah pendaftaran. Tidak diperlukan OTP atau pemeriksaan Turnstile.</p>
+<p>Masukkan nomor pesanan dan email yang digunakan saat pendaftaran. Tidak diperlukan OTP atau token.</p>
 <div id="accessBox" class="hidden">
 <label for="order">Nomor pesanan</label>
 <div class="order-input"><span aria-hidden="true">BDJ-</span><input id="order" placeholder="4 KODE" autocomplete="off" maxlength="4" autocapitalize="characters" spellcheck="false"></div>
-<label for="access">Token akses pembayaran pribadi</label>
-<input id="access" type="password" placeholder="Tempel token pribadi 64 karakter" autocomplete="off" spellcheck="false">
+<label for="buyerEmail">Email yang digunakan saat pendaftaran</label>
+<input
+  id="buyerEmail"
+  type="email"
+  placeholder="Masukkan email pendaftaran"
+  autocomplete="email"
+  required
+>
 <button type="button" id="check">LIHAT RINCIAN PESANAN</button>
 </div>
 <div id="billBox" class="hidden">
@@ -111,18 +117,19 @@ label{display:block}
   const $ = id => document.getElementById(id);
   const status = msg => { $('status').textContent = msg; };
   const ORDER_PATTERN = /^BDJ-[A-HJ-NP-Z2-9]{4}$/;
-  const TOKEN_PATTERN = /^[a-f0-9]{64}$/;
-  let orderNumber = '';
-  let accessToken = '';
-  let verifiedOrder = '';
-  let currentBill = null;
 
-  // Token berada di URL fragment (#), bukan query string.
-  // Fragment tidak dikirim dalam permintaan HTTP ke server.
-  const fragment = new URLSearchParams(location.hash.slice(1));
-  const initialOrder = (fragment.get('order') || '').trim().toUpperCase();
-  const initialToken = (fragment.get('access') || '').trim();
-  history.replaceState(null, '', location.pathname + location.search);
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+let orderNumber = '';
+let buyerEmail = '';
+let verifiedOrder = '';
+let currentBill = null;
+
+const fragment = new URLSearchParams(location.hash.slice(1));
+const initialOrder = (fragment.get('order') || '').trim().toUpperCase();
+
+history.replaceState(null, '', location.pathname + location.search);
+
 
   $('order').addEventListener('input', () => {
     $('order').value = $('order').value.toUpperCase()
@@ -162,48 +169,74 @@ label{display:block}
     return 'Status: Menunggu Pembayaran';
   }
 
-  async function loadOrder(number, token) {
-    if (!ORDER_PATTERN.test(number) || !TOKEN_PATTERN.test(token))
-      throw Error('Nomor pesanan atau token pribadi tidak valid. Gunakan tautan dari pendaftaran.');
-    verifiedOrder = '';
-    currentBill = null;
-    $('invoiceDownload').classList.add('hidden');
-    $('billBox').classList.add('hidden');
-    $('uploadBox').classList.add('hidden');
-    const detail = await post('/api/order-details', {
-      order_number: number,
-      payment_access_token: token
-    });
-    const bill = detail.order;
-    currentBill = bill;
-    if (!bill || bill.order_number !== number ||
-        !Number.isSafeInteger(bill.total_amount) || bill.total_amount <= 0 ||
-        !Number.isSafeInteger(bill.total_participants) || bill.total_participants < 1)
-      throw Error('Data tagihan tidak valid. Hubungi admin.');
-    orderNumber = number;
-    accessToken = token;
-    verifiedOrder = number;
-    $('billOrder').textContent = bill.order_number;
-    $('billCount').textContent = bill.total_participants + ' orang';
-    $('billAmount').textContent = new Intl.NumberFormat('id-ID', {
-      style: 'currency', currency: 'IDR', maximumFractionDigits: 0
-    }).format(bill.total_amount);
-    $('billPaymentStatus').textContent = paymentStatusLabel(bill);
-    $('billBox').classList.remove('hidden');
-    if (bill.payment_status === 'PAID') $('invoiceDownload').classList.remove('hidden');
-    $('accessBox').classList.add('hidden');
-    if (bill.payment_allowed === true) {
-      $('uploadBox').classList.remove('hidden');
-      status('Pesanan ditemukan. Periksa nominal tagihan sebelum membayar.');
-    } else {
-      status('Bukti pembayaran tidak dapat diunggah lagi. Jika perlu bantuan, hubungi admin.');
-    }
+ 
+async function loadOrder(number, email) {
+  email = String(email || '').trim().toLowerCase();
+
+  if (!ORDER_PATTERN.test(number) || !EMAIL_PATTERN.test(email)) {
+    throw Error('Nomor pesanan atau email tidak valid.');
   }
 
-  $('check').addEventListener('click', () => run($('check'), async () => {
-    await loadOrder('BDJ-' + $('order').value.trim().toUpperCase(),
-      $('access').value.trim());
-  }));
+  verifiedOrder = '';
+  currentBill = null;
+
+  $('invoiceDownload').classList.add('hidden');
+  $('billBox').classList.add('hidden');
+  $('uploadBox').classList.add('hidden');
+
+  const detail = await post('/api/order-details', {
+    order_number: number,
+    buyer_email: email
+  });
+
+  const bill = detail.order;
+
+  if (
+    !bill ||
+    bill.order_number !== number ||
+    !Number.isSafeInteger(bill.total_amount) ||
+    bill.total_amount <= 0 ||
+    !Number.isSafeInteger(bill.total_participants) ||
+    bill.total_participants < 1
+  ) {
+    throw Error('Data tagihan tidak valid. Hubungi admin.');
+  }
+
+  currentBill = bill;
+  orderNumber = number;
+  buyerEmail = email;
+  verifiedOrder = number;
+
+  $('billOrder').textContent = bill.order_number;
+  $('billCount').textContent = bill.total_participants + ' orang';
+
+  $('billAmount').textContent = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  }).format(bill.total_amount);
+
+  $('billPaymentStatus').textContent = paymentStatusLabel(bill);
+  $('billBox').classList.remove('hidden');
+  $('accessBox').classList.add('hidden');
+
+  if (bill.payment_allowed === true) {
+    $('uploadBox').classList.remove('hidden');
+    status('Pesanan ditemukan. Silakan unggah bukti pembayaran QRIS.');
+  } else {
+    status('Bukti tidak dapat diunggah. Periksa status pembayaran atau hubungi admin.');
+  }
+}
+
+$('check').addEventListener('click', () =>
+  run($('check'), async () => {
+    const number = 'BDJ-' + $('order').value.trim().toUpperCase();
+    const email = $('buyerEmail').value.trim();
+
+    await loadOrder(number, email);
+  })
+);
+
 
   function loadImage(file) {
     return new Promise((resolve, reject) => {
@@ -326,26 +359,54 @@ label{display:block}
     });
   }
 
-  $('upload').addEventListener('click', () => run($('upload'), async () => {
-    if (!verifiedOrder || verifiedOrder !== orderNumber || !TOKEN_PATTERN.test(accessToken))
-      throw Error('Akses pembayaran tidak valid. Buka kembali tautan pribadi Anda.');
+
+$('upload').addEventListener('click', () =>
+  run($('upload'), async () => {
+
+    if (
+      !verifiedOrder ||
+      verifiedOrder !== orderNumber ||
+      !EMAIL_PATTERN.test(buyerEmail)
+    ) {
+      throw Error('Akses pesanan tidak valid. Periksa nomor pesanan dan email.');
+    }
+
     const file = $('proof').files[0];
-    if (!file) throw Error('Pilih gambar bukti pembayaran.');
+
+    if (!file) {
+      throw Error('Pilih gambar bukti pembayaran.');
+    }
+
     status('Sedang mengompres gambar...');
+
     const compressed = await compressProof(file);
-    status('Gambar siap (' + Math.ceil(compressed.size / 1024) + ' KB). Sedang mengunggah...');
+
+    status(
+      'Gambar siap (' +
+      Math.ceil(compressed.size / 1024) +
+      ' KB). Sedang mengunggah...'
+    );
+
     const base64 = await toBase64(compressed);
-    const d = await post('/api/upload-real-proof', {
+
+    const result = await post('/api/upload-real-proof', {
       order_number: verifiedOrder,
-      payment_access_token: accessToken,
+      buyer_email: buyerEmail,
       mime_type: 'image/jpeg',
       file_base64: base64
     });
-    $('uploadBox').classList.add('hidden');
-    $('billPaymentStatus').textContent = 'Status: Bukti dikirim, menunggu verifikasi admin.';
-    status(d.message || 'Bukti diterima. Menunggu verifikasi admin.');
-  }));
 
+    $('uploadBox').classList.add('hidden');
+
+    $('billPaymentStatus').textContent =
+      'Status: Bukti diterima, menunggu verifikasi OWNER.';
+
+    status(
+      result.message ||
+      'Bukti pembayaran berhasil diunggah.'
+    );
+  })
+);
 
   function safeText(value) {
     return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -438,19 +499,14 @@ const logoDataUrl = await new Promise((resolve, reject) => {
     status('Pilih "Simpan sebagai PDF" pada dialog cetak.');
   }));
 
-  if (ORDER_PATTERN.test(initialOrder) && TOKEN_PATTERN.test(initialToken)) {
-    status('Memuat rincian pesanan...');
-    loadOrder(initialOrder, initialToken).catch(e => {
-      $('accessBox').classList.remove('hidden');
-      $('order').value = initialOrder.slice(4);
-      $('access').value = initialToken;
-      status(e.message || 'Gagal memuat pesanan.');
-    });
-  } else {
-    $('accessBox').classList.remove('hidden');
-    if (initialOrder.startsWith('BDJ-')) $('order').value = initialOrder.slice(4);
-    status('Buka tautan pembayaran pribadi yang diterima saat pendaftaran. Jika hanya memiliki nomor pesanan, hubungi admin untuk bantuan akses.');
-  }
+$('accessBox').classList.remove('hidden');
+
+if (ORDER_PATTERN.test(initialOrder)) {
+  $('order').value = initialOrder.slice(4);
+}
+
+status('Masukkan nomor pesanan dan email yang digunakan saat pendaftaran.');
+
 })();
 </script>
 </body>
