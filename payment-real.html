@@ -30,7 +30,18 @@ label{display:block}
   main {display:none!important}
   #invoicePrint {display:block!important;position:static!important;background:#fff!important;color:#17251b!important;margin:0;padding:0;max-width:none}
   #invoicePrint .invoice-header {display:flex;align-items:center;gap:15px;border-bottom:3px solid #284c34;padding-bottom:13px;margin-bottom:17px}
-  #invoicePrint .invoice-logo {width:94px;max-width:94px;height:80px;object-fit:contain;margin:0;border-radius:0}
+  
+#invoicePrint .invoice-logo {
+  display: block !important;
+  width: 160px !important;
+  max-width: 160px !important;
+  height: auto !important;
+  max-height: 110px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+
   #invoicePrint h1 {font-size:21px;color:#24432e;margin:0 0 3px;line-height:1.2}
   #invoicePrint h2 {font-size:13px;color:#24432e;margin:16px 0 8px;border-bottom:1px solid #cbd6cb;padding-bottom:5px}
   #invoicePrint .invoice-subtitle {font-size:11px;color:#56675b}
