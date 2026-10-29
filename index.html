@@ -884,7 +884,7 @@ section{position:relative;overflow:hidden;isolation:isolate}
 }
 
 
-/* TAMPILAN TAHAP EARLY BIRD SAJA — SEMUA UKURAN LAYAR
+/* TAMPILAN REGULER SAJA — SEMUA UKURAN LAYAR
    Elemen Normal tetap berada di DOM agar JavaScript lama tetap kompatibel. */
 #priceNormal, #cardNormal { display: none !important; }
 #normalSubtotal { display: none; }
@@ -2360,7 +2360,7 @@ html, body {
 
       <div class="order-summary">
         <div class="summary-line">
-          <span>Early Bird</span><strong id="earlySubtotal">Rp0</strong>
+          <span>Reguler</span><strong id="earlySubtotal">Rp0</strong>
         </div>
         <div class="summary-line">
           <span>Reguler</span><strong id="normalSubtotal">Rp0</strong>
@@ -2374,7 +2374,7 @@ html, body {
       </div>
 
       <p class="notice">
-        DAFTAR SEKARANG. Sistem sedang dalam proses migrasi ke pendaftaran resmi. Mohon tidak melakukan pembayaran sampai pendaftaran dibuka kembali.
+        Pendaftaran REGULER Rp150.000 per peserta. Lanjutkan pengisian data untuk mendapatkan nomor pesanan.
       </p>
 
       <div class="registration-actions">
@@ -2748,16 +2748,14 @@ function updateTicketDisplay(){
         available?"PENDAFTARAN DIBUKA":
         "BELUM TERSEDIA";
     }
-    if ($(priceStatus)) $(priceStatus).textContent=status;
-    if ($(cardStatus)) $(cardStatus).textContent=status;
-    if ($(cardId)) {
-      $(cardId).classList.toggle("available",available);
-      $(cardId).classList.toggle("unavailable",!available);
-    }
-    if ($(plus)) $(plus).disabled=!available;
-    if ($(minus)) $(minus).disabled= !available || qty[key]===0;
+    if($(priceStatus)) $(priceStatus).textContent=status;
+    if($(cardStatus)) $(cardStatus).textContent=status;
+    if($(cardId)) $(cardId).classList.toggle("available",available);
+    if($(cardId)) $(cardId).classList.toggle("unavailable",!available);
+    if($(plus)) $(plus).disabled=!available;
+    if($(minus)) $(minus).disabled=qty[key]===0;
     const link=$(button);
-    if (link) {
+    if(link){
       link.classList.toggle("disabled-link",!available);
       link.setAttribute("aria-disabled",String(!available));
       link.tabIndex=available?0:-1;
@@ -2804,13 +2802,13 @@ function changeQty(category,change){
     return;
   }
   qty[category]=next;
-  updateTicketSummary();
+  updateTicketDisplay();
 }
 
 function updateTicketSummary(){
-  $("earlyQty").textContent=qty.early;
+  if($("earlyQty")) $("earlyQty").textContent=qty.early;
   $("normalQty").textContent=qty.normal;
-  $("earlySubtotal").textContent=rupiah(qty.early*prices.early);
+  if($("earlySubtotal")) $("earlySubtotal").textContent=rupiah(qty.early*prices.early);
   $("normalSubtotal").textContent=rupiah(qty.normal*prices.normal);
   $("totalPeople").textContent=totalPeople()+" orang";
   $("grandTotal").textContent=rupiah(totalPrice());
