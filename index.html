@@ -2504,23 +2504,7 @@ html, body {
       </div>
 
       <div id="registrationResult" class="notice" role="status" aria-live="polite" hidden></div>
-      <div id="realPaymentPanel" class="participant-card" hidden>
-        <h3>VERIFIKASI PEMBAYARAN</h3>
-        <p class="copy">Simpan nomor pesanan. Lakukan pembayaran hanya melalui QRIS resmi yang diumumkan panitia. Unggah bukti setelah pembayaran.</p>
-        <p id="realPaymentOrder" class="notice"></p>
-        <div class="field"><label for="realPaymentEmail">EMAIL PEMESAN</label><input type="email" id="realPaymentEmail" autocomplete="email" readonly></div>
-        <button class="btn" type="button" id="realOtpRequest" onclick="requestRealPaymentOtp()">KIRIM KODE OTP KE EMAIL</button>
-        <div id="realOtpVerifyArea" hidden>
-          <div class="field" style="margin-top:20px"><label for="realOtpCode">KODE OTP 6 ANGKA</label><input id="realOtpCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000"></div>
-          <button class="btn" type="button" id="realOtpVerify" onclick="verifyRealPaymentOtp()">VERIFIKASI OTP</button>
-        </div>
-        <div id="realProofArea" hidden>
-          <div class="field" style="margin-top:20px"><label for="realProofFile">BUKTI PEMBAYARAN (JPG, PNG, WEBP, MAKS. 1 MB)</label><input type="file" id="realProofFile" accept="image/jpeg,image/png,image/webp"></div>
-          <button class="btn" type="button" id="realProofUpload" onclick="uploadRealPaymentProof()">UNGGAH BUKTI PEMBAYARAN</button>
-        </div>
-        <p id="realPaymentMessage" class="notice" role="status" aria-live="polite" hidden></p>
-      </div>
-      <p class="notice">
+       <p class="notice">
         Pendaftaran dan pembayaran belum tersedia selama proses migrasi.
       </p>
     </div>
@@ -3173,28 +3157,75 @@ async function previewPayment(){
       throw new Error(data?.error||"Pendaftaran gagal disimpan. Silakan coba lagi.");
     }
 
-    registrationCompleted=true;
-    const orderNumber=String(data.order_number||"").trim();
-    if(!orderNumber){
-      showRegistrationResult("Pendaftaran berhasil diproses tetapi nomor pesanan tidak diterima. Hubungi panitia menggunakan email pendaftaran.");
-      button.textContent="PENDAFTARAN DIPROSES";
+        registrationCompleted = true;
+
+    const orderNumber = String(data.order_number || "").trim();
+    const paymentToken = String(data.payment_access_token || "").trim();
+    
+    if (
+      !/^BDJ-[A-HJ-NP-Z2-9]{4}$/.test(orderNumber) ||
+      !/^[a-f0-9]{64}$/.test(paymentToken)
+    ) {
+      showRegistrationResult(
+        "Pendaftaran telah diproses, tetapi akses pembayaran belum tersedia. " +
+        "Jangan mendaftar ulang. Hubungi panitia menggunakan email pendaftaran."
+      );
+      button.textContent = "PENDAFTARAN DIPROSES";
       return;
     }
 
+    const expectedUrl = new URL(
+      "/payment-real.html",
+      window.location.origin
+    );
+
+    expectedUrl.hash =
+      "order=" + encodeURIComponent(orderNumber) +
+      "&access=" + encodeURIComponent(paymentToken);
+
+    // Gunakan tautan yang dibuat sendiri dari token hasil pendaftaran.
+    // Hindari mengarahkan peserta ke domain lain.
+    const safePaymentUrl = expectedUrl.href;
+
     showRegistrationResult(
-      "PENDAFTARAN BERHASIL DISIMPAN\n"+
-      "Nomor pesanan: "+orderNumber+"\n"+
-      "Jumlah peserta: "+data.total_participants+"\n"+
-      "Total pembayaran: "+rupiah(data.total_amount)+"\n"+
-      "Status: "+String(data.payment_status||"PENDING_PAYMENT")+"\n\n"+
-      "Pesanan belum lunas. Simpan nomor pesanan ini. Gunakan QRIS resmi panitia dan verifikasi OTP untuk mengunggah bukti pembayaran.",
+      "PENDAFTARAN BERHASIL DISIMPAN\n" +
+      "Nomor pesanan: " + orderNumber + "\n" +
+      "Jumlah peserta: " + data.total_participants + "\n" +
+      "Total pembayaran: " + rupiah(data.total_amount) + "\n" +
+      "Status: MENUNGGU PEMBAYARAN\n\n" +
+      "Klik tombol di bawah untuk membayar melalui QRIS resmi. " +
+      "Simpan tautan pribadi Anda agar dapat membuka pesanan kembali.",
       true
     );
-    realPaymentOrderNumber=orderNumber;
-    $("realPaymentOrder").textContent="Nomor pesanan: "+orderNumber+" | Total: "+rupiah(data.total_amount);
-    $("realPaymentEmail").value=payload.buyer.email;
-    $("realPaymentPanel").hidden=false;
-    button.textContent="PENDAFTARAN TERSIMPAN";
+
+    const resultBox = $("registrationResult");
+
+    const paymentLink = document.createElement("a");
+    paymentLink.className = "btn";
+    paymentLink.href = safePaymentUrl;
+    paymentLink.textContent = "LANJUT KE PEMBAYARAN QRIS →";
+    paymentLink.style.marginTop = "20px";
+    paymentLink.style.width = "100%";
+
+    const saveLink = document.createElement("button");
+    saveLink.type = "button";
+    saveLink.className = "btn btn-outline";
+    saveLink.textContent = "SALIN TAUTAN PEMBAYARAN PRIBADI";
+    saveLink.style.marginTop = "12px";
+    saveLink.style.width = "100%";
+
+    saveLink.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(safePaymentUrl);
+        saveLink.textContent = "TAUTAN BERHASIL DISALIN";
+      } catch {
+        saveLink.textContent =
+          "GAGAL MENYALIN — GUNAKAN TOMBOL PEMBAYARAN";
+      }
+    });
+
+    resultBox.append(paymentLink, saveLink);  
+    button.textContent = "PENDAFTARAN TERSIMPAN";
     await refreshTicketStatus();
   }catch(error){
     showRegistrationResult(error?.message||"Terjadi kesalahan sistem.");
@@ -3203,66 +3234,6 @@ async function previewPayment(){
     registrationSubmitting=false;
     button.disabled=registrationCompleted||!selectedPayment||!$("agreeRules").checked;
   }
-}
-
-
-/* OTP DAN UPLOAD BUKTI QRIS LIVE — SESI HANYA DISIMPAN DALAM MEMORI TAB */
-let realPaymentOrderNumber="";
-let realPaymentSessionToken="";
-let realPaymentSessionExpires=0;
-function realPaymentNotice(message){
-  const element=$("realPaymentMessage");
-  element.textContent=String(message);
-  element.hidden=false;
-}
-async function realPaymentPost(endpoint,payload){
-  const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),cache:"no-store"});
-  const data=await response.json().catch(()=>({}));
-  if(!response.ok||data.ok!==true)throw new Error(data.message||"Layanan pembayaran belum dapat diproses.");
-  return data;
-}
-async function requestRealPaymentOtp(){
-  const button=$("realOtpRequest");
-  if(!realPaymentOrderNumber)return;
-  button.disabled=true;
-  try{
-    const data=await realPaymentPost("/api/request-real-payment-otp",{order_number:realPaymentOrderNumber,email:$("realPaymentEmail").value.trim()});
-    realPaymentNotice(data.message||"Jika data cocok, OTP akan dikirim ke email.");
-    $("realOtpVerifyArea").hidden=false;
-  }catch(error){realPaymentNotice(error.message)}
-  finally{button.disabled=false}
-}
-async function verifyRealPaymentOtp(){
-  const otp=$("realOtpCode").value.trim();
-  if(!/^\d{6}$/.test(otp)){realPaymentNotice("Masukkan kode OTP 6 angka.");return}
-  const button=$("realOtpVerify");button.disabled=true;
-  try{
-    const data=await realPaymentPost("/api/verify-real-payment-otp",{order_number:realPaymentOrderNumber,email:$("realPaymentEmail").value.trim(),otp});
-    if(!/^[a-f0-9]{64}$/.test(data.session_token||""))throw new Error("Sesi pembayaran tidak valid.");
-    realPaymentSessionToken=data.session_token;
-    realPaymentSessionExpires=Date.parse(data.expires_at)||Date.now()+30*60*1000;
-    $("realProofArea").hidden=false;
-    $("realOtpVerifyArea").hidden=true;
-    realPaymentNotice("OTP berhasil. Sesi upload berlaku hingga 30 menit. Silakan unggah bukti QRIS resmi.");
-  }catch(error){realPaymentNotice(error.message)}
-  finally{button.disabled=false}
-}
-async function uploadRealPaymentProof(){
-  if(!realPaymentSessionToken||Date.now()>=realPaymentSessionExpires){realPaymentNotice("Sesi telah berakhir. Silakan minta OTP baru.");return}
-  const file=$("realProofFile").files?.[0];
-  if(!file||!(["image/jpeg","image/png","image/webp"].includes(file.type))||file.size>1048576||file.size<16){realPaymentNotice("Pilih JPG, PNG, atau WebP dengan ukuran maksimal 1 MB.");return}
-  const button=$("realProofUpload");button.disabled=true;
-  try{
-    const fileBase64=await new Promise((resolve,reject)=>{
-      const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(",")[1]||"");reader.onerror=()=>reject(new Error("Gagal membaca gambar."));reader.readAsDataURL(file);
-    });
-    const data=await realPaymentPost("/api/upload-real-proof",{order_number:realPaymentOrderNumber,session_token:realPaymentSessionToken,mime_type:file.type,file_base64:fileBase64});
-    realPaymentNotice(data.message||"Bukti diterima dan menunggu verifikasi admin.");
-    $("realProofArea").hidden=true;
-    $("realOtpRequest").disabled=true;
-    realPaymentSessionToken="";
-  }catch(error){realPaymentNotice(error.message)}
-  finally{if(!$("realProofArea").hidden)button.disabled=false}
 }
 
 /* PARALLAX VISIBLE V3: animasi seluruh 3 slide tanpa library eksternal. */
