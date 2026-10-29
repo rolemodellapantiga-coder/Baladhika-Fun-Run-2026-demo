@@ -1750,6 +1750,139 @@
       }
     };
 
+    // PENCARIAN DAN PENYERAHAN RACEPACK - OWNER
+    const rpLookup = document.createElement("div");
+    rpLookup.className = "card";
+    rpLookup.style.marginTop = "15px";
+    rpLookup.innerHTML = `
+      <h3 style="margin:0 0 8px">Verifikasi Kode Booking Racepack</h3>
+      <p class="info">Cari kode booking peserta sebelum menyerahkan racepack.</p>
+      <div class="toolbar" style="margin-top:14px">
+        <input id="rpBookingInput" type="search" maxlength="40" autocomplete="off"
+               placeholder="Masukkan kode booking peserta" aria-label="Kode booking racepack">
+        <button id="rpFindBooking" type="button" class="btn btn-orange">CARI BOOKING</button>
+      </div>
+      <div id="rpBookingResult" class="info" aria-live="polite"></div>
+      <button id="rpCollectBooking" type="button" class="btn hidden" style="margin-top:14px">
+        KONFIRMASI PENGAMBILAN
+      </button>
+      <p id="rpBookingError" class="error" role="alert"></p>
+    `;
+    racepackSummarySection.appendChild(rpLookup);
+
+    let rpSelected = null;
+    let rpBusy = false;
+    const rpGet = id => document.getElementById(id);
+    const rpPick = (obj, names) => {
+      for (const k of names) if (obj?.[k] !== undefined && obj[k] !== null) return obj[k];
+      return "-";
+    };
+    const rpPaid = data => {
+      const status = String(rpPick(data, ["payment_status", "status_pembayaran"])).toUpperCase();
+      return status === "PAID" || status === "LUNAS";
+    };
+    const rpCollected = data => {
+      const flag = rpPick(data, ["is_collected", "collected", "racepack_collected", "is_racepack_collected"]);
+      const status = String(rpPick(data, ["collection_status", "racepack_status", "status_pengambilan"])).toUpperCase();
+      return flag === true || flag === 1 || status === "COLLECTED" || status === "SUDAH DIAMBIL";
+    };
+    const rpClear = () => {
+      rpSelected = null;
+      rpGet("rpCollectBooking").classList.add("hidden");
+      rpGet("rpBookingResult").replaceChildren();
+      rpGet("rpBookingError").textContent = "";
+    };
+    function rpRender(data) {
+      const target = rpGet("rpBookingResult");
+      target.replaceChildren();
+      const fields = [
+        ["Kode Booking", rpPick(data, ["booking_code", "code"])],
+        ["Nama Peserta", rpPick(data, ["full_name", "participant_name", "nama_peserta"])],
+        ["Nomor Pesanan", rpPick(data, ["order_number", "nomor_pesanan"])],
+        ["Ukuran Jersey", rpPick(data, ["jersey_size", "size_jersey"])],
+        ["Status Pembayaran", rpPick(data, ["payment_status", "status_pembayaran"])],
+        ["Status Racepack", rpCollected(data) ? "SUDAH DIAMBIL" : "BELUM DIAMBIL"]
+      ];
+      for (const [label, value] of fields) {
+        const line = document.createElement("p");
+        line.style.margin = "7px 0";
+        const bold = document.createElement("strong");
+        bold.textContent = label + ": ";
+        line.append(bold, document.createTextNode(String(value)));
+        target.appendChild(line);
+      }
+    }
+    async function rpFind() {
+      if (rpBusy || !accessToken) return;
+      rpClear();
+      const code = rpGet("rpBookingInput").value.trim().toUpperCase();
+      if (!code || !/^[A-Z0-9-]{3,40}$/.test(code)) {
+        rpGet("rpBookingError").textContent = "Masukkan kode booking yang valid.";
+        return;
+      }
+      rpBusy = true;
+      rpGet("rpFindBooking").disabled = true;
+      rpGet("rpBookingResult").textContent = "Mencari booking...";
+      try {
+        // Parameter RPC perlu cocok dengan definisi fungsi di Supabase.
+        const result = await rpc("owner_find_racepack_booking", { p_booking_code: code });
+        const data = Array.isArray(result) ? result[0] : (result?.participant || result?.booking || result);
+        if (!data || typeof data !== "object" || data.success === false || data.found === false) {
+          throw new Error(data?.error || "Kode booking tidak ditemukan.");
+        }
+        rpSelected = { code, data };
+        rpRender(data);
+        if (rpPaid(data) && !rpCollected(data)) {
+          rpGet("rpCollectBooking").classList.remove("hidden");
+        } else if (!rpPaid(data)) {
+          rpGet("rpBookingError").textContent = "Racepack tidak dapat diserahkan karena pembayaran belum LUNAS.";
+        }
+      } catch (err) {
+        rpGet("rpBookingResult").replaceChildren();
+        rpGet("rpBookingError").textContent = "Pencarian gagal: " + err.message;
+      } finally {
+        rpBusy = false;
+        rpGet("rpFindBooking").disabled = false;
+      }
+    }
+    rpGet("rpFindBooking").addEventListener("click", rpFind);
+    rpGet("rpBookingInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); rpFind(); }
+    });
+    rpGet("rpBookingInput").addEventListener("input", rpClear);
+    rpGet("rpCollectBooking").addEventListener("click", async () => {
+      if (rpBusy || !rpSelected || !accessToken) return;
+      const { code, data } = rpSelected;
+      if (!rpPaid(data) || rpCollected(data)) return;
+      if (!window.confirm("Konfirmasi racepack untuk kode " + code + " SUDAH DISERAHKAN kepada peserta?")) return;
+      rpBusy = true;
+      rpGet("rpCollectBooking").disabled = true;
+      rpGet("rpBookingError").textContent = "Menyimpan pengambilan...";
+      try {
+        // Jangan ulang otomatis operasi mutasi bila respons tidak pasti.
+        await rpc("owner_collect_racepack", { p_booking_code: code });
+        rpGet("rpBookingError").textContent = "Pengambilan diproses. Memeriksa status terbaru...";
+        await rpFindAfterCollect(code);
+        await loadRacepackSummary();
+      } catch (err) {
+        rpClear();
+        rpGet("rpBookingError").textContent = "Gagal memastikan pengambilan: " + err.message + ". Cari ulang kode sebelum mencoba konfirmasi lagi.";
+      } finally {
+        rpBusy = false;
+        rpGet("rpCollectBooking").disabled = false;
+      }
+    });
+    async function rpFindAfterCollect(code) {
+      const result = await rpc("owner_find_racepack_booking", { p_booking_code: code });
+      const data = Array.isArray(result) ? result[0] : (result?.participant || result?.booking || result);
+      rpSelected = null;
+      rpGet("rpCollectBooking").classList.add("hidden");
+      if (data && typeof data === "object") rpRender(data);
+      rpGet("rpBookingError").textContent = rpCollected(data)
+        ? "Racepack berhasil dikonfirmasi SUDAH DIAMBIL."
+        : "Permintaan terkirim, tetapi status belum terkonfirmasi. Periksa kembali sebelum menyerahkan racepack.";
+    }
+
     showLogin();
   </script>
 </body>
