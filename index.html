@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#24362b">
-<title>BALADHIKA FUN RUN 2026 | PENDAFTARAN DITUTUP SEMENTARA</title>
+<title>BALADHIKA FUN RUN 2026 | DAFTAR SEKARANG</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -884,16 +884,15 @@ section{position:relative;overflow:hidden;isolation:isolate}
 }
 
 
-/* TAMPILAN TAHAP EARLY BIRD SAJA — SEMUA UKURAN LAYAR
-   Elemen Normal tetap berada di DOM agar JavaScript lama tetap kompatibel. */
-#priceNormal, #cardNormal { display: none !important; }
-#normalSubtotal { display: none; }
-.order-summary .summary-line:has(#normalSubtotal) { display: none !important; }
+/* SATU KATEGORI REGULER — identitas teknis normal tetap dipakai agar API kompatibel */
+#priceEarly, #cardEarly { display: none !important; }
+#earlySubtotal { display: none; }
+.order-summary .summary-line:has(#earlySubtotal) { display: none !important; }
 .price-section .inner {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   max-width: 1020px;
 }
-.price-col#priceEarly { text-align: left; }
+.price-col#priceNormal { text-align: left; }
 .price-visual { min-width: 0; }
 .ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: 650px; }
 @media (max-width: 768px) {
@@ -902,39 +901,39 @@ section{position:relative;overflow:hidden;isolation:isolate}
     grid-template-rows: auto auto !important;
     gap: 18px;
   }
-  #priceEarly { grid-column: 1; grid-row: 1; }
+  #priceNormal { grid-column: 1; grid-row: 1; }
   .price-visual { grid-column: 1 !important; grid-row: 2 !important; }
   .ticket-grid { grid-template-columns: minmax(0, 1fr); max-width: none; }
 }
 
-/* PENYESUAIAN KARTU EARLY BIRD — TAMPILAN SAJA */
-#priceEarly {
+/* PENYESUAIAN KARTU REGULER — TAMPILAN SAJA */
+#priceNormal {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 0;
 }
-#priceEarly .kicker {
+#priceNormal .kicker {
   font-size: clamp(14px, 1.4vw, 19px);
   letter-spacing: .13em;
 }
-#priceEarly .price-title {
+#priceNormal .price-title {
   font-size: clamp(76px, 8.5vw, 125px);
   line-height: .93;
   margin: 22px 0 15px;
 }
-#priceEarly .price-number {
+#priceNormal .price-number {
   font-size: clamp(76px, 8vw, 116px);
   line-height: 1;
   margin: 10px 0 16px;
 }
-#priceEarly .ticket-status {
+#priceNormal .ticket-status {
   font-size: clamp(13px, 1.4vw, 18px);
   font-weight: 900;
   letter-spacing: .08em;
 }
-#priceEarly .btn {
+#priceNormal .btn {
   width: 100%;
   max-width: 410px;
   margin-top: 30px;
@@ -949,22 +948,22 @@ section{position:relative;overflow:hidden;isolation:isolate}
     padding-bottom: 20px;
     gap: 4px !important;
   }
-  #priceEarly .kicker {
+  #priceNormal .kicker {
     font-size: 15px;
   }
-  #priceEarly .price-title {
+  #priceNormal .price-title {
     font-size: clamp(86px, 19vw, 132px);
     line-height: .9;
     margin: 22px 0 18px;
   }
-  #priceEarly .price-number {
+  #priceNormal .price-number {
     font-size: clamp(88px, 20vw, 132px);
     margin: 12px 0 18px;
   }
-  #priceEarly .ticket-status {
+  #priceNormal .ticket-status {
     font-size: clamp(13px, 3.8vw, 18px);
   }
-  #priceEarly .btn {
+  #priceNormal .btn {
     max-width: none;
     margin-top: 32px;
     padding: 22px 16px;
@@ -2118,7 +2117,14 @@ section{position:relative;overflow:hidden;isolation:isolate}
 .migration-notice{padding:25px 28px;margin:15px 0 22px;background:#142119;color:#fff8ed;border:2px solid #ff691f;border-radius:16px;text-align:center}
 .migration-notice strong{font:900 clamp(17px,3vw,27px)/1.4 Montserrat,sans-serif;color:#ffad78}
 .migration-notice p{margin:12px 0 0;font-size:13px;line-height:1.8}
-#continueTickets,#earlyPlus,#earlyMinus,#normalPlus,#normalMinus{pointer-events:none}
+
+
+/* FINAL: HANYA REGULER (Rp150.000), TANPA EARLY BIRD / NORMAL */
+#priceEarly, #cardEarly { display:none!important; }
+#priceNormal { display:flex!important; }
+#cardNormal { display:block!important; }
+.order-summary .summary-line:has(#earlySubtotal) { display:none!important; }
+.order-summary .summary-line:has(#normalSubtotal) { display:none!important; }
 </style>
 <style>
 /* Perbaikan khusus layar HP: mencegah halaman melebar ke samping. */
@@ -2285,7 +2291,7 @@ html, body {
         <div class="time-box"><span class="time-value" id="minutes">--</span><span class="time-label">MENIT</span></div>
         <div class="time-box"><span class="time-value" id="seconds">--</span><span class="time-label">DETIK</span></div>
       </div>
-      <a class="btn hero-register" href="#registration">PENDAFTARAN DITUTUP SEMENTARA</a>
+      <a class="btn hero-register" href="#registration">DAFTAR SEKARANG</a>
     </div>
     <div class="hero-brand">
       <img class="hero-wordmark" src="logo-baladhika.png" alt="Baladhika Fun Run 2026">
@@ -2315,18 +2321,17 @@ html, body {
     </div>
 
     <!-- STEP 1 -->
-    <div class="migration-notice" role="status" aria-live="polite"><strong>PENDAFTARAN DITUTUP SEMENTARA</strong><p>Sistem Baladhika Fun Run 2026 sedang dalam proses migrasi. Pendaftaran dan pembayaran belum dapat dilakukan. Informasi event tetap dapat dilihat di halaman ini.</p></div>
-    <div class="registration-panel" id="ticketStep">
+        <div class="registration-panel" id="ticketStep">
       <p class="kicker orange">STEP 01</p>
       <h3 id="chooseYourTicketHeading">CHOOSE YOUR <span class="orange">TICKET</span></h3>
       <p class="registration-intro copy">
-        Pilih kategori yang tersedia sesuai status sistem.
+        Tiket REGULER Rp150.000 per peserta. Pilih jumlah peserta untuk melanjutkan.
       </p>
 
       <div class="ticket-grid">
-        <div class="ticket-card unavailable" id="cardEarly">
+        <div class="ticket-card unavailable" id="cardEarly" hidden aria-hidden="true">
           <div class="ticket-name">
-            EARLY BIRD
+            REGULER
             <img class="sold-stamp" src="sold-out.png" alt="SOLD OUT" hidden>
           </div>
           <div class="ticket-price">RP150.000</div>
@@ -2360,8 +2365,8 @@ html, body {
       </div>
 
       <div class="order-summary">
-        <div class="summary-line">
-          <span>Early Bird</span><strong id="earlySubtotal">Rp0</strong>
+        <div class="summary-line" hidden aria-hidden="true">
+          <span>REGULER</span><strong id="earlySubtotal">Rp0</strong>
         </div>
         <div class="summary-line">
           <span>Reguler</span><strong id="normalSubtotal">Rp0</strong>
@@ -2375,15 +2380,15 @@ html, body {
       </div>
 
       <p class="notice">
-        PENDAFTARAN DITUTUP SEMENTARA. Sistem sedang dalam proses migrasi ke pendaftaran resmi. Mohon tidak melakukan pembayaran sampai pendaftaran dibuka kembali.
+        Pendaftaran REGULER dibuka sesuai ketersediaan tiket. Pembayaran dilakukan melalui QRIS resmi setelah nomor pesanan diterbitkan.
       </p>
 
       <div class="registration-actions">
         <span></span>
         <button class="btn" id="continueTickets"
-                onclick="openParticipantStep()" disabled>
-          PENDAFTARAN DITUTUP SEMENTARA
-        </button>
+        onclick="openParticipantStep()">
+  LANJUTKAN PENDAFTARAN
+</button>
       </div>
     </div>
 
@@ -2516,7 +2521,7 @@ html, body {
     <div>
       
       <h2 class="check-order-title">CEK <span class="orange">PESANAN</span></h2>
-      <p class="copy muted">Layanan pengecekan pesanan sementara tidak tersedia selama pembaruan sistem.</p>
+      <p class="copy muted">Masukkan nomor pesanan untuk memeriksa status pembayaran.</p>
       
     </div>
     <div class="check-order-panel">
@@ -2525,7 +2530,9 @@ html, body {
           <label for="checkOrderNumber">NOMOR PESANAN *</label>
           <div class="order-code-row"><span class="order-code-prefix">BDJ-</span><input id="checkOrderNumber" name="order_number" maxlength="4" minlength="4" required autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="[A-HJ-NP-Za-hj-np-z2-9]{4}" placeholder="A7K2"></div>
         </div>
-        <button class="btn" id="checkOrderButton" type="submit" disabled>CEK PESANAN DITUTUP SEMENTARA</button>
+       <button class="btn" id="checkOrderButton" type="submit">
+  CEK PESANAN
+</button>
       </form>
       <div class="check-order-result" id="checkOrderResult" role="status" aria-live="polite" hidden></div>
     </div>
@@ -2632,24 +2639,56 @@ html, body {
 <script>
 "use strict";
 
-/* CEK PESANAN — MENUNGGU INTEGRASI SISTEM NYATA */
+
+/* CEK PESANAN RESMI — TANPA OTP / TOKEN */
 (function initializeCheckOrder() {
   const form = document.getElementById("checkOrderForm");
+  const input = document.getElementById("checkOrderNumber");
   const result = document.getElementById("checkOrderResult");
-  if (!form || !result) return;
+  const button = document.getElementById("checkOrderButton");
 
-  form.addEventListener("submit", function(event) {
+  if (!form || !input || !result || !button) return;
+
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
-    result.replaceChildren();
 
-    const message = document.createElement("p");
-    message.textContent =
-      "Pengecekan pesanan sedang disiapkan untuk sistem pembayaran resmi. Silakan hubungi panitia apabila memerlukan bantuan.";
+    const code = input.value.trim().toUpperCase();
+    if (!/^[A-HJ-NP-Z2-9]{4}$/.test(code)) {
+      result.textContent = "Masukkan 4 karakter nomor pesanan.";
+      result.hidden = false;
+      return;
+    }
 
-    result.appendChild(message);
+    button.disabled = true;
+    result.textContent = "Memeriksa pesanan...";
     result.hidden = false;
+
+    try {
+      const response = await fetch("/api/check-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_number: "BDJ-" + code }),
+        cache: "no-store"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.success !== true) {
+        throw new Error(data.error || "Pesanan tidak ditemukan.");
+      }
+
+      result.textContent =
+        "Nomor Pesanan: " + data.order_number + "\n" +
+        "Status: " + data.payment_notice;
+      result.style.whiteSpace = "pre-line";
+    } catch (error) {
+      result.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
   });
 })();
+
 
 /* COUNTDOWN */
 const $=id=>document.getElementById(id);
@@ -2951,7 +2990,7 @@ function createParticipant(index,category){
 }
 
 async function openParticipantStep(){
-  if(MIGRATION_REGISTRATION_CLOSED){alert("Pendaftaran ditutup sementara selama migrasi sistem.");return;}
+  if(MIGRATION_REGISTRATION_CLOSED){alert("DAFTAR SEKARANG selama migrasi sistem.");return;}
   await refreshTicketStatus();
   if(totalPeople()===0){
     alert("Pilih tiket yang tersedia.");
@@ -3103,7 +3142,7 @@ function showRegistrationResult(message, success=false){
 
 async function previewPayment(){
   if(MIGRATION_REGISTRATION_CLOSED){
-    alert("Pendaftaran ditutup sementara selama migrasi sistem.");
+    alert("DAFTAR SEKARANG selama migrasi sistem.");
     return;
   }
   if(registrationSubmitting||registrationCompleted)return;
