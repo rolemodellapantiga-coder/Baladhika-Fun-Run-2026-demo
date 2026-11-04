@@ -2675,6 +2675,28 @@ html, body {
         "Nomor Pesanan: " + data.order_number + "\n" +
         "Status: " + data.payment_notice;
       result.style.whiteSpace = "pre-line";
+      
+      // Pesanan belum dibayar: tampilkan akses kembali ke QRIS.
+      if (data.payment_status === "PENDING_PAYMENT") {
+        const panelBayar = document.createElement("div");
+        panelBayar.style.cssText =
+          "margin-top:16px;padding-top:14px;border-top:1px solid #ffffff33";
+
+        const lanjutBayar = document.createElement("button");
+        lanjutBayar.type = "button";
+        lanjutBayar.className = "btn";
+        lanjutBayar.textContent = "LANJUTKAN PEMBAYARAN";
+
+        lanjutBayar.addEventListener("click", () => {
+          window.location.href =
+            "/payment-real.html?order_number=" +
+            encodeURIComponent(data.order_number);
+        });
+
+        panelBayar.appendChild(lanjutBayar);
+        result.appendChild(panelBayar);
+      }
+
       // Invoice hanya untuk pesanan PAID, dengan verifikasi email pemesan.
       if (data.payment_status === "PAID") {
         const panel = document.createElement("div");
