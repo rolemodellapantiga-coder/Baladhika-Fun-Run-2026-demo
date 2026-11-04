@@ -509,30 +509,33 @@
       el("totalValue").textContent =
         rupiah(data.total_order_value);
 
-      const early = Number(data.early_bird_registered || 0);
-      const normal = Number(data.normal_registered || 0);
-      const earlyQuota = 2000;
-      const normalQuota = 2000;
-      const registered = early + normal;
+   
+      // MONITORING KUOTA REGULER 5K
+      // Mengikuti data resmi dari RPC OWNER.
+      const quota = Number(data.regular_quota ?? 2000);
+      const registered = Number(data.regular_registered ?? 0);
+      const remaining = Number(data.remaining_quota ?? quota);
+
+      const used = Math.max(0, quota - remaining);
+      const percentage = quota > 0
+        ? Math.min(100, used / quota * 100)
+        : 0;
 
       el("earlyValue").textContent =
-        numberFormat(registered) + " / " + numberFormat(earlyQuota);
+        numberFormat(used) + " / " + numberFormat(quota);
 
       el("normalValue").textContent =
-        "REGULER: " + numberFormat(normal);
+        "REGULER: " + numberFormat(registered);
 
-      el("earlyBar").style.width =
-        Math.min(100, earlyQuota ? registered / earlyQuota * 100 : 0) + "%";
-
-      el("normalBar").style.width =
-        Math.min(100, normalQuota ? normal / normalQuota * 100 : 0) + "%";
+      el("earlyBar").style.width = percentage + "%";
+      el("normalBar").style.width = percentage + "%";
 
       el("earlyNote").textContent =
-        "Sisa berdasarkan jumlah pesanan: " +
-        numberFormat(Math.max(0, earlyQuota - registered));
+        "Sisa kuota: " + numberFormat(remaining) + " peserta";
 
       el("normalNote").textContent =
-        "Kolom Normal dipakai untuk tiket REGULER. Angka mengikuti RPC ringkasan yang ada.";
+        "Jumlah peserta REGULER berdasarkan database Supabase.";
+
     }
 
     function addCell(row, value) {
