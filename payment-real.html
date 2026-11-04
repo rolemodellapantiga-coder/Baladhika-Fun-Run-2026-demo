@@ -125,10 +125,17 @@ let buyerEmail = '';
 let verifiedOrder = '';
 let currentBill = null;
 
-const fragment = new URLSearchParams(location.hash.slice(1));
-const initialOrder = (fragment.get('order') || '').trim().toUpperCase();
 
-history.replaceState(null, '', location.pathname + location.search);
+const fragment = new URLSearchParams(location.hash.slice(1));
+const query = new URLSearchParams(location.search);
+
+const initialOrder = (
+  query.get('order_number') ||
+  fragment.get('order') ||
+  ''
+).trim().toUpperCase();
+
+history.replaceState(null, '', location.pathname);
 
 
   $('order').addEventListener('input', () => {
