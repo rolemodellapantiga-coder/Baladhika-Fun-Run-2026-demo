@@ -288,16 +288,28 @@
           <div class="value" id="totalParticipants">—</div>
           <div class="note">Peserta terdaftar</div>
         </div>
-        <div class="card">
-          <div class="label">Total Pesanan</div>
-          <div class="value" id="totalOrders">—</div>
-          <div class="note">Pesanan individu dan rombongan</div>
-        </div>
-        <div class="card">
-          <div class="label">Pesanan Menunggu Pembayaran</div>
-          <div class="value" id="pendingOrders">—</div>
-          <div class="note">Belum merupakan pembayaran lunas</div>
-        </div>
+
+<div class="card">
+  <div class="label">Total Pesanan</div>
+  <div class="value" id="totalOrders">—</div>
+  <div class="note">Pesanan individu dan rombongan</div>
+</div>
+
+<div class="card">
+  <div class="label">Pesanan Menunggu Pembayaran</div>
+  <div class="value" id="pendingOrders">—</div>
+
+  <div class="note">
+    <strong id="pendingParticipants">—</strong>
+    peserta belum lunas
+  </div>
+
+  <div class="note">
+    Berdasarkan pembayaran QRIS LIVE
+  </div>
+</div>
+
+
         <div class="card">
           <div class="label">Nilai Pesanan</div>
           <div class="value" id="totalValue">—</div>
@@ -502,11 +514,7 @@
       el("totalOrders").textContent =
         numberFormat(data.total_orders);
 
-      // RPC ringkasan lama belum dipastikan menyediakan jumlah pending LIVE.
-      // Jangan tampilkan hitungan DEMO sebagai angka pembayaran LIVE.
-      el("pendingOrders").textContent = "—";
-
-      el("totalValue").textContent =
+          el("totalValue").textContent =
         rupiah(data.total_order_value);
 
    
@@ -1336,6 +1344,65 @@
       });
     }
 
+async function loadPendingSummary() {
+  const batchSize = 100;
+  let offset = 0;
+  let total = null;
+
+  let pendingOrderCount = 0;
+  let pendingParticipantCount = 0;
+
+  while (true) {
+    const result = await rpc("get_owner_orders", {
+      p_search: "",
+      p_limit: batchSize,
+      p_offset: offset
+    });
+
+    const orders = Array.isArray(result.orders)
+      ? result.orders
+      : [];
+
+    const reportedTotal = Number(result.total);
+
+    if (!Number.isSafeInteger(reportedTotal) ||
+        reportedTotal < 0) {
+      throw new Error("Jumlah pesanan tidak valid.");
+    }
+
+    if (total === null) {
+      total = reportedTotal;
+    } else if (total !== reportedTotal) {
+      throw new Error(
+        "Data pesanan berubah. Silakan refresh dashboard."
+      );
+    }
+
+    for (const order of orders) {
+      if (order.payment_status === "PENDING_PAYMENT") {
+        pendingOrderCount++;
+
+        pendingParticipantCount +=
+          Number(order.total_participants || 0);
+      }
+    }
+
+    offset += orders.length;
+
+    if (offset >= total) break;
+
+    if (orders.length === 0) {
+      throw new Error("Pengambilan data pending terhenti.");
+    }
+  }
+
+  el("pendingOrders").textContent =
+    numberFormat(pendingOrderCount);
+
+  el("pendingParticipants").textContent =
+    numberFormat(pendingParticipantCount);
+}
+
     async function loadOrders() {
       const result = await rpc("get_owner_orders", {
         p_search: orderSearch,
@@ -1384,16 +1451,24 @@
       document.getElementById("orderError").textContent = "";
     }
 
-    async function refreshOrders() {
-      if (!accessToken) return;
+    
+async function refreshOrders() {
+  if (!accessToken) return;
 
-      try {
-        await loadOrders();
-      } catch (error) {
-        document.getElementById("orderError").textContent =
-          "Gagal memuat pesanan: " + error.message;
-      }
-    }
+  try {
+    await Promise.all([
+      loadOrders(),
+      loadPendingSummary()
+    ]);
+
+    document.getElementById("orderError").textContent = "";
+
+  } catch (error) {
+    document.getElementById("orderError").textContent =
+      "Gagal memuat data pesanan: " + error.message;
+  }
+}
+
 
     // Muat pesanan setiap kali dashboard diperbarui.
     const refreshDashboardBeforeOrders = refreshDashboard;
