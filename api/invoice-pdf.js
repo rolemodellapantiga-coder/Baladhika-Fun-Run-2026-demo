@@ -256,13 +256,13 @@ async function generateInvoicePdf(orderNumber) {
     y += 28;
   }
 
-  if (y > 610) {
+    if (y + 153 > doc.page.height - 46) {
     doc.addPage();
     y = 55;
   }
 
   doc
-    .roundedRect(46, y + 10, 503, 123, 9)
+    .roundedRect(46, y + 10, 503, 143, 9)
     .fill("#F6F1E6");
 
   doc
@@ -281,7 +281,7 @@ async function generateInvoicePdf(orderNumber) {
     );
 
   doc.text(
-    "Tanggal: 4-5 Desember 2026   |   Waktu: 09.00 s.d. 17.00 WIB",
+    "Tanggal: 11-12 Desember 2026   |   Waktu: 09.00 s.d. 17.00 WIB",
     62,
     y + 65
   );
@@ -290,12 +290,22 @@ async function generateInvoicePdf(orderNumber) {
 
   const mapUrl = "https://maps.app.goo.gl/dYJC8VDHShwtpsqG6";
 
-  doc
+    doc
     .fillColor("#1455A0")
     .text(mapUrl, 62, y + 103, {
       link: mapUrl,
       underline: true
     });
+
+  doc
+    .fillColor(dark)
+    .font("Helvetica-Bold")
+    .fontSize(10)
+    .text(
+      "Pelaksanaan Fun Run: Minggu, 13 Desember 2026",
+      62,
+      y + 124
+    );
 
   doc.addPage();
 
