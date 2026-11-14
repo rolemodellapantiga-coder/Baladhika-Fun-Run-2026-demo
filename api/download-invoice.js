@@ -59,13 +59,29 @@ module.exports = async function handler(req,res) {
     doc.fillColor(dark).font('Helvetica-Bold').fontSize(13).text('KODE BOOKING PENGAMBILAN RACEPACK',46,y);y+=25;
     if(rows.length){for(const [i,p] of rows.entries()){if(y>690){doc.addPage();y=55;}doc.fillColor(dark).font('Helvetica').fontSize(10).text(`${i+1}. ${safe([p.first_name,p.last_name].filter(Boolean).join(' '))}`,46,y,{width:260});doc.fillColor(orange).font('Helvetica-Bold').text(safe(p.booking_code||'BELUM TERSEDIA'),315,y,{width:225});y+=23;}}
     else{doc.fillColor(muted).font('Helvetica').fontSize(10).text('Data peserta / kode booking belum tersedia di database.',46,y);y+=28;}
-    if(y>610){doc.addPage();y=55;}
-    doc.roundedRect(46,y+10,503,123,9).fill('#F6F1E6');
-    doc.fillColor(dark).font('Helvetica-Bold').fontSize(11).text('INFORMASI PENGAMBILAN RACEPACK',62,y+24);
-    doc.font('Helvetica').fontSize(10).text('Invoice ini adalah bukti untuk pengambilan Racepack.',62,y+45);
-    doc.text('Tanggal: 4-5 Desember 2026   |   Waktu: 09.00 s.d. 17.00 WIB',62,y+65);
-    doc.text('Tempat: Korem 083/BDJ',62,y+84);
-    doc.fillColor('#1455A0').text('https://maps.app.goo.gl/dYJC8VDHShwtpsqG6',62,y+103,{link:'https://maps.app.goo.gl/dYJC8VDHShwtpsqG6',underline:true});
+    if(y + 153 > doc.page.height - 46){
+  doc.addPage();
+  y = 55;
+}
+    doc.roundedRect(46,y+10,503,143,9).fill('#F6F1E6');
+doc.fillColor(dark).font('Helvetica-Bold').fontSize(11)
+  .text('INFORMASI PENGAMBILAN RACEPACK',62,y+24);
+
+doc.font('Helvetica').fontSize(10)
+  .text('Invoice ini adalah bukti untuk pengambilan Racepack.',62,y+45);
+
+doc.text('Tanggal: 11-12 Desember 2026   |   Waktu: 09.00 s.d. 17.00 WIB',62,y+65);
+
+doc.text('Tempat: Korem 083/BDJ',62,y+84);
+
+doc.fillColor('#1455A0')
+  .text('https://maps.app.goo.gl/dYJC8VDHShwtpsqG6',62,y+103,{
+    link:'https://maps.app.goo.gl/dYJC8VDHShwtpsqG6',
+    underline:true
+  });
+
+doc.fillColor(dark).font('Helvetica-Bold').fontSize(10)
+  .text('Pelaksanaan Fun Run: Minggu, 13 Desember 2026',62,y+124);
     doc.addPage();
     doc.fillColor(dark).font('Helvetica-Bold').fontSize(16).text('LAMPIRAN BUKTI PEMBAYARAN',46,46);
     doc.fillColor(muted).font('Helvetica').fontSize(9).text(`Pesanan: ${number} | Bukti diunggah peserta dan pembayaran disetujui OWNER.`,46,74,{width:503});
