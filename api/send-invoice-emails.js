@@ -129,10 +129,26 @@ async function sendEmail(invoice, orderId) {
               Invoice PDF terlampir sebagai bukti pembayaran
               dan informasi pengambilan racepack.
             </p>
-            <p>
-              Simpan invoice dan kode booking Anda
-              untuk pengambilan racepack.
-            </p>
+            
+<p>
+  Simpan invoice dan kode booking Anda
+  untuk pengambilan racepack.
+</p>
+
+<p><strong>INFORMASI JADWAL TERBARU</strong></p>
+
+<p>
+  Pengambilan Racepack:<br>
+  <strong>11–12 Desember 2026</strong><br>
+  Pukul 09.00–17.00 WIB<br>
+  Tempat: Korem 083/BDJ
+</p>
+
+<p>
+  Pelaksanaan BALADHIKA FUN RUN 2026:<br>
+  <strong>Minggu, 13 Desember 2026</strong>
+</p>
+
             <p>Terima kasih atas partisipasi Anda.</p>
             <p><strong>Panitia BALADHIKA FUN RUN 2026</strong></p>
           </div>
